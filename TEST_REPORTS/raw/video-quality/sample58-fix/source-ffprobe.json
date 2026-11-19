@@ -1,0 +1,19 @@
+{
+    "programs": [
+
+    ],
+    "stream_groups": [
+
+    ],
+    "streams": [
+        {
+            "codec_name": "mpeg4",
+            "width": 540,
+            "height": 1130,
+            "pix_fmt": "yuv420p",
+            "avg_frame_rate": "12/1",
+            "bit_rate": "6680667",
+            "nb_frames": "134"
+        }
+    ]
+}

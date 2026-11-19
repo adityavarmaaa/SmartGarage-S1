@@ -1,0 +1,6 @@
+Source,Evidence type,Vehicle alias,Plate status,Confidence,Track,Result,Evidence
+reports/IMG_2138_entry_report.json,plate_evidence,vehicle-1,CANDIDATE,0.8119,,INCONCLUSIVE,raw/b03-association.json
+reports/exit_20261114_140604.json,plate_evidence,vehicle-2,CANDIDATE,0.8963,,INCONCLUSIVE,raw/b03-association.json
+reports/exit_20261114_141336.json,plate_evidence,vehicle-3,CANDIDATE,0.8963,,INCONCLUSIVE,raw/b03-association.json
+reports/exit_preview_4bd56cac66.json,plate_evidence,vehicle-2,CANDIDATE,0.7627,,INCONCLUSIVE,raw/b03-association.json
+reports/IMG_2138_entry_report.json,slot_details,vehicle-1,UNCONFIRMED,,9,INCONCLUSIVE,raw/b03-association.json

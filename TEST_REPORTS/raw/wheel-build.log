@@ -1,0 +1,17 @@
+WARNING: The directory '/home/agent/.cache/pip' or its parent directory is not owned or is not writable by the current user. The cache has been disabled. Check the permissions and owner of that directory. If executing pip with sudo, you should use sudo's -H flag.
+Processing /workspace/work/production/smart_parking_s1_complete
+  Installing build dependencies: started
+  Installing build dependencies: finished with status 'done'
+  Getting requirements to build wheel: started
+  Getting requirements to build wheel: finished with status 'done'
+  Preparing metadata (pyproject.toml): started
+  Preparing metadata (pyproject.toml): finished with status 'done'
+Building wheels for collected packages: smart-parking-s1
+  Building wheel for smart-parking-s1 (pyproject.toml): started
+  Building wheel for smart-parking-s1 (pyproject.toml): finished with status 'done'
+  Created wheel for smart-parking-s1: filename=smart_parking_s1-0.1.0-py3-none-any.whl size=162080 sha256=aee85f4e783c733c36a9982fb3c1fb82a04d37c23e0bcdbfee56bee93d0f8f89
+  Stored in directory: /tmp/pip-ephem-wheel-cache-of34pydr/wheels/de/bc/01/c2d3e6c8124f2c746ea72dd33b712253cf3c9cd6c9153657e0
+Successfully built smart-parking-s1
+
+[notice] A new release of pip is available: 25.0.1 -> 26.3
+[notice] To update, run: python -m pip install --upgrade pip

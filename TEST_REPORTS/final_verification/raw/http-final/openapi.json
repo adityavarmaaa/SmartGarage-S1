@@ -1,0 +1,903 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Smart Parking \u2014 Service 1 API",
+    "description": "Video upload and live-camera processing API. Interactive Swagger UI is at /docs; OpenAPI schema is at /openapi.json. Processing is asynchronous and one job is allowed at a time. Jobs support cooperative cancellation and finalized MP4 delivery.",
+    "contact": {
+      "name": "Smart Parking Engineering"
+    },
+    "version": "1.2.0"
+  },
+  "paths": {
+    "/": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Root",
+        "operationId": "root__get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ServiceLinks"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health",
+        "description": "Process liveness. Job inputs and camera availability are checked during processing.",
+        "operationId": "health_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HealthResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/status": {
+      "get": {
+        "tags": [
+          "Processing"
+        ],
+        "summary": "Get Status",
+        "operationId": "get_status_api_status_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobStatus"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/upload": {
+      "post": {
+        "tags": [
+          "Video Upload"
+        ],
+        "summary": "Upload a video and start asynchronous processing",
+        "description": "Stores the upload and queues one background job. HTTP 202 acknowledges acceptance. Check /api/status for the result.",
+        "operationId": "upload_video_api_upload_post",
+        "parameters": [
+          {
+            "name": "replay",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "enum": [
+                "realtime",
+                "sync"
+              ],
+              "type": "string",
+              "default": "realtime",
+              "title": "Replay"
+            }
+          },
+          {
+            "name": "no_plates",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "No Plates"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_upload_video_api_upload_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filename or empty video",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Job active",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Configured size limit exceeded",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported extension",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Storage or startup failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/live/start": {
+      "post": {
+        "tags": [
+          "Live Camera"
+        ],
+        "summary": "Start processing a camera or RTSP source",
+        "description": "Uses the first configured camera's calibration. Live input uses realtime processing.",
+        "operationId": "start_live_api_live_start_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LiveStartRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "202": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/JobAccepted"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Unsupported camera source",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Job active",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid request fields",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Worker startup failed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/live/stop": {
+      "post": {
+        "tags": [
+          "Live Camera"
+        ],
+        "summary": "Stop Live",
+        "description": "Requests cancellation of the current live or upload job. Poll job status until cleanup finishes.",
+        "operationId": "stop_live_api_live_stop_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/StopResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/video/uploaded": {
+      "get": {
+        "tags": [
+          "Video Upload"
+        ],
+        "summary": "Uploaded Videos",
+        "operationId": "uploaded_videos_api_video_uploaded_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UploadedFiles"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Upload directory unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/frames/latest": {
+      "get": {
+        "tags": [
+          "Processed Output"
+        ],
+        "summary": "Latest Frame",
+        "operationId": "latest_frame_api_frames_latest_get",
+        "responses": {
+          "501": {
+            "description": "Feature unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/output/stream": {
+      "get": {
+        "tags": [
+          "Processed Output"
+        ],
+        "summary": "Output Stream",
+        "description": "Streams a finalized MP4 with byte ranges or the active job's live MJPEG preview.",
+        "operationId": "output_stream_api_output_stream_get",
+        "parameters": [
+          {
+            "name": "live",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Live"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Finalized MP4 or live MJPEG",
+            "content": {
+              "video/mp4": {},
+              "multipart/x-mixed-replace": {}
+            }
+          },
+          "206": {
+            "description": "Byte range",
+            "content": {
+              "video/mp4": {},
+              "multipart/byteranges": {}
+            }
+          },
+          "400": {
+            "description": "Invalid Range header",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "416": {
+            "description": "Range outside the file",
+            "headers": {
+              "Content-Range": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No finalized video is available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Video pending or preview initializing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid live query value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Video storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "head": {
+        "tags": [
+          "Processed Output"
+        ],
+        "summary": "Output Stream",
+        "description": "Returns headers for the finalized demo MP4.",
+        "operationId": "output_stream_api_output_stream_head",
+        "parameters": [
+          {
+            "name": "live",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Live"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Finalized MP4 or live MJPEG",
+            "content": {
+              "video/mp4": {},
+              "multipart/x-mixed-replace": {}
+            }
+          },
+          "206": {
+            "description": "Byte range",
+            "content": {
+              "video/mp4": {},
+              "multipart/byteranges": {}
+            }
+          },
+          "400": {
+            "description": "Invalid Range header",
+            "content": {
+              "text/plain": {}
+            }
+          },
+          "416": {
+            "description": "Range outside the file",
+            "headers": {
+              "Content-Range": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "No finalized video is available",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Video pending or preview initializing",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Invalid live query value",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Video storage unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Body_upload_video_api_upload_post": {
+        "properties": {
+          "file": {
+            "type": "string",
+            "contentMediaType": "application/octet-stream",
+            "title": "File",
+            "description": "Video file: MP4, AVI, MOV, MKV or M4V."
+          }
+        },
+        "type": "object",
+        "required": [
+          "file"
+        ],
+        "title": "Body_upload_video_api_upload_post"
+      },
+      "ErrorDiagnostic": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "module": {
+            "type": "string",
+            "title": "Module"
+          },
+          "component": {
+            "type": "string",
+            "title": "Component"
+          },
+          "operation": {
+            "type": "string",
+            "title": "Operation"
+          },
+          "category": {
+            "type": "string",
+            "title": "Category"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "recoverable": {
+            "type": "boolean",
+            "title": "Recoverable"
+          },
+          "result": {
+            "type": "string",
+            "title": "Result"
+          },
+          "action": {
+            "type": "string",
+            "title": "Action"
+          },
+          "severity": {
+            "type": "string",
+            "title": "Severity"
+          },
+          "context": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Context"
+          },
+          "timestamp": {
+            "type": "string",
+            "title": "Timestamp"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code",
+          "module",
+          "component",
+          "operation",
+          "category",
+          "message",
+          "recoverable",
+          "result",
+          "action",
+          "severity",
+          "context",
+          "timestamp"
+        ],
+        "title": "ErrorDiagnostic"
+      },
+      "ErrorResponse": {
+        "properties": {
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          },
+          "error": {
+            "$ref": "#/components/schemas/ErrorDiagnostic"
+          }
+        },
+        "type": "object",
+        "required": [
+          "detail",
+          "error"
+        ],
+        "title": "ErrorResponse"
+      },
+      "HealthResponse": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          },
+          "service": {
+            "type": "string",
+            "title": "Service"
+          }
+        },
+        "type": "object",
+        "required": [
+          "status",
+          "service"
+        ],
+        "title": "HealthResponse"
+      },
+      "JobAccepted": {
+        "properties": {
+          "job_id": {
+            "type": "string",
+            "title": "Job Id"
+          },
+          "state": {
+            "type": "string",
+            "const": "starting",
+            "title": "State"
+          },
+          "source": {
+            "type": "string",
+            "title": "Source"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          }
+        },
+        "type": "object",
+        "required": [
+          "job_id",
+          "state",
+          "source"
+        ],
+        "title": "JobAccepted"
+      },
+      "JobStatus": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "enum": [
+              "idle",
+              "starting",
+              "running",
+              "cancelling",
+              "cancelled",
+              "completed",
+              "error"
+            ],
+            "title": "State"
+          },
+          "source": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Source"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Filename"
+          },
+          "job_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Job Id"
+          },
+          "error": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error"
+          },
+          "diagnostic": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ErrorDiagnostic"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "worker_alive": {
+            "type": "boolean",
+            "title": "Worker Alive"
+          },
+          "output_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Output Url"
+          },
+          "live_output_url": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Live Output Url"
+          }
+        },
+        "type": "object",
+        "required": [
+          "state",
+          "worker_alive"
+        ],
+        "title": "JobStatus"
+      },
+      "LiveStartRequest": {
+        "properties": {
+          "source": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Source",
+            "description": "Camera index or RTSP/RTSPS stream URL.",
+            "examples": [
+              "0",
+              "rtsp://camera-host/stream"
+            ]
+          },
+          "replay": {
+            "type": "string",
+            "enum": [
+              "realtime",
+              "sync"
+            ],
+            "title": "Replay",
+            "default": "realtime"
+          },
+          "no_plates": {
+            "type": "boolean",
+            "title": "No Plates",
+            "default": false
+          }
+        },
+        "type": "object",
+        "required": [
+          "source"
+        ],
+        "title": "LiveStartRequest"
+      },
+      "ServiceLinks": {
+        "properties": {
+          "service": {
+            "type": "string",
+            "title": "Service"
+          },
+          "health": {
+            "type": "string",
+            "title": "Health"
+          },
+          "docs": {
+            "type": "string",
+            "title": "Docs"
+          },
+          "openapi": {
+            "type": "string",
+            "title": "Openapi"
+          }
+        },
+        "type": "object",
+        "required": [
+          "service",
+          "health",
+          "docs",
+          "openapi"
+        ],
+        "title": "ServiceLinks"
+      },
+      "StopResponse": {
+        "properties": {
+          "state": {
+            "type": "string",
+            "title": "State"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          }
+        },
+        "type": "object",
+        "required": [
+          "state",
+          "message"
+        ],
+        "title": "StopResponse"
+      },
+      "UploadedFile": {
+        "properties": {
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Size Bytes"
+          }
+        },
+        "type": "object",
+        "required": [
+          "filename",
+          "size_bytes"
+        ],
+        "title": "UploadedFile"
+      },
+      "UploadedFiles": {
+        "properties": {
+          "files": {
+            "items": {
+              "$ref": "#/components/schemas/UploadedFile"
+            },
+            "type": "array",
+            "title": "Files"
+          }
+        },
+        "type": "object",
+        "required": [
+          "files"
+        ],
+        "title": "UploadedFiles"
+      }
+    }
+  }
+}

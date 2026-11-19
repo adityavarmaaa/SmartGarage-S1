@@ -1,0 +1,70 @@
+# Smart Parking Service 1
+
+S1 decodes camera or recorded video, detects and tracks vehicles, collects plate and attribute evidence, assigns vehicles to calibrated parking slots, and produces lifecycle events and reports. Service 2 receives the existing mapped event contract when publishing is enabled.
+
+| Directory | Responsibility |
+| --- | --- |
+| `s1/vehicle_front` | Vehicle detection, tracking, identity, ANPR and attributes |
+| `s1/parking` | Geometry, tripwire, slot assignment, occupancy and lifecycle |
+| `s1/integration`, `s1/events` | Vehicle-to-parking bridge, event construction and validation |
+| `s1/multicam`, `s1/video` | Shared inference, independent camera state, capture and demo video |
+| `s1/publishing`, `s1/reporting` | SQLite outbox, Service 2 mapping and reports |
+| `s1/common`, `s1/api.py` | Configuration, logs, structured diagnostics and HTTP |
+| `config`, `data`, `models`, `tests` | Configuration, geometry and local assets, model placement, regression suite |
+| `s2` | Bundled Service 2 code and independently runnable tests |
+
+## Install and validate
+
+Use Python 3.10–3.12. Run from the project root.
+
+```bash
+python -m venv .venv
+. .venv/bin/activate
+python -m pip install -r requirements-dev.txt
+python -m pytest tests -q -p no:cacheprovider
+python main.py --help
+```
+
+Use `requirements.txt` for the pipeline and add `requirements-api.txt` for HTTP if development dependencies are unnecessary. The GPU variant uses `requirements-gpu.txt` after installing compatible CUDA PyTorch. FFmpeg is optional and provides H.264 export and input metadata. See [Windows installation](INSTALL_WINDOWS.md) and [Kaggle setup](README_KAGGLE.md).
+
+## Configure and run
+
+Configure every camera's source, calibrated geometry, and processing options in `config/config.local.yaml` or a copy. The original paths reference recordings from another workstation. Supply the corresponding footage and geometry, or calibrate your own cameras. For CPU use set `detector.device: cpu`. Preview runs preserve the Service 2 event shape locally.
+
+```bash
+python preflight.py config/config.local.yaml
+python run_local.py --config config/config.local.yaml --videos videos --no-plates
+```
+
+Remove `--no-plates` for ANPR. The reader models must be provisioned or available for download. `run_local.py` requires `--publish` to send events. If invoking the lower-level launcher with `python main.py --config ...`, use `--no-publisher` for isolation. Keep encryption keys, HMAC keys, Service 2 API credentials and storage credentials in the deployment environment.
+
+## Run the API
+
+```bash
+python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+```
+
+The API defaults to preview mode. Use `/docs` for Swagger, `/openapi.json` for the live contract, and `/health` for liveness. Poll `/api/status` after an upload or camera start. One worker processes one source at a time. See the [API guide](docs/API_SWAGGER.md) for inputs, HTTP statuses and environment variables.
+
+## Logs and output
+
+CLI runs write rotating logs under `logs/`. The configured JSON report summarizes camera health, slot occupancy, tracked vehicles, plate confidence and lifecycle events. A failed camera or missed inference can leave results partial. Check diagnostic codes and the camera and frame context in the log before interpreting a report or generated video. See [error handling](docs/ERROR_HANDLING.md) and the [release validation report](docs/RELEASE_VALIDATION.md).
+
+A missing OSNet model uses the existing histogram fallback for cross-camera ReID when enabled. Slot assignment requires calibrated polygons. Replay times describe the configured processing timeline. The API supports cooperative cancellation, live MJPEG previews and finalized MP4 streaming when the configured multicamera demo recorder is enabled. The standalone latest-frame endpoint returns 501. The API requires a trusted local environment.
+
+## Production team handover
+
+Start with the [readiness assessment](TEST_REPORTS/PRODUCTION_HANDOVER_READINESS_REPORT.md). The handover has executable CPU preview evidence and retains the earlier isolated API and fault-injection results. Production approval is conditional on site calibration, live source and model acceptance, and a destination-specific integration check.
+
+- [Installation and portable CPU preview](docs/INSTALLATION_GUIDE.md)
+- [Production startup, shutdown and recovery](docs/PRODUCTION_OPERATIONS_GUIDE.md)
+- [Architecture](docs/ARCHITECTURE_HANDOVER.md) and [configuration](docs/CONFIGURATION_REFERENCE.md)
+- [Diagnostics and troubleshooting](docs/TROUBLESHOOTING.md)
+- [All evidence and release reports](TEST_REPORTS/FINAL_EVIDENCE_INDEX.md)
+
+ReDoc is at `/redoc`. Request cooperative API shutdown of a job with `POST /api/live/stop`, then wait for `/api/status` to show a terminal state and `worker_alive: false` before stopping the server. CLI examples, all coverage figures and safe reproduction commands are included in the evidence bundle.
+
+The published source comes from the verified handover ZIP. Its original
+checksum, member hashes, and fresh-extraction logs are in
+[TEST_REPORTS/raw](TEST_REPORTS/raw/). The release recorded 172 S1 and 28 S2
+passing tests. The evidence index describes the commands and deployment limits.

@@ -1,0 +1,59 @@
+FFFFFFFF                                                                 [100%]
+=================================== FAILURES ===================================
+_________________ test_semantic_park_start_retry_after_restart _________________
+tests/production/test_production_lifecycle.py:45: in test_semantic_park_start_retry_after_restart
+    assert sender.publish.call_count == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = <Mock name='mock.publish' id='139877575675152'>.call_count
+E    +    where <Mock name='mock.publish' id='139877575675152'> = <Mock id='139877745807856'>.publish
+________________ test_retry_uses_first_id_after_outbox_failure _________________
+tests/production/test_production_lifecycle.py:61: in test_retry_uses_first_id_after_outbox_failure
+    assert [c.args[0]["event_id"] for c in sender.publish.call_args_list] == [start["event_id"]] * 2
+E   AssertionError: assert ['57d0d8e1a4a...fc8528ba4138'] == ['57d0d8e1a4a...797ec0dbf338']
+E     
+E     At index 1 diff: 'e4996c00c4824116992ffc8528ba4138' != '57d0d8e1a4aa42a69471797ec0dbf338'
+E     Use -v to get more diff
+__________ test_delayed_duplicate_entry_cannot_reopen_parked_session ___________
+tests/production/test_production_lifecycle.py:73: in test_delayed_duplicate_entry_cannot_reopen_parked_session
+    assert mapper._uid_session(start)[3] == "PARKED"
+E   AssertionError: assert 'OPEN' == 'PARKED'
+E     
+E     - PARKED
+E     + OPEN
+_____ test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate ______
+tests/production/test_production_lifecycle.py:95: in test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate
+    assert mapper._uid_session(first)[3] == "PARKED"
+E   AssertionError: assert 'CLOSED' == 'PARKED'
+E     
+E     - PARKED
+E     + CLOSED
+__________ test_report_ignores_same_observation_with_fresh_id[ENTRY] ___________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': 'c85b47abe12d4429b7271247d3acc201', 'vehicle_uid': 'ce153560c24e449a97b01295b6f3e994', 'slot_id': '7c7f... 'vehicle_uid': 'ce153560c24e449a97b01295b6f3e994', 'slot_id': '7c7f3730900244b59c257ec5b19a53d1', 'plate': None, ...}])
+________ test_report_ignores_same_observation_with_fresh_id[PARK_START] ________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': 'f595f7d7d4124f559705b2eab429c2bb', 'vehicle_uid': 'f8c694af865345fea87c61c707095b8e', 'slot_id': '9370... 'vehicle_uid': 'f8c694af865345fea87c61c707095b8e', 'slot_id': '9370d61e90734203879d29c62e404e8a', 'plate': None, ...}])
+_________ test_report_ignores_same_observation_with_fresh_id[PARK_END] _________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': 'f210c58fe7f0486bb2e380e26238170b', 'vehicle_uid': '4d09e45b900043259f828686fe0427bb', 'slot_id': 'f033... 'vehicle_uid': '4d09e45b900043259f828686fe0427bb', 'slot_id': 'f0338571d6094c43884fefc1c1f3d3fe', 'plate': None, ...}])
+___________ test_report_ignores_same_observation_with_fresh_id[EXIT] ___________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': 'b828de0ab1ed447584257b613b5b7be7', 'vehicle_uid': 'c273c62417f948ff867df2c052b2f6d8', 'slot_id': '7146... 'vehicle_uid': 'c273c62417f948ff867df2c052b2f6d8', 'slot_id': '71463850c30849848261245b02d0bd88', 'plate': None, ...}])
+=========================== short test summary info ============================
+FAILED tests/production/test_production_lifecycle.py::test_semantic_park_start_retry_after_restart
+FAILED tests/production/test_production_lifecycle.py::test_retry_uses_first_id_after_outbox_failure
+FAILED tests/production/test_production_lifecycle.py::test_delayed_duplicate_entry_cannot_reopen_parked_session
+FAILED tests/production/test_production_lifecycle.py::test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[ENTRY]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_START]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_END]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[EXIT]
+8 failed in 0.28s

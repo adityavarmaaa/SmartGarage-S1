@@ -1,0 +1,47 @@
+{
+  "stages": {
+    "source-decoded": {
+      "shape_hwc": [
+        1130,
+        540,
+        3
+      ],
+      "dtype": "uint8"
+    },
+    "intermediate-33x70": {
+      "shape_hwc": [
+        70,
+        33,
+        3
+      ],
+      "dtype": "uint8"
+    },
+    "old-before-annotation": {
+      "shape_hwc": [
+        1130,
+        540,
+        3
+      ],
+      "dtype": "uint8"
+    },
+    "old-after-annotation-jpeg": {
+      "shape_hwc": [
+        1130,
+        540,
+        3
+      ],
+      "dtype": "uint8"
+    },
+    "old-export-decoded": {
+      "shape_hwc": [
+        1130,
+        540,
+        3
+      ],
+      "dtype": "uint8"
+    }
+  },
+  "mean_absolute_pixel_delta_source_to_old_pre_annotation": 15.705256200152956,
+  "mean_absolute_pixel_delta_old_pre_annotation_to_jpeg": 1.8509690811755708,
+  "mean_absolute_pixel_delta_old_jpeg_to_mp4": 2.6868775264940457
+}

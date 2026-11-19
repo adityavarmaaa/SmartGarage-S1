@@ -1,0 +1,397 @@
+{
+  "slot": "B-03",
+  "candidate_reports": [
+    {
+      "source": "reports/IMG_2138_entry_report.json",
+      "sha256": "b71c835269296196dc307021f9330ca39fb1d7bf888ed8e26bd964a6bf074a0a",
+      "group": "plate_evidence",
+      "camera": "CAM-01",
+      "slot": "B-03",
+      "vehicle_alias": "vehicle-1",
+      "track_id": null,
+      "status": "CANDIDATE",
+      "event": null,
+      "state": null,
+      "timestamp": null,
+      "ocr_confidence": 0.8119,
+      "crop_shape": [
+        61,
+        25
+      ],
+      "candidate_alias": null,
+      "crop_references": [
+        {
+          "reference": "B-03_d6717d99_diagnostic_original.png.enc",
+          "present": true,
+          "encrypted": true
+        },
+        {
+          "reference": "B-03_d6717d99_diagnostic_clahe.png.enc",
+          "present": true,
+          "encrypted": true
+        }
+      ]
+    },
+    {
+      "source": "reports/exit_20261114_140604.json",
+      "sha256": "6e0327994bf601bacafe87f34477cfbc64dbe4e352e023795e50d155ee380fda",
+      "group": "plate_evidence",
+      "camera": "CAM-01",
+      "slot": "B-03",
+      "vehicle_alias": "vehicle-2",
+      "track_id": null,
+      "status": "CANDIDATE",
+      "event": null,
+      "state": null,
+      "timestamp": null,
+      "ocr_confidence": 0.8963,
+      "crop_shape": [
+        94,
+        31
+      ],
+      "candidate_alias": "plaintext-group-1",
+      "crop_references": [
+        {
+          "reference": "B-03_TG15BA2444_514d585b_original.png",
+          "present": false,
+          "encrypted": false
+        },
+        {
+          "reference": "B-03_TG15BA2444_514d585b_clahe.png",
+          "present": false,
+          "encrypted": false
+        }
+      ]
+    },
+    {
+      "source": "reports/exit_20261114_141336.json",
+      "sha256": "3b9208a1e71a37b8e2698e75237856a50323ce83d01d7d1986720c8e73435747",
+      "group": "plate_evidence",
+      "camera": "CAM-01",
+      "slot": "B-03",
+      "vehicle_alias": "vehicle-3",
+      "track_id": null,
+      "status": "CANDIDATE",
+      "event": null,
+      "state": null,
+      "timestamp": null,
+      "ocr_confidence": 0.8963,
+      "crop_shape": [
+        94,
+        31
+      ],
+      "candidate_alias": "plaintext-group-1",
+      "crop_references": [
+        {
+          "reference": "B-03_TG15BA2444_72b7e7e0_original.png",
+          "present": false,
+          "encrypted": false
+        },
+        {
+          "reference": "B-03_TG15BA2444_72b7e7e0_clahe.png",
+          "present": false,
+          "encrypted": false
+        }
+      ]
+    },
+    {
+      "source": "reports/exit_preview_4bd56cac66.json",
+      "sha256": "d597dd4307233fa10c2abe4fb5dded6f4be24b298c38513b3f586a478dfd2ff7",
+      "group": "plate_evidence",
+      "camera": "CAM-01",
+      "slot": "B-03",
+      "vehicle_alias": "vehicle-2",
+      "track_id": null,
+      "status": "CANDIDATE",
+      "event": null,
+      "state": null,
+      "timestamp": null,
+      "ocr_confidence": 0.7627,
+      "crop_shape": [
+        59,
+        26
+      ],
+      "candidate_alias": null,
+      "crop_references": [
+        {
+          "reference": "B-03_514d585b_diagnostic_original.png.enc",
+          "present": true,
+          "encrypted": true
+        },
+        {
+          "reference": "B-03_514d585b_diagnostic_clahe.png.enc",
+          "present": true,
+          "encrypted": true
+        }
+      ]
+    }
+  ],
+  "slot_records": [
+    {
+      "source": "reports/IMG_2138_entry_report.json",
+      "sha256": "b71c835269296196dc307021f9330ca39fb1d7bf888ed8e26bd964a6bf074a0a",
+      "group": "slot_details",
+      "camera": "CAM-01",
+      "slot": "B-03",
+      "vehicle_alias": "vehicle-1",
+      "track_id": 9,
+      "status": "UNCONFIRMED",
+      "event": null,
+      "state": "OCCUPIED",
+      "timestamp": "2026-11-19T16:39:46+05:30",
+      "ocr_confidence": null,
+      "crop_shape": null,
+      "candidate_alias": null,
+      "crop_references": []
+    }
+  ],
+  "lifecycle_records": [],
+  "crop_inventory": [
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_d6717d99_diagnostic_original.png.enc",
+      "bytes": 3522,
+      "encrypted": true,
+      "sha256": "10e7e13a41b0923f9a7324734665cf7d531463d83da0c95e59975c97f409568d"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_e1d9d3ed_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "d71661eb690aac93dda6dfb5f21e47a202c334d9473d2cd558eadfe88f1833ba"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_1e0e90d3_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "28257723c524ceeff6cb639a4e50bc971a34fdb8ef5f1512c44b90762740ba3d"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_1e0e90d3_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "6db13bb56c57b4c21c39bc88c4e025cd561dd73d226d5a2520de24d833828fdd"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_d6717d99_diagnostic_clahe.png.enc",
+      "bytes": 42711,
+      "encrypted": true,
+      "sha256": "d148c6e8891522ba7a073d32fa3b0eea5d55b75fa570f65a787f3ce98bd1bc6f"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_514d585b_diagnostic_clahe.png.enc",
+      "bytes": 45999,
+      "encrypted": true,
+      "sha256": "96480307db052509e26139dad40b2121240ec591698ed2c31f3b4088c627cc38"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_91ff48ad_diagnostic_original.png.enc",
+      "bytes": 3365,
+      "encrypted": true,
+      "sha256": "1b871a2f808bf3e4967876a38174f690cf05d0acf1640a929b1d19dfedc928a6"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_19351e5c_diagnostic_clahe.png.enc",
+      "bytes": 39108,
+      "encrypted": true,
+      "sha256": "d504d4f0167277f39bd7be1cfc39fd7fbfa90045802ec18fbc6f2112d6d91ba2"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_f18946fe_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "bb3f892e3b6a44a71e0de721afc80d162a7f2b0eb73faeb175f084d55653ffed"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_b31c3626_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "042dd27a12d185b389e7b6b7328c56013aa653a140d3273dcf3c04fce547780c"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_51ae6d91_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "aa878a85c65821550ff81134c0a59771edafee4188c6921cffa52d4696eef116"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_24f788ae_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "e0f372fedc6be7c0c8a589b042520581ddababa19366fc0808d3807f7bda402f"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_4b04facc_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "0f033c1c7e0761d8c4c2985136309d6623ffbc8435205ec49776270228741411"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_d4267d93_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "91794764c11d491969a3b75ff7e13f0fb9cd7fbbf342e25caa921d4349c221c8"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_514d585b_diagnostic_original.png.enc",
+      "bytes": 3322,
+      "encrypted": true,
+      "sha256": "e21c56ed21cbb86b08f6907d4b16b92e353ccadec16c594024abac6f0f5162a5"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_9db4502a_diagnostic_original.png.enc",
+      "bytes": 3365,
+      "encrypted": true,
+      "sha256": "91b5abe409deab11626f19ae0c1db814b5128617708b73418acc811650ef165e"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_2ba05254_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "28eb44841168e851f44227f9dae1425415ec619470425055e8c995981fa09bf7"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_9db4502a_diagnostic_clahe.png.enc",
+      "bytes": 43538,
+      "encrypted": true,
+      "sha256": "fd688df586f6ee83103700ee3c4ede19df4da7775f3227e2bb6c87f845f40b50"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_b9ef518b_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "22735fa1e344843688c84aa66f69fb5c8319ea129f1d91cd69eaf4bced601527"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_2ba05254_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "88b33a1ddca828ff4abce918561a46341a2e83d06fb30cd1d6a16ee862bbdfbf"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_19351e5c_diagnostic_original.png.enc",
+      "bytes": 5819,
+      "encrypted": true,
+      "sha256": "9ec3c17020282fcb500ce8e57046faef7d960d30a661eaa08a85d4142e6ed7d6"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_6f26ad6c_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "18e01fbf9cdad712c4f106169ec4e6bbf487aabc431f5471426b4cc85c976c7a"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_61745049_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "9d4052d08dc1a01b2f2782d1eefbeb303c2930a9e095d7e61d6dd8bbd28c61f3"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_b31c3626_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "4133be296ff22a5a36b7c7ee6ec717108b017f309b8f6afc0fd9e4cb495e53f3"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_e1d9d3ed_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "e6bc5407652f80c1b04f3116dcf0a365e5de91c5f98f18f63cdae66549e8a763"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_fc856b2b_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "aa992de775a743a55f0047925cbd5a0ef1ad48be3f8c6dba4b17792116a41461"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_b9ef518b_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "3faa46ed4a417b3d7a77f141c8e77e1dfa5c9d2d9a43775a5d5bde3b3c0eca9d"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_fc856b2b_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "1752d42aa6d4995658b863400d516e0ab77d9e1c320794c10eaa49405bbf65a9"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_51ae6d91_diagnostic_clahe.png.enc",
+      "bytes": 45822,
+      "encrypted": true,
+      "sha256": "ba34082316a756cf9c7ea7502ff7d19175ad2e76d0cc9f13c421ec948552afdc"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_6f26ad6c_diagnostic_clahe.png.enc",
+      "bytes": 44737,
+      "encrypted": true,
+      "sha256": "84ae6a9b2575894f381fdedec45a1e3f9cd1e50cdc73d5616a589a4c85d5d24d"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_61745049_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "084f3173da795f2ed52d4458c4efd2f9683354dbb363e47836ec1142b709fcfc"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_d4267d93_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "fc613e1d1eeb76f377727d2cb3980b00e03a61cb46ab5d758b153233434ced44"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_24f788ae_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "1c2f0e2216b0093b6c5b4e800eb777c529a542f5227def53a0066016d973ec12"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_91ff48ad_diagnostic_clahe.png.enc",
+      "bytes": 43538,
+      "encrypted": true,
+      "sha256": "33f7c949e3e06b226de95076ace91b1e5cb9ff4f1a07cf6cc54c9fa61a738424"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_f18946fe_diagnostic_original.png.enc",
+      "bytes": 3531,
+      "encrypted": true,
+      "sha256": "8eb3938764532952883902d04eb2ad09aab23805a9b6c4272a1b2ca6bd97a381"
+    },
+    {
+      "path": "data/plate_evidence/CAM-01/B-03_4b04facc_diagnostic_original.png.enc",
+      "bytes": 3453,
+      "encrypted": true,
+      "sha256": "0362802492a7b63d083cea0fef13119cb33b8ebaff0cedff0d6fe2ed35428d6f"
+    }
+  ],
+  "log_index": [
+    {
+      "path": "IMG_2138_entry_errors.log",
+      "matching_lines": 70
+    },
+    {
+      "path": "IMG_2138_parallel.log",
+      "matching_lines": 3
+    },
+    {
+      "path": "IMG_2138_parallel_error.log",
+      "matching_lines": 75
+    },
+    {
+      "path": "b02_fixed_test.log",
+      "matching_lines": 958
+    },
+    {
+      "path": "logs/s1.log",
+      "matching_lines": 3226
+    },
+    {
+      "path": "logs/s1.log.1",
+      "matching_lines": 5776
+    }
+  ],
+  "candidate_status_counts": {
+    "CANDIDATE": 4
+  },
+  "redaction": "Plate values, ciphertext and HMACs are excluded. Aliases share a family only."
+}

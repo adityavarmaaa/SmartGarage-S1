@@ -1,0 +1,12 @@
+{
+  "slot": "B-03",
+  "candidate_reports": 4,
+  "slot_records": 1,
+  "lifecycle_records": 0,
+  "crop_inventory": 36,
+  "log_index": 6,
+  "candidate_status_counts": {
+    "CANDIDATE": 4
+  },
+  "redaction": "Plate values, ciphertext and HMACs are excluded. Aliases share a family only."
+}

@@ -1,0 +1,1 @@
+Runtime YAML files stay in config/ so existing --config paths keep working.

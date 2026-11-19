@@ -1,0 +1,1 @@
+VERIFIED {'first_frame_detections': 1, 'output_shape': (530, 172, 3), 'fps': 10.0, 'decoded_frames': 10, 'configured_slots': 3, 'processing_status': 'completed'}

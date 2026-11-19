@@ -1,0 +1,14 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+______________ test_stale_end_cannot_close_a_newer_parking_cycle _______________
+tests/production/test_production_lifecycle.py:184: in test_stale_end_cannot_close_a_newer_parking_cycle
+    assert mapper._uid_session(old_end)[3] == "PARKED"
+E   AssertionError: assert 'CLOSED' == 'PARKED'
+E     
+E     - PARKED
+E     + CLOSED
+------------------------------ Captured log call -------------------------------
+WARNING  s2_mapper:s2_mapper.py:614 EXIT received_at is earlier than captured_at captured_at=2026-01-01T00:06:00+00:00 received_at=2026-01-01T00:02:00+00:00
+=========================== short test summary info ============================
+FAILED tests/production/test_production_lifecycle.py::test_stale_end_cannot_close_a_newer_parking_cycle
+1 failed, 12 deselected in 0.68s

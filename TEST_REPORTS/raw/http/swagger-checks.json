@@ -1,0 +1,42 @@
+[
+  {
+    "id": "S01",
+    "status": "PASS",
+    "evidence": "H05"
+  },
+  {
+    "id": "S02",
+    "status": "PASS",
+    "evidence": "H06"
+  },
+  {
+    "id": "S03",
+    "status": "PASS",
+    "evidence": "openapi.json"
+  },
+  {
+    "id": "S04",
+    "status": "PASS",
+    "evidence": "openapi.json and runtime route declarations"
+  },
+  {
+    "id": "S05",
+    "status": "PASS",
+    "evidence": "upload schema"
+  },
+  {
+    "id": "S06",
+    "status": "PASS",
+    "evidence": "camera request and examples"
+  },
+  {
+    "id": "S07",
+    "status": "PASS",
+    "evidence": "MP4 and HEAD definitions"
+  },
+  {
+    "id": "S08",
+    "status": "PASS",
+    "evidence": "response schemas and route descriptions"
+  }
+]

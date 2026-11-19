@@ -1,0 +1,1255 @@
+[
+  {
+    "id": "H01",
+    "method": "GET",
+    "path": "/",
+    "scenario": "Root service links",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "97",
+      "content-type": "application/json"
+    },
+    "body": {
+      "service": "Smart Parking Service 1",
+      "health": "/health",
+      "docs": "/docs",
+      "openapi": "/openapi.json"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H02",
+    "method": "GET",
+    "path": "/health",
+    "scenario": "Health and process startup",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "44",
+      "content-type": "application/json"
+    },
+    "body": {
+      "status": "ok",
+      "service": "smart-parking-s1"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H03",
+    "method": "GET",
+    "path": "/api/status",
+    "scenario": "Initial job status",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "153",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "idle",
+      "source": null,
+      "filename": null,
+      "job_id": null,
+      "error": null,
+      "diagnostic": null,
+      "worker_alive": false,
+      "output_url": null,
+      "live_output_url": null
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H04",
+    "method": "GET",
+    "path": "/openapi.json",
+    "scenario": "Generated OpenAPI",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "11579",
+      "content-type": "application/json"
+    },
+    "body": {
+      "bytes": 11579,
+      "content_type": "application/json"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H05",
+    "method": "GET",
+    "path": "/docs",
+    "scenario": "Swagger HTML",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "1030",
+      "content-type": "text/html; charset=utf-8"
+    },
+    "body": {
+      "bytes": 1030,
+      "content_type": "text/html; charset=utf-8"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H06",
+    "method": "GET",
+    "path": "/redoc",
+    "scenario": "ReDoc HTML",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "912",
+      "content-type": "text/html; charset=utf-8"
+    },
+    "body": {
+      "bytes": 912,
+      "content_type": "text/html; charset=utf-8"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H07",
+    "method": "GET",
+    "path": "/docs/oauth2-redirect",
+    "scenario": "Built-in OAuth redirect HTML",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "3012",
+      "content-type": "text/html; charset=utf-8"
+    },
+    "body": {
+      "bytes": 3012,
+      "content_type": "text/html; charset=utf-8"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H08",
+    "method": "GET",
+    "path": "/api/video/uploaded",
+    "scenario": "Empty upload inventory",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "12",
+      "content-type": "application/json"
+    },
+    "body": {
+      "files": []
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H09",
+    "method": "GET",
+    "path": "/api/frames/latest",
+    "scenario": "Documented unavailable frame endpoint",
+    "expected": 501,
+    "actual": 501,
+    "expected_code": "API_FEATURE_UNAVAILABLE",
+    "code": "API_FEATURE_UNAVAILABLE",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "402",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Processed-frame output is not implemented.",
+      "error": {
+        "code": "API_FEATURE_UNAVAILABLE",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "unsupported",
+        "message": "Processed-frame output is not implemented.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.553461+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H10",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "No finalized output",
+    "expected": 404,
+    "actual": 404,
+    "expected_code": "API_OUTPUT_UNAVAILABLE",
+    "code": "API_OUTPUT_UNAVAILABLE",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "412",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "The latest job has no finalized processed video.",
+      "error": {
+        "code": "API_OUTPUT_UNAVAILABLE",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "validation",
+        "message": "The latest job has no finalized processed video.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.598151+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H11",
+    "method": "HEAD",
+    "path": "/api/output/stream",
+    "scenario": "Missing output HEAD has no body",
+    "expected": 404,
+    "actual": 404,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "413",
+      "content-type": "application/json"
+    },
+    "body": {
+      "bytes": 0
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H12",
+    "method": "POST",
+    "path": "/api/live/stop",
+    "scenario": "Stop while idle",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "54",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "idle",
+      "message": "No active processing job."
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H13",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Missing camera source",
+    "expected": 422,
+    "actual": 422,
+    "expected_code": "API_VALIDATION",
+    "code": "API_VALIDATION",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "435",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Request fields are missing or invalid. See the endpoint schema.",
+      "error": {
+        "code": "API_VALIDATION",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Request fields are missing or invalid. See the endpoint schema.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.689605+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H14",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Wrong source type",
+    "expected": 422,
+    "actual": 422,
+    "expected_code": "API_VALIDATION",
+    "code": "API_VALIDATION",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "435",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Request fields are missing or invalid. See the endpoint schema.",
+      "error": {
+        "code": "API_VALIDATION",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Request fields are missing or invalid. See the endpoint schema.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.733170+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H15",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Invalid source scheme",
+    "expected": 400,
+    "actual": 400,
+    "expected_code": "API_INVALID_REQUEST",
+    "code": "API_INVALID_REQUEST",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "420",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Use an RTSP/RTSPS URL or a non-negative camera index.",
+      "error": {
+        "code": "API_INVALID_REQUEST",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Use an RTSP/RTSPS URL or a non-negative camera index.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.777565+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H16",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Malformed JSON",
+    "expected": 422,
+    "actual": 422,
+    "expected_code": "API_VALIDATION",
+    "code": "API_VALIDATION",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "435",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Request fields are missing or invalid. See the endpoint schema.",
+      "error": {
+        "code": "API_VALIDATION",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Request fields are missing or invalid. See the endpoint schema.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.821466+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H17",
+    "method": "GET",
+    "path": "/missing-0d3bad0af1664f138a8fc00c34e99f33",
+    "scenario": "Unknown route",
+    "expected": 404,
+    "actual": 404,
+    "expected_code": "API_ROUTE_NOT_FOUND",
+    "code": "API_ROUTE_NOT_FOUND",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "331",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Not Found",
+      "error": {
+        "code": "API_ROUTE_NOT_FOUND",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "validation",
+        "message": "Not Found",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.865314+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H18",
+    "method": "PUT",
+    "path": "/health",
+    "scenario": "Unsupported method",
+    "expected": 405,
+    "actual": 405,
+    "expected_code": "API_REQUEST_FAILED",
+    "code": "API_REQUEST_FAILED",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "allow": "GET",
+      "content-length": "348",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Method Not Allowed",
+      "error": {
+        "code": "API_REQUEST_FAILED",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "PUT",
+        "category": "validation",
+        "message": "Method Not Allowed",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.909245+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H19",
+    "method": "POST",
+    "path": "/api/upload",
+    "scenario": "Missing multipart file",
+    "expected": 422,
+    "actual": 422,
+    "expected_code": "API_VALIDATION",
+    "code": "API_VALIDATION",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "435",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Request fields are missing or invalid. See the endpoint schema.",
+      "error": {
+        "code": "API_VALIDATION",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Request fields are missing or invalid. See the endpoint schema.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:46.954538+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H20",
+    "method": "POST",
+    "path": "/api/upload",
+    "scenario": "Unsupported upload extension",
+    "expected": 415,
+    "actual": 415,
+    "expected_code": "API_UNSUPPORTED_VIDEO_FORMAT",
+    "code": "API_UNSUPPORTED_VIDEO_FORMAT",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "455",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Unsupported video extension. Allowed: .avi, .m4v, .mkv, .mov, .mp4",
+      "error": {
+        "code": "API_UNSUPPORTED_VIDEO_FORMAT",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Unsupported video extension. Allowed: .avi, .m4v, .mkv, .mov, .mp4",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:47.000619+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H21",
+    "method": "POST",
+    "path": "/api/upload",
+    "scenario": "Zero-byte upload",
+    "expected": 400,
+    "actual": 400,
+    "expected_code": "API_INVALID_REQUEST",
+    "code": "API_INVALID_REQUEST",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "362",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Uploaded video is empty.",
+      "error": {
+        "code": "API_INVALID_REQUEST",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Uploaded video is empty.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:47.049378+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H22",
+    "method": "POST",
+    "path": "/api/upload",
+    "scenario": "Over configured size",
+    "expected": 413,
+    "actual": 413,
+    "expected_code": "API_UPLOAD_TOO_LARGE",
+    "code": "API_UPLOAD_TOO_LARGE",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "395",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Upload exceeds configured limit of 1 MB.",
+      "error": {
+        "code": "API_UPLOAD_TOO_LARGE",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "validation",
+        "message": "Upload exceeds configured limit of 1 MB.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:47.116066+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H23",
+    "method": "POST",
+    "path": "/api/upload",
+    "scenario": "Upload destination cannot be created",
+    "expected": 500,
+    "actual": 500,
+    "expected_code": "API_STORAGE_FAILED",
+    "code": "API_STORAGE_FAILED",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:46 GMT",
+      "server": "uvicorn",
+      "content-length": "369",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Could not save uploaded video.",
+      "error": {
+        "code": "API_STORAGE_FAILED",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "internal",
+        "message": "Could not save uploaded video.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "ERROR",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:47.164004+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H24",
+    "method": "GET",
+    "path": "/api/video/uploaded",
+    "scenario": "Upload inventory internal exception",
+    "expected": 500,
+    "actual": 500,
+    "expected_code": "API_INTERNAL",
+    "code": "API_INTERNAL",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:47 GMT",
+      "server": "uvicorn",
+      "content-length": "380",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "The API could not complete the request.",
+      "error": {
+        "code": "API_INTERNAL",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "internal",
+        "message": "The API could not complete the request.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "ERROR",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:47.214206+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H25",
+    "method": "GET",
+    "path": "/api/video/uploaded",
+    "scenario": "Inventory recovers after obstruction removal",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:47 GMT",
+      "server": "uvicorn",
+      "content-length": "12",
+      "content-type": "application/json"
+    },
+    "body": {
+      "files": []
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H26",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Accepted camera job with a controlled invalid configuration",
+    "expected": 202,
+    "actual": 202,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:47 GMT",
+      "server": "uvicorn",
+      "content-length": "93",
+      "content-type": "application/json"
+    },
+    "body": {
+      "job_id": "817829a1243f4b798b6aa3d3251dfe34",
+      "state": "starting",
+      "source": "0",
+      "filename": null
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H27",
+    "method": "GET",
+    "path": "/api/status",
+    "scenario": "Asynchronous configuration failure",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:47 GMT",
+      "server": "uvicorn",
+      "content-length": "601",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "error",
+      "source": "0",
+      "filename": null,
+      "job_id": "817829a1243f4b798b6aa3d3251dfe34",
+      "error": "Job configuration could not be loaded.",
+      "diagnostic": {
+        "code": "CONFIG_VALIDATION_FAILED",
+        "module": "CONFIGURATION",
+        "component": "processing worker",
+        "operation": "execute",
+        "category": "processing",
+        "message": "Job configuration could not be loaded.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Released the worker slot.",
+        "severity": "ERROR",
+        "context": {
+          "job_id": "817829a1243f4b798b6aa3d3251dfe34"
+        },
+        "timestamp": "2026-11-19T17:50:47.223923+00:00"
+      },
+      "worker_alive": false,
+      "output_url": null,
+      "live_output_url": null
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H28",
+    "method": "POST",
+    "path": "/api/upload?replay=sync&no_plates=true",
+    "scenario": "Queued corrupt video",
+    "expected": 202,
+    "actual": 202,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:47 GMT",
+      "server": "uvicorn",
+      "content-length": "162",
+      "content-type": "application/json"
+    },
+    "body": {
+      "job_id": "b8a72a82088c4afab0e235526d6d32c0",
+      "state": "starting",
+      "source": "3f54a2311f9f4d90ad1ce13d9f771244.mp4",
+      "filename": "2a5896ef14284c72a4e1ff7966078ed4.mp4"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H29",
+    "method": "GET",
+    "path": "/api/status",
+    "scenario": "Asynchronous capture failure",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:54 GMT",
+      "server": "uvicorn",
+      "content-length": "728",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "error",
+      "source": "3f54a2311f9f4d90ad1ce13d9f771244.mp4",
+      "filename": "2a5896ef14284c72a4e1ff7966078ed4.mp4",
+      "job_id": "b8a72a82088c4afab0e235526d6d32c0",
+      "error": "Processing could not complete. Consult the job's internal logs.",
+      "diagnostic": {
+        "code": "MULTICAMERA_NO_CAMERAS_INITIALIZED",
+        "module": "MULTICAMERA",
+        "component": "processing worker",
+        "operation": "execute",
+        "category": "processing",
+        "message": "Processing could not complete. Consult the job's internal logs.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Released the worker slot.",
+        "severity": "ERROR",
+        "context": {
+          "job_id": "b8a72a82088c4afab0e235526d6d32c0"
+        },
+        "timestamp": "2026-11-19T17:50:55.659176+00:00"
+      },
+      "worker_alive": false,
+      "output_url": null,
+      "live_output_url": null
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H30",
+    "method": "POST",
+    "path": "/api/upload?replay=sync&no_plates=true",
+    "scenario": "Real CPU processing job",
+    "expected": 202,
+    "actual": 202,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:54 GMT",
+      "server": "uvicorn",
+      "content-length": "162",
+      "content-type": "application/json"
+    },
+    "body": {
+      "job_id": "9d1a93c7446a48c88e45ef9042f41cf2",
+      "state": "starting",
+      "source": "89ee40b7fd9c43c59999b4fc59c07ac4.mp4",
+      "filename": "2a5896ef14284c72a4e1ff7966078ed4.mp4"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H31",
+    "method": "POST",
+    "path": "/api/live/start",
+    "scenario": "Valid camera request conflicts with active upload",
+    "expected": 409,
+    "actual": 409,
+    "expected_code": "API_JOB_ACTIVE",
+    "code": "API_JOB_ACTIVE",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:55 GMT",
+      "server": "uvicorn",
+      "content-length": "472",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "A processing job is already running. Wait for it to finish before starting another.",
+      "error": {
+        "code": "API_JOB_ACTIVE",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "POST",
+        "category": "conflict",
+        "message": "A processing job is already running. Wait for it to finish before starting another.",
+        "recoverable": true,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:55.856281+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H32",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "Final video pending",
+    "expected": 409,
+    "actual": 409,
+    "expected_code": "API_OUTPUT_PENDING",
+    "code": "API_OUTPUT_PENDING",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:55 GMT",
+      "server": "uvicorn",
+      "content-length": "423",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Processed video will be available after job finalization.",
+      "error": {
+        "code": "API_OUTPUT_PENDING",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "conflict",
+        "message": "Processed video will be available after job finalization.",
+        "recoverable": true,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:55.915910+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H33",
+    "method": "GET",
+    "path": "/api/output/stream?live=invalid",
+    "scenario": "Invalid stream query",
+    "expected": 422,
+    "actual": 422,
+    "expected_code": "API_VALIDATION",
+    "code": "API_VALIDATION",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:55 GMT",
+      "server": "uvicorn",
+      "content-length": "434",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "Request fields are missing or invalid. See the endpoint schema.",
+      "error": {
+        "code": "API_VALIDATION",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "validation",
+        "message": "Request fields are missing or invalid. See the endpoint schema.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:56.007992+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H34",
+    "method": "POST",
+    "path": "/api/live/stop",
+    "scenario": "Cancellation while MJPEG response is open",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:55 GMT",
+      "server": "uvicorn",
+      "content-length": "91",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "cancelling",
+      "message": "Cancellation requested. Poll /api/status for completion."
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H35",
+    "method": "GET",
+    "path": "/api/output/stream?live=true",
+    "scenario": "Live JPEG decoded and stream ended",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:55 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "content-type": "multipart/x-mixed-replace; boundary=frame",
+      "transfer-encoding": "chunked"
+    },
+    "body": {
+      "jpeg_bytes": 21594,
+      "decoded_shape": [
+        410,
+        320,
+        3
+      ],
+      "closed_boundary": true
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H36",
+    "method": "GET",
+    "path": "/api/status",
+    "scenario": "Pipeline released worker slot",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-length": "272",
+      "content-type": "application/json"
+    },
+    "body": {
+      "state": "cancelled",
+      "source": "89ee40b7fd9c43c59999b4fc59c07ac4.mp4",
+      "filename": "2a5896ef14284c72a4e1ff7966078ed4.mp4",
+      "job_id": "9d1a93c7446a48c88e45ef9042f41cf2",
+      "error": null,
+      "diagnostic": null,
+      "worker_alive": false,
+      "output_url": "/api/output/stream",
+      "live_output_url": null
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H37",
+    "method": "HEAD",
+    "path": "/api/output/stream",
+    "scenario": "MP4 response headers",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "content-type": "video/mp4",
+      "accept-ranges": "bytes",
+      "content-disposition": "inline; filename=\"processed.mp4\"",
+      "content-length": "15116",
+      "last-modified": "Thu, 19 Nov 2026 17:50:57 GMT",
+      "etag": "\"6e7b45d918d91b72a3f0c14bfc7e0b0d\""
+    },
+    "body": {
+      "bytes": 0,
+      "content_type": "video/mp4"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H38",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "Playable partial MP4",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "content-type": "video/mp4",
+      "accept-ranges": "bytes",
+      "content-disposition": "inline; filename=\"processed.mp4\"",
+      "content-length": "15116",
+      "last-modified": "Thu, 19 Nov 2026 17:50:57 GMT",
+      "etag": "\"6e7b45d918d91b72a3f0c14bfc7e0b0d\""
+    },
+    "body": {
+      "bytes": 15116,
+      "content_type": "video/mp4"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H39",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "Byte range",
+    "expected": 206,
+    "actual": 206,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "cache-control": "no-store",
+      "content-type": "video/mp4",
+      "accept-ranges": "bytes",
+      "content-disposition": "inline; filename=\"processed.mp4\"",
+      "content-length": "32",
+      "last-modified": "Thu, 19 Nov 2026 17:50:57 GMT",
+      "etag": "\"6e7b45d918d91b72a3f0c14bfc7e0b0d\"",
+      "content-range": "bytes 0-31/15116"
+    },
+    "body": {
+      "bytes": 32,
+      "content_type": "video/mp4"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H40",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "Range beyond EOF",
+    "expected": 416,
+    "actual": 416,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-range": "bytes */15116",
+      "content-length": "0",
+      "content-type": "text/plain; charset=utf-8"
+    },
+    "body": {
+      "bytes": 0,
+      "content_type": "text/plain; charset=utf-8"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H41",
+    "method": "GET",
+    "path": "/api/output/stream",
+    "scenario": "Malformed range",
+    "expected": 400,
+    "actual": 400,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-length": "37",
+      "content-type": "text/plain; charset=utf-8"
+    },
+    "body": {
+      "bytes": 37,
+      "content_type": "text/plain; charset=utf-8"
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H42",
+    "method": "GET",
+    "path": "/api/output/stream?live=true",
+    "scenario": "Live stream after cancellation",
+    "expected": 404,
+    "actual": 404,
+    "expected_code": "API_OUTPUT_UNAVAILABLE",
+    "code": "API_OUTPUT_UNAVAILABLE",
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-length": "380",
+      "content-type": "application/json"
+    },
+    "body": {
+      "detail": "There is no active live preview.",
+      "error": {
+        "code": "API_OUTPUT_UNAVAILABLE",
+        "module": "API",
+        "component": "HTTP",
+        "operation": "GET",
+        "category": "validation",
+        "message": "There is no active live preview.",
+        "recoverable": false,
+        "result": "failed",
+        "action": "Request ended without starting a new job.",
+        "severity": "WARNING",
+        "context": {},
+        "timestamp": "2026-11-19T17:50:57.250507+00:00"
+      }
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H43",
+    "method": "GET",
+    "path": "/api/video/uploaded",
+    "scenario": "Accepted upload inventory",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-length": "150",
+      "content-type": "application/json"
+    },
+    "body": {
+      "files": [
+        {
+          "filename": "3f54a2311f9f4d90ad1ce13d9f771244.mp4",
+          "size_bytes": 13
+        },
+        {
+          "filename": "89ee40b7fd9c43c59999b4fc59c07ac4.mp4",
+          "size_bytes": 25532
+        }
+      ]
+    },
+    "status": "PASS"
+  },
+  {
+    "id": "H44",
+    "method": "GET",
+    "path": "/health",
+    "scenario": "Service recovered after repeated errors and cancellation",
+    "expected": 200,
+    "actual": 200,
+    "expected_code": null,
+    "code": null,
+    "headers": {
+      "date": "Thu, 19 Nov 2026 17:50:56 GMT",
+      "server": "uvicorn",
+      "content-length": "44",
+      "content-type": "application/json"
+    },
+    "body": {
+      "status": "ok",
+      "service": "smart-parking-s1"
+    },
+    "status": "PASS"
+  }
+]

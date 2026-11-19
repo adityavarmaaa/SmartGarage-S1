@@ -1,0 +1,10 @@
+ultralytics>=8.3
+numpy
+scipy
+pyyaml
+opencv-python-headless
+fast-alpr[onnx]
+cryptography>=42.0.0
+tzdata; sys_platform == "win32"
+# ReID on GPU needs onnxruntime-gpu INSTEAD of onnxruntime (never both):
+#   pip uninstall -y onnxruntime && pip install onnxruntime-gpu

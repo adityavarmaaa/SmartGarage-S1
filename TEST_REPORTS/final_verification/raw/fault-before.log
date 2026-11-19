@@ -1,0 +1,903 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.2.0, pluggy-1.7.0 -- /workspace/work/venv/bin/python
+rootdir: /workspace/work/evidence/smart_parking_s1_complete
+configfile: pyproject.toml
+collecting ... collected 32 items
+
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D01] FAILED [  3%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D02] FAILED [  6%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D03] FAILED [  9%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D04] FAILED [ 12%]
+tests/fault_injection/test_faults.py::test_missing_model_has_categorized_failure PASSED [ 15%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D07] PASSED [ 18%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D08] PASSED [ 21%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D09] PASSED [ 25%]
+tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T01] FAILED [ 28%]
+tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T02] FAILED [ 31%]
+tests/fault_injection/test_faults.py::test_tracking_gap_expires_ids_and_reacquires PASSED [ 34%]
+tests/fault_injection/test_faults.py::test_ocr_pins_result_keys_and_recovers_after_failure PASSED [ 37%]
+tests/fault_injection/test_faults.py::test_disappeared_vehicle_ocr_does_not_update_another PASSED [ 40%]
+tests/fault_injection/test_faults.py::test_attribute_inference_fault_preserves_vehicle PASSED [ 43%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G01] FAILED [ 46%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G02] FAILED [ 50%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G03] FAILED [ 53%]
+tests/fault_injection/test_faults.py::test_calibration_scaling_and_empty_slots PASSED [ 56%]
+tests/fault_injection/test_faults.py::test_invalid_event_time_is_rejected[L01] PASSED [ 59%]
+tests/fault_injection/test_faults.py::test_invalid_event_time_is_rejected[L02] PASSED [ 62%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V01] PASSED [ 65%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V02] PASSED [ 68%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V03] PASSED [ 71%]
+tests/fault_injection/test_faults.py::test_video_writer_open_and_write_faults PASSED [ 75%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M01] FAILED [ 78%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M02] PASSED [ 81%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M03] PASSED [ 84%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M04] FAILED [ 87%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M05] PASSED [ 90%]
+tests/fault_injection/test_faults.py::test_report_write_failure_keeps_previous_version[R01] PASSED [ 93%]
+tests/fault_injection/test_faults.py::test_report_write_failure_keeps_previous_version[R02] PASSED [ 96%]
+tests/fault_injection/test_faults.py::test_non_cancelled_job_cannot_succeed_after_report_failure FAILED [100%]
+
+=================================== FAILURES ===================================
+_____________ test_invalid_frames_skip_inference_and_recover[D01] ______________
+
+fixture = namespace(cfg={'camera_id': '9f213fa2fbf844898a13f1fe722ebba6', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/2d4486db7f104860b1fe58ef88427603.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf90b56360>
+kind = 'empty'
+
+    @pytest.mark.parametrize("kind", ["empty", "none", "scalar", "corrupt"], ids=["D01", "D02", "D03", "D04"])
+    def test_invalid_frames_skip_inference_and_recover(fixture, caplog, kind):
+        f = fixture
+        invalid = {"empty": f.image[:0], "none": None, "scalar": 7,
+                   "corrupt": f.image.astype(np.float32) * np.nan}[kind]
+        assert f.pipe.process(Frame(100, invalid, 0)) == []
+>       assert not f.pipe.last_frame_ok
+E       AssertionError: assert not True
+E        +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770>.last_frame_ok
+E        +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770> = namespace(cfg={'camera_id': '9f213fa2fbf844898a13f1fe722ebba6', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/7e4abedc94054ba388b47bfee583ed75.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/02e4e6671ac14aa2ba2400097216ac31.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': 'aa44328767184056b4e2f6bc14e46288', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/2d4486db7f104860b1fe58ef88427603.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '207dfc3e25b24789a1a13ed53f521e0d', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529493192208'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770>, publisher=<s1.main.MemoryPublisher object at 0x7fcf92945910>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/7e4abedc94054ba388b47bfee583ed75.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/02e4e6671ac14aa2ba2400097216ac31.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/2d4486db7f104860b1fe58ef88427603.json')).pipe
+
+tests/fault_injection/test_faults.py:92: AssertionError
+_____________ test_invalid_frames_skip_inference_and_recover[D02] ______________
+
+fixture = namespace(cfg={'camera_id': '3b8331dfe92341f5801e1feeed068180', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/1c46c2d4003f488a915b1e917ae43409.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf90b31fd0>
+kind = 'none'
+
+    @pytest.mark.parametrize("kind", ["empty", "none", "scalar", "corrupt"], ids=["D01", "D02", "D03", "D04"])
+    def test_invalid_frames_skip_inference_and_recover(fixture, caplog, kind):
+        f = fixture
+        invalid = {"empty": f.image[:0], "none": None, "scalar": 7,
+                   "corrupt": f.image.astype(np.float32) * np.nan}[kind]
+        assert f.pipe.process(Frame(100, invalid, 0)) == []
+>       assert not f.pipe.last_frame_ok
+E       AssertionError: assert not True
+E        +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20>.last_frame_ok
+E        +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20> = namespace(cfg={'camera_id': '3b8331dfe92341f5801e1feeed068180', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/3d66d86c70684c798e4126ff4be2bc81.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/ba6216c702f44bad9e3f111fb78931de.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': '7d835bc8d3be45139796e4b1d013e092', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/1c46c2d4003f488a915b1e917ae43409.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '2952a4a1f3544896ba583b80f9ead8b9', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529494149888'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20>, publisher=<s1.main.MemoryPublisher object at 0x7fcf90d8e780>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/3d66d86c70684c798e4126ff4be2bc81.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/ba6216c702f44bad9e3f111fb78931de.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/1c46c2d4003f488a915b1e917ae43409.json')).pipe
+
+tests/fault_injection/test_faults.py:92: AssertionError
+_____________ test_invalid_frames_skip_inference_and_recover[D03] ______________
+
+fixture = namespace(cfg={'camera_id': '0f73569b21d64deaa044d235c1d21170', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/51c282631da94832a16b0d56ea5f279c.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf90b56e10>
+kind = 'scalar'
+
+    @pytest.mark.parametrize("kind", ["empty", "none", "scalar", "corrupt"], ids=["D01", "D02", "D03", "D04"])
+    def test_invalid_frames_skip_inference_and_recover(fixture, caplog, kind):
+        f = fixture
+        invalid = {"empty": f.image[:0], "none": None, "scalar": 7,
+                   "corrupt": f.image.astype(np.float32) * np.nan}[kind]
+        assert f.pipe.process(Frame(100, invalid, 0)) == []
+>       assert not f.pipe.last_frame_ok
+E       AssertionError: assert not True
+E        +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0>.last_frame_ok
+E        +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0> = namespace(cfg={'camera_id': '0f73569b21d64deaa044d235c1d21170', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/503d3af958c04aafb7661732c415019b.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/dcb41e8d994f4537a18b03ceea540214.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': '3f6162003ca840578188908cf48c65e9', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/51c282631da94832a16b0d56ea5f279c.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '81b0f8eb58074252b6c11331075a34a2', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529462766256'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0>, publisher=<s1.main.MemoryPublisher object at 0x7fcf911bba10>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/503d3af958c04aafb7661732c415019b.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/dcb41e8d994f4537a18b03ceea540214.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/51c282631da94832a16b0d56ea5f279c.json')).pipe
+
+tests/fault_injection/test_faults.py:92: AssertionError
+_____________ test_invalid_frames_skip_inference_and_recover[D04] ______________
+
+fixture = namespace(cfg={'camera_id': 'c5a2310176d54bbdb5a1530e1f07020a', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/12728ca0baee45548b060a68e5f75dad.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf90b57770>
+kind = 'corrupt'
+
+    @pytest.mark.parametrize("kind", ["empty", "none", "scalar", "corrupt"], ids=["D01", "D02", "D03", "D04"])
+    def test_invalid_frames_skip_inference_and_recover(fixture, caplog, kind):
+        f = fixture
+        invalid = {"empty": f.image[:0], "none": None, "scalar": 7,
+                   "corrupt": f.image.astype(np.float32) * np.nan}[kind]
+        assert f.pipe.process(Frame(100, invalid, 0)) == []
+>       assert not f.pipe.last_frame_ok
+E       AssertionError: assert not True
+E        +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0>.last_frame_ok
+E        +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0> = namespace(cfg={'camera_id': 'c5a2310176d54bbdb5a1530e1f07020a', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/066014825966481c965cafa58a4c138e.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/d2be8d9a555d426ca71545589f67a222.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': 'e432e1e98d4a448a86f9802b057020ea', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/12728ca0baee45548b060a68e5f75dad.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '80125ae910eb4b448014593935b31c68', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529462769616'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0>, publisher=<s1.main.MemoryPublisher object at 0x7fcfae1181d0>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/066014825966481c965cafa58a4c138e.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/d2be8d9a555d426ca71545589f67a222.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/12728ca0baee45548b060a68e5f75dad.json')).pipe
+
+tests/fault_injection/test_faults.py:92: AssertionError
+_________________ test_invalid_association_is_categorized[T01] _________________
+
+fixture = namespace(cfg={'camera_id': '7ed0e19a25df45d780cece3f1cf0a806', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_association_is_ca0/29bcd179092241229765d3e3aa215faa.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf76918b30>
+bad_tracks = [namespace()]
+
+    @pytest.mark.parametrize("bad_tracks", [[SimpleNamespace()], [SimpleNamespace(id=1)] * 2],
+                             ids=["T01", "T02"])
+    def test_invalid_association_is_categorized(fixture, caplog, bad_tracks):
+        f = fixture
+        tracker = Mock(wraps=f.pipe.tracker)
+        tracker.update.side_effect = [(bad_tracks, []), ([], [])]
+        f.pipe.tracker = tracker
+>       assert f.pipe.process(Frame(100, f.image, 0)) == []
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/fault_injection/test_faults.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf769186e0>
+frame = Frame(ts=100, image=array([[[90, 90, 90],
+        [90, 90, 90],
+        [90, 90, 90],
+        ...,
+        [90, 90, 90...       ...,
+        [90, 90, 90],
+        [90, 90, 90],
+        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), idx=0)
+detections = None, detection_elapsed_ms = None
+
+    def process(self, frame, detections=None, detection_elapsed_ms=None):
+        """Process one frame for this camera.
+    
+        ``detections`` may be supplied by a shared, serialized inference owner.
+        When omitted, preserve the legacy single-camera behavior.
+        """
+        t0 = time.perf_counter()
+        events = []
+        self.last_frame_ok = False
+        self.display_ts = float(frame.ts)
+    
+        # Capture recording start before tracker confirmation.
+        if self.slots.stream_start_ts is None:
+            self.slots.stream_start_ts = float(frame.ts)
+    
+        # MOG2 motion gate: use YOLO only when motion is meaningful,
+        # or periodically as a safeguard. Each Pipeline owns its own model.
+        self.motion_gate_frame_count += 1
+        run_yolo = detections is not None or not self.motion_gate_enabled
+    
+        context = {"camera_id": self.cfg.get("camera_id"), "frame_id": frame.idx}
+        try:
+            if detections is not None:
+                dets = detections
+            elif self.motion_gate_enabled:
+                mask = self.motion_gate.apply(frame.image)
+                # Ignore MOG2 shadow pixels (127); count only foreground (255).
+                motion_pixels = int(cv2.countNonZero(
+                    cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1]
+                ))
+                periodic_check = (
+                    self.motion_gate_frame_count % self.motion_gate_force_every == 0
+                )
+                run_yolo = (
+                    motion_pixels >= self.motion_gate_min_pixels or periodic_check
+                )
+    
+                if run_yolo:
+                    dets = self.detector.detect(frame.image)
+                else:
+                    dets = np.zeros((0, 6), dtype=np.float32)
+            else:
+                dets = self.detector.detect(frame.image)
+        except Exception:
+            Diagnostic(
+                "YOLO_INFERENCE_FAILED", "VEHICLE_DETECTION", "detector", "infer",
+                "inference", "Vehicle inference failed for this frame.", True,
+                "missing", "Skipped frame without advancing tracking or parking.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+    
+        try:
+            dets = np.asarray(dets, dtype=np.float32)
+            if (dets.ndim != 2 or dets.shape[1] != 6
+                    or not np.isfinite(dets).all()
+                    or (dets[:, 2:4] <= dets[:, :2]).any()):
+                raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+        except (TypeError, ValueError, OverflowError):
+            Diagnostic(
+                "DETECTION_OUTPUT_INVALID", "VEHICLE_DETECTION", "detector",
+                "validate detections", "validation", "Detector output is malformed.",
+                True, "missing", "Skipped frame without advancing tracking or parking.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+        if run_yolo and len(dets) == 0:
+            log.debug("NO_DETECTIONS camera=%s frame=%s", context["camera_id"], frame.idx)
+        t1 = time.perf_counter()
+    
+        try:
+            tracks, removed = self.tracker.update(dets, frame.ts)
+        except Exception:
+            Diagnostic(
+                "TRACKER_UPDATE_FAILED", "VEHICLE_TRACKING", "tracker", "associate",
+                "processing", "Tracker could not associate detections.", True,
+                "partial", "Skipped downstream updates for this frame.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+        t2 = time.perf_counter()
+    
+        # Estimate current->reference motion using current-frame track boxes as
+        # masks. This keeps moving vehicles out of the background feature set,
+        # including when the reference frame is first initialized. Detection
+        # and tracking remain entirely in original source-frame coordinates.
+        if self.camera_motion_enabled:
+                self.camera_transform = self.camera_motion.update(
+                        frame.image,
+                        moving_boxes=[t.bbox for t in tracks],
+                        frame_id=getattr(frame, "idx", None),
+                )
+        else:
+                self.camera_transform = np.array(
+                        [[1., 0., 0.], [0., 1., 0.]], dtype=np.float32
+        )
+    
+        self.slots.set_camera_transform(self.camera_transform)
+    
+        # Release removed tracker IDs from parking state BEFORE processing
+        # newly created tracks. This lets recover_lost_track() rebind a
+        # replacement tracker to the original parked Vehicle identity.
+        for t in removed:
+            v = self.registry.by_track.get(t.id)
+            self._remember_entry_tripwire_state(t.id, v, frame.ts)
+    
+            # Preserve an already-observed real crossing across tracker-ID recovery.
+            pending_crossing = self._pending_tripwire_crossings.pop(
+                int(t.id), None
+            )
+            if pending_crossing is not None and v is not None:
+                v._pending_tripwire_crossing = pending_crossing
+            self.tripwire.forget(t.id)
+            self.slots.on_track_removed(t)
+    
+            if v is not None:
+                try:
+                    self._maybe_infer_exit(events, v)
+                except Exception:
+                    log.exception("EXIT_INFERENCE_FAILED vehicle=%s", v.uid)
+                v.pending.clear()
+            self.registry.drop_track(t.id)
+    
+        # ByteTracker returns only confirmed tracks to the parking pipeline.
+        # Feed tripwire observations from all tracks updated on this frame,
+        # including tentative tracks, so the approach-side state is not lost.
+        active_tracker_tracks = [
+>           track for track in self.tracker.tracks
+                               ^^^^^^^^^^^^^^^^^^^
+            if float(track.last_ts) == float(frame.ts)
+        ]
+E       TypeError: 'Mock' object is not iterable
+
+s1/integration/vehicle_parking_bridge.py:1284: TypeError
+_________________ test_invalid_association_is_categorized[T02] _________________
+
+fixture = namespace(cfg={'camera_id': '7e113a954e5e4882ae5ac441c052a202', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_association_is_ca1/a5e5f263550345eb8643fa212d6e816c.json'))
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf7691be30>
+bad_tracks = [namespace(id=1), namespace(id=1)]
+
+    @pytest.mark.parametrize("bad_tracks", [[SimpleNamespace()], [SimpleNamespace(id=1)] * 2],
+                             ids=["T01", "T02"])
+    def test_invalid_association_is_categorized(fixture, caplog, bad_tracks):
+        f = fixture
+        tracker = Mock(wraps=f.pipe.tracker)
+        tracker.update.side_effect = [(bad_tracks, []), ([], [])]
+        f.pipe.tracker = tracker
+>       assert f.pipe.process(Frame(100, f.image, 0)) == []
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+tests/fault_injection/test_faults.py:126: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf7691b740>
+frame = Frame(ts=100, image=array([[[90, 90, 90],
+        [90, 90, 90],
+        [90, 90, 90],
+        ...,
+        [90, 90, 90...       ...,
+        [90, 90, 90],
+        [90, 90, 90],
+        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), idx=0)
+detections = None, detection_elapsed_ms = None
+
+    def process(self, frame, detections=None, detection_elapsed_ms=None):
+        """Process one frame for this camera.
+    
+        ``detections`` may be supplied by a shared, serialized inference owner.
+        When omitted, preserve the legacy single-camera behavior.
+        """
+        t0 = time.perf_counter()
+        events = []
+        self.last_frame_ok = False
+        self.display_ts = float(frame.ts)
+    
+        # Capture recording start before tracker confirmation.
+        if self.slots.stream_start_ts is None:
+            self.slots.stream_start_ts = float(frame.ts)
+    
+        # MOG2 motion gate: use YOLO only when motion is meaningful,
+        # or periodically as a safeguard. Each Pipeline owns its own model.
+        self.motion_gate_frame_count += 1
+        run_yolo = detections is not None or not self.motion_gate_enabled
+    
+        context = {"camera_id": self.cfg.get("camera_id"), "frame_id": frame.idx}
+        try:
+            if detections is not None:
+                dets = detections
+            elif self.motion_gate_enabled:
+                mask = self.motion_gate.apply(frame.image)
+                # Ignore MOG2 shadow pixels (127); count only foreground (255).
+                motion_pixels = int(cv2.countNonZero(
+                    cv2.threshold(mask, 200, 255, cv2.THRESH_BINARY)[1]
+                ))
+                periodic_check = (
+                    self.motion_gate_frame_count % self.motion_gate_force_every == 0
+                )
+                run_yolo = (
+                    motion_pixels >= self.motion_gate_min_pixels or periodic_check
+                )
+    
+                if run_yolo:
+                    dets = self.detector.detect(frame.image)
+                else:
+                    dets = np.zeros((0, 6), dtype=np.float32)
+            else:
+                dets = self.detector.detect(frame.image)
+        except Exception:
+            Diagnostic(
+                "YOLO_INFERENCE_FAILED", "VEHICLE_DETECTION", "detector", "infer",
+                "inference", "Vehicle inference failed for this frame.", True,
+                "missing", "Skipped frame without advancing tracking or parking.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+    
+        try:
+            dets = np.asarray(dets, dtype=np.float32)
+            if (dets.ndim != 2 or dets.shape[1] != 6
+                    or not np.isfinite(dets).all()
+                    or (dets[:, 2:4] <= dets[:, :2]).any()):
+                raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+        except (TypeError, ValueError, OverflowError):
+            Diagnostic(
+                "DETECTION_OUTPUT_INVALID", "VEHICLE_DETECTION", "detector",
+                "validate detections", "validation", "Detector output is malformed.",
+                True, "missing", "Skipped frame without advancing tracking or parking.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+        if run_yolo and len(dets) == 0:
+            log.debug("NO_DETECTIONS camera=%s frame=%s", context["camera_id"], frame.idx)
+        t1 = time.perf_counter()
+    
+        try:
+            tracks, removed = self.tracker.update(dets, frame.ts)
+        except Exception:
+            Diagnostic(
+                "TRACKER_UPDATE_FAILED", "VEHICLE_TRACKING", "tracker", "associate",
+                "processing", "Tracker could not associate detections.", True,
+                "partial", "Skipped downstream updates for this frame.",
+                context=context,
+            ).log(log, exc_info=True)
+            return events
+        t2 = time.perf_counter()
+    
+        # Estimate current->reference motion using current-frame track boxes as
+        # masks. This keeps moving vehicles out of the background feature set,
+        # including when the reference frame is first initialized. Detection
+        # and tracking remain entirely in original source-frame coordinates.
+        if self.camera_motion_enabled:
+                self.camera_transform = self.camera_motion.update(
+                        frame.image,
+                        moving_boxes=[t.bbox for t in tracks],
+                        frame_id=getattr(frame, "idx", None),
+                )
+        else:
+                self.camera_transform = np.array(
+                        [[1., 0., 0.], [0., 1., 0.]], dtype=np.float32
+        )
+    
+        self.slots.set_camera_transform(self.camera_transform)
+    
+        # Release removed tracker IDs from parking state BEFORE processing
+        # newly created tracks. This lets recover_lost_track() rebind a
+        # replacement tracker to the original parked Vehicle identity.
+        for t in removed:
+            v = self.registry.by_track.get(t.id)
+            self._remember_entry_tripwire_state(t.id, v, frame.ts)
+    
+            # Preserve an already-observed real crossing across tracker-ID recovery.
+            pending_crossing = self._pending_tripwire_crossings.pop(
+                int(t.id), None
+            )
+            if pending_crossing is not None and v is not None:
+                v._pending_tripwire_crossing = pending_crossing
+            self.tripwire.forget(t.id)
+            self.slots.on_track_removed(t)
+    
+            if v is not None:
+                try:
+                    self._maybe_infer_exit(events, v)
+                except Exception:
+                    log.exception("EXIT_INFERENCE_FAILED vehicle=%s", v.uid)
+                v.pending.clear()
+            self.registry.drop_track(t.id)
+    
+        # ByteTracker returns only confirmed tracks to the parking pipeline.
+        # Feed tripwire observations from all tracks updated on this frame,
+        # including tentative tracks, so the approach-side state is not lost.
+        active_tracker_tracks = [
+>           track for track in self.tracker.tracks
+                               ^^^^^^^^^^^^^^^^^^^
+            if float(track.last_ts) == float(frame.ts)
+        ]
+E       TypeError: 'Mock' object is not iterable
+
+s1/integration/vehicle_parking_bridge.py:1284: TypeError
+________________ test_bad_calibration_dimensions_rejected[G01] _________________
+
+fixture = namespace(cfg={'camera_id': '380f94ca14ed45b19b3849fac66423bb', 'source': '/tmp/pytest-of-agent/pytest-24/test_bad_cal...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_bad_calibration_dimension0/88024846095c492dad0c1fd05bea5031.json'))
+size = [-1, 20]
+
+    @pytest.mark.parametrize("size", [[-1, 20], [10], [0, 30]], ids=["G01", "G02", "G03"])
+    def test_bad_calibration_dimensions_rejected(fixture, size):
+        g = Geometry({**fixture.geometry, "frame_size": size})
+>       with pytest.raises(ValueError, match="frame_size"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/fault_injection/test_faults.py:209: Failed
+________________ test_bad_calibration_dimensions_rejected[G02] _________________
+
+fixture = namespace(cfg={'camera_id': '1a26b2df89b54924823ba989035e3dad', 'source': '/tmp/pytest-of-agent/pytest-24/test_bad_cal...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_bad_calibration_dimension1/d758b3f682b64d3cafc92c81a2d45094.json'))
+size = [10]
+
+    @pytest.mark.parametrize("size", [[-1, 20], [10], [0, 30]], ids=["G01", "G02", "G03"])
+    def test_bad_calibration_dimensions_rejected(fixture, size):
+        g = Geometry({**fixture.geometry, "frame_size": size})
+>       with pytest.raises(ValueError, match="frame_size"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/fault_injection/test_faults.py:209: Failed
+________________ test_bad_calibration_dimensions_rejected[G03] _________________
+
+fixture = namespace(cfg={'camera_id': '6619c0e451da413c876827dac4478c1d', 'source': '/tmp/pytest-of-agent/pytest-24/test_bad_cal...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_bad_calibration_dimension2/ebc21a6fcab04cd7bc1f694097a07754.json'))
+size = [0, 30]
+
+    @pytest.mark.parametrize("size", [[-1, 20], [10], [0, 30]], ids=["G01", "G02", "G03"])
+    def test_bad_calibration_dimensions_rejected(fixture, size):
+        g = Geometry({**fixture.geometry, "frame_size": size})
+>       with pytest.raises(ValueError, match="frame_size"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ValueError
+
+tests/fault_injection/test_faults.py:209: Failed
+___________ test_camera_failure_leaves_other_camera_processing[M01] ____________
+
+fixture = namespace(cfg={'camera_id': '57804c3523544f22954bed59092010cf', 'source': '/tmp/pytest-of-agent/pytest-24/test_camera_...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth0/570f3b352c194585b2e3b1ac1a9a6b61.json'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcf769a69f0>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf769a6c30>
+method = 'decode'
+
+    @pytest.mark.parametrize("method", ["decode", "startup", "geometry", "malformed-frame", "tracker"],
+                             ids=["M01", "M02", "M03", "M04", "M05"])
+    def test_camera_failure_leaves_other_camera_processing(fixture, monkeypatch, caplog, method):
+        from s1.multicam import multicam
+        f = fixture
+        write_clip(f)
+        bad = key()
+        other = camera(f, camera_id=bad)
+        if method == "geometry":
+            other["geometry_file"] += ".missing"
+        cfg = {**f.cfg, "cameras": [other, camera(f)]}
+        original = multicam.open_source
+        bad_source = Mock()
+        bad_source.eof = False
+        bad_source.read.side_effect = [Frame(100, None, 0), Frame(101, f.image, 1), OSError("decoder broke")]
+    
+        def open_source(config):
+            if config["camera_id"] == bad:
+                if method == "startup":
+                    raise OSError("capture init failed")
+                if method == "malformed-frame":
+                    return bad_source
+                if method == "decode":
+                    good = original(config)
+                    bad_source.read.side_effect = [good.read(), OSError("decoder broke")]
+                    bad_source.stop.side_effect = good.stop
+                    return bad_source
+            return original(config)
+    
+        factory = multicam.Pipeline
+        def make_pipeline(config, *args, **kwargs):
+            pipe = factory(config, *args, **kwargs)
+            if method == "tracker" and config["camera_id"] == bad:
+                pipe.tracker.update = Mock(side_effect=RuntimeError("tracker failed"))
+            return pipe
+    
+        monkeypatch.setattr(multicam, "open_source", open_source)
+        monkeypatch.setattr(multicam, "Pipeline", make_pipeline)
+        run_multi_camera(cfg, f.detector, no_publisher=True)
+>       result = json.loads(f.report.read_text())
+                            ^^^^^^^^^^^^^^^^^^^^
+
+tests/fault_injection/test_faults.py:301: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1027: in read_text
+    with self.open(mode='r', encoding=encoding, errors=errors) as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+self = PosixPath('/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth0/570f3b352c194585b2e3b1ac1a9a6b61.json')
+mode = 'r', buffering = -1, encoding = 'locale', errors = None, newline = None
+
+    def open(self, mode='r', buffering=-1, encoding=None,
+             errors=None, newline=None):
+        """
+        Open the file pointed to by this path and return a file object, as
+        the built-in open() function does.
+        """
+        if "b" not in mode:
+            encoding = io.text_encoding(encoding)
+>       return io.open(self, mode, buffering, encoding, errors, newline)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth0/570f3b352c194585b2e3b1ac1a9a6b61.json'
+
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py:1013: FileNotFoundError
+------------------------------ Captured log call -------------------------------
+ERROR    multicam:multicam.py:1003 camera=fccd5beedd36494392f507a603ee6952 frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 993, in run_multi_camera
+    rt.dropped_frames + int(
+                        ^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'Mock'
+ERROR    multicam:errors.py:33 {"code": "VIDEO_FRAME_READ_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "read", "category": "decode", "message": "Camera source could not supply its next frame.", "recoverable": true, "result": "partial", "action": "Stopped scheduling this camera.", "severity": "ERROR", "context": {"camera_id": "fccd5beedd36494392f507a603ee6952", "last_frame_id": 0}, "timestamp": "2026-11-19T17:45:29.403115+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 744, in run_multi_camera
+    frame = rt.source.read(rt.last_idx, timeout=0.0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1202, in _execute_mock_call
+    raise result
+OSError: decoder broke
+ERROR    multicam:errors.py:33 {"code": "REPORT_GENERATION_FAILED", "module": "REPORTING", "component": "multicamera report", "operation": "write", "category": "output", "message": "The final report could not be generated.", "recoverable": true, "result": "partial", "action": "Kept processed events and any independent outputs.", "severity": "ERROR", "context": {}, "timestamp": "2026-11-19T17:45:29.413127+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 1081, in run_multi_camera
+    report = build_final_report(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/reporting/report.py", line 669, in build_final_report
+    "dropped_frames": rt.dropped_frames + int(getattr(rt.source, "dropped_frames", 0)),
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'Mock'
+___________ test_camera_failure_leaves_other_camera_processing[M04] ____________
+
+fixture = namespace(cfg={'camera_id': '530b848b3459468e84922dd998571476', 'source': '/tmp/pytest-of-agent/pytest-24/test_camera_...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth3/a29054503d434416a7f11791c4bc70fe.json'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcf6f02be30>
+caplog = <_pytest.logging.LogCaptureFixture object at 0x7fcf6f02b230>
+method = 'malformed-frame'
+
+    @pytest.mark.parametrize("method", ["decode", "startup", "geometry", "malformed-frame", "tracker"],
+                             ids=["M01", "M02", "M03", "M04", "M05"])
+    def test_camera_failure_leaves_other_camera_processing(fixture, monkeypatch, caplog, method):
+        from s1.multicam import multicam
+        f = fixture
+        write_clip(f)
+        bad = key()
+        other = camera(f, camera_id=bad)
+        if method == "geometry":
+            other["geometry_file"] += ".missing"
+        cfg = {**f.cfg, "cameras": [other, camera(f)]}
+        original = multicam.open_source
+        bad_source = Mock()
+        bad_source.eof = False
+        bad_source.read.side_effect = [Frame(100, None, 0), Frame(101, f.image, 1), OSError("decoder broke")]
+    
+        def open_source(config):
+            if config["camera_id"] == bad:
+                if method == "startup":
+                    raise OSError("capture init failed")
+                if method == "malformed-frame":
+                    return bad_source
+                if method == "decode":
+                    good = original(config)
+                    bad_source.read.side_effect = [good.read(), OSError("decoder broke")]
+                    bad_source.stop.side_effect = good.stop
+                    return bad_source
+            return original(config)
+    
+        factory = multicam.Pipeline
+        def make_pipeline(config, *args, **kwargs):
+            pipe = factory(config, *args, **kwargs)
+            if method == "tracker" and config["camera_id"] == bad:
+                pipe.tracker.update = Mock(side_effect=RuntimeError("tracker failed"))
+            return pipe
+    
+        monkeypatch.setattr(multicam, "open_source", open_source)
+        monkeypatch.setattr(multicam, "Pipeline", make_pipeline)
+>       run_multi_camera(cfg, f.detector, no_publisher=True)
+
+tests/fault_injection/test_faults.py:300: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+cfg = {'camera_id': '530b848b3459468e84922dd998571476', 'source': '/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth3/725de43727274537a4c3715ac581a268.mp4', 'replay': 'sync', 'replay_start_time': None, ...}
+detector = <Mock id='140528897403856'>, show = False, no_publisher = True
+cancel_event = <threading.Event at 0x7fcf6f02b260: unset>, frame_sink = None
+
+    def run_multi_camera(cfg, detector, show=False, no_publisher=False, cancel_event=None, frame_sink=None):
+        """Run all configured cameras through a shared detector and fair scheduler."""
+        cancel_event = cancel_event or threading.Event()
+        configs = camera_configs(cfg)
+        inference_cfg = cfg.get("inference", {})
+    
+        # Deterministic file replay (see s1/determinism.py). "auto" turns it on only
+        # when every source is a recorded file; live cameras are never affected.
+        det = resolve_deterministic(cfg, configs)
+        log.info("DETERMINISM enabled=%s reason=%s timestamp_source=%s seed=%d",
+                 det.enabled, det.reason, det.timestamp_source, det.seed)
+        if det.enabled:
+            seed_everything(det.seed)
+            for camera_cfg in configs:
+                camera_cfg["deterministic"] = True
+                camera_cfg["replay"] = "sync"          # read EVERY frame, in order
+                if (det.timestamp_source == "laptop" and is_file_source(camera_cfg["source"])
+                        and camera_cfg.get("replay_start_time") is None):
+                    # One laptop-clock instant shared by all cameras: absolute IST
+                    # = laptop start + video offset, so the same video always gives
+                    # the same relative timeline and cameras stay mutually aligned.
+                    camera_cfg["replay_start_time"] = det.run_start_epoch
+        cam_order = {c["camera_id"]: i for i, c in enumerate(configs)}
+    
+        def _clock(frame):
+            """Scheduler clock: video time when deterministic, else monotonic."""
+            return float(frame.ts) if det.enabled else time.monotonic()
+        max_frame_age_ms = float(inference_cfg.get("max_frame_age_ms", 1500))
+        fairness_s = float(inference_cfg.get("max_camera_wait_ms", 750)) / 1000.0
+        poll_s = max(0.002, float(inference_cfg.get("scheduler_poll_ms", 5)) / 1000.0)
+        activity_threshold = float(inference_cfg.get("activity_threshold", 0.025))
+        startup_wait_s = float(inference_cfg.get("camera_startup_wait_s", 10.0))
+        roi_cfg = inference_cfg.get("motion_roi", {}) or {}
+        roi_enabled = bool(roi_cfg.get("enabled", True))
+        min_blob_px = int(roi_cfg.get("min_blob_px", 6))
+    
+        runtimes = {}
+        failed_cameras = set()
+        processing_failures = 0
+        recorder = None
+        out_path = None
+        transfers_reported = 0
+        plate_engine_error = False
+        batch_stats = {"calls": 0, "frames": 0, "max_size": 0, "sizes": {}}
+    
+        # One shared OSNet/ReID registry across every camera pipeline. Local
+        # ByteTrack instances remain independent; only identity association is shared.
+        from pathlib import Path
+        reid_cfg = cfg.get("global_reid", {})
+        reid_model = Path(__file__).resolve().parents[2] / "models" / reid_cfg.get(
+            "model_name", "osnet_ain_x1_0_vehicle_reid.onnx"
+        )
+        arbiter = GpuArbiter()
+        handoff = HandoffCoordinator.from_cfg(cfg) if cfg.get("handoff", {}).get("enabled", True) else None
+    
+        # ReID backend: OSNet if the ONNX file exists, else a colour-histogram
+        # fallback (clearly labelled in the report) so the pipeline still runs end to
+        # end instead of crashing. reid.enabled=false turns cross-camera ID off.
+        from s1.global_identity import GlobalIdentityRegistry
+        reid_info = {"backend": "disabled", "model": None, "threshold": None}
+        embedder = None
+        threshold = float(reid_cfg.get("similarity_threshold", 0.75))
+        aux_dev, shares = resolve_aux_device(
+            getattr(detector, "device", "cpu"), cfg.get("gpu", {}).get("aux_device", "auto")
+        )
+        if reid_cfg.get("enabled", True):
+            if reid_model.exists():
+                from s1.reid import OSNetEmbedder
+                embedder = OSNetEmbedder(str(reid_model), device=aux_dev)
+                reid_info = {"backend": "osnet", "model": str(reid_model), "threshold": threshold}
+            else:
+                from s1.reid import HistogramEmbedder
+                embedder = HistogramEmbedder()
+                threshold = float(reid_cfg.get("fallback_similarity_threshold", 0.93))
+                shares = False
+                reid_info = {"backend": "histogram_fallback", "model": None, "threshold": threshold}
+                log.warning(
+                    "OSNet model not found at %s -> using colour-histogram ReID fallback "
+                    "(weak: cannot separate same-colour cars). Put the .onnx in models/ for real ReID.",
+                    reid_model,
+                )
+        log.info("REID backend=%s device=%s shares_with_yolo=%s", reid_info["backend"], aux_dev, shares)
+        if embedder is not None:
+            identity_registry = GlobalIdentityRegistry(
+                threshold=threshold,
+                update_rate=float(reid_cfg.get("update_rate", 0.15)),
+            )
+    
+            # Reserve every global ID recorded during ENTRY.
+            restore_identity_cfg = cfg.get("exit_restore", {}) or {}
+            entry_report_for_ids = restore_identity_cfg.get("entry_report_path")
+    
+            if restore_identity_cfg.get("enabled") and entry_report_for_ids:
+                report_path = Path(entry_report_for_ids)
+                if not report_path.is_absolute():
+                    report_path = Path.cwd() / report_path
+    
+                if report_path.is_file():
+                    import json
+                    with report_path.open("r", encoding="utf-8") as handle:
+                        entry_identity_report = json.load(handle)
+    
+                    reserved = []
+                    for vehicle_record in entry_identity_report.get("vehicles", []):
+                        values = (
+                            vehicle_record.get("global_ids")
+                            or vehicle_record.get("reid_ids")
+                            or []
+                        )
+                        if isinstance(values, str):
+                            values = [values]
+                        reserved.extend(values)
+    
+                        for key in ("global_id", "vehicle_id"):
+                            if vehicle_record.get(key):
+                                reserved.append(vehicle_record[key])
+    
+                    identity_registry.reserve_existing_ids(reserved)
+                    log.info(
+                        "Reserved %d ENTRY global IDs; next GID counter=%d",
+                        len(set(reserved)), identity_registry.counter
+                    )
+    
+            global_reid = AsyncGlobalReID(
+                embedder,
+                identity_registry,
+                handoff=handoff, arbiter=arbiter, shares_gpu_with_yolo=shares,
+                embedding_interval_s=float(reid_cfg.get("embedding_interval_s", 0.5)),
+                deterministic=det.enabled,
+            )
+        else:
+            handoff = None
+            global_reid = _NullReID()
+        try:
+            # Open every capture independently. One failed camera does not prevent
+            # other configured cameras from starting.
+            for camera_cfg in configs:
+                if cancel_event.is_set():
+                    return None
+                camera_cfg.setdefault(
+                    "frame_buffer_capacity",
+                    max(1, int(inference_cfg.get("frame_buffer_capacity", 3))),
+                )
+                cam = camera_cfg["camera_id"]
+                try:
+                    geometry = Geometry.load(camera_cfg["geometry_file"])
+                    validate_geometry_for_camera(camera_cfg, geometry)
+                except Exception:
+                    Diagnostic(
+                        "SLOT_GEOMETRY_INVALID", "SLOT_GEOMETRY", "camera geometry",
+                        "load and validate", "validation", "Camera geometry could not be loaded.",
+                        True, "missing", "Skipped this camera.",
+                        context={"camera_id": cam, "file": camera_cfg["geometry_file"]},
+                    ).log(log, exc_info=True)
+                    failed_cameras.add(cam)
+                    continue
+                try:
+                    source = open_source(camera_cfg)
+                    runtimes[cam] = CameraRuntime(camera_cfg, source, geometry)
+                    source_label = "RTSP" if str(camera_cfg["source"]).lower().startswith(("rtsp://", "rtsps://")) else "file/device"
+                    log.info("camera %s capture started (%s source)", cam, source_label)
+                except Exception:
+                    Diagnostic(
+                        "VIDEO_SOURCE_OPEN_FAILED", "VIDEO_PROCESSING", "capture", "open",
+                        "availability", "Camera source could not be opened.", True,
+                        "missing", "Skipped this camera.", context={"camera_id": cam},
+                    ).log(log, exc_info=True)
+                    failed_cameras.add(cam)
+    
+            if cancel_event.is_set():
+                return None
+            if not runtimes:
+                raise RuntimeError("No configured cameras could be initialized")
+    
+            # Start each camera's own pipeline after its first frame arrives.
+            deadline = time.monotonic() + startup_wait_s
+            while (not cancel_event.is_set() and time.monotonic() < deadline
+                   and any(rt.pipeline is None and cam not in failed_cameras for cam, rt in runtimes.items())):
+                for cam, rt in runtimes.items():
+                    if cancel_event.is_set():
+                        break
+                    if rt.pipeline is not None or cam in failed_cameras:
+                        continue
+                    try:
+                        frame = rt.source.read(-1, timeout=0.001)
+                    except Exception:
+                        log.exception("VIDEO_FRAME_READ_FAILED camera=%s during startup", cam)
+                        failed_cameras.add(cam)
+                        continue
+                    if frame is None:
+                        if getattr(rt.source, "eof", False):
+                            log.error("VIDEO_FIRST_FRAME_UNAVAILABLE camera=%s", cam)
+                            failed_cameras.add(cam)
+                        continue
+                    rt.first_frame = frame
+                    rt.last_idx = frame.idx
+                    rt.last_scheduled_monotonic = time.monotonic()
+>                   h, w = frame.image.shape[:2]
+                           ^^^^^^^^^^^^^^^^^
+E                   AttributeError: 'NoneType' object has no attribute 'shape'
+
+s1/multicam/multicam.py:573: AttributeError
+------------------------------ Captured log call -------------------------------
+ERROR    multicam:errors.py:33 {"code": "REPORT_GENERATION_FAILED", "module": "REPORTING", "component": "multicamera report", "operation": "write", "category": "output", "message": "The final report could not be generated.", "recoverable": true, "result": "partial", "action": "Kept processed events and any independent outputs.", "severity": "ERROR", "context": {}, "timestamp": "2026-11-19T17:45:29.485044+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 573, in run_multi_camera
+    h, w = frame.image.shape[:2]
+           ^^^^^^^^^^^^^^^^^
+AttributeError: 'NoneType' object has no attribute 'shape'
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 1081, in run_multi_camera
+    report = build_final_report(
+             ^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/reporting/report.py", line 669, in build_final_report
+    "dropped_frames": rt.dropped_frames + int(getattr(rt.source, "dropped_frames", 0)),
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+TypeError: int() argument must be a string, a bytes-like object or a real number, not 'Mock'
+__________ test_non_cancelled_job_cannot_succeed_after_report_failure __________
+
+fixture = namespace(cfg={'camera_id': '9df96d080d4040709541e59f31d305b4', 'source': '/tmp/pytest-of-agent/pytest-24/test_non_can...port=PosixPath('/tmp/pytest-of-agent/pytest-24/test_non_cancelled_job_cannot_0/7b3e043c955044849f6b0764233c653c.json'))
+monkeypatch = <_pytest.monkeypatch.MonkeyPatch object at 0x7fcf6f0dc320>
+
+    def test_non_cancelled_job_cannot_succeed_after_report_failure(fixture, monkeypatch):
+        f = fixture
+        write_clip(f)
+        unavailable = f.report.parent / key()
+        unavailable.write_text("directory obstruction")
+        cfg = {**f.cfg, "cameras": [camera(f)], "report": {"path": str(unavailable / f.report.name)}}
+>       with pytest.raises(ProcessingError, match="REPORT_GENERATION_FAILED"):
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E       Failed: DID NOT RAISE ProcessingError
+
+tests/fault_injection/test_faults.py:334: Failed
+------------------------------ Captured log call -------------------------------
+ERROR    multicam:errors.py:33 {"code": "REPORT_GENERATION_FAILED", "module": "REPORTING", "component": "multicamera report", "operation": "write", "category": "output", "message": "The final report could not be generated.", "recoverable": true, "result": "partial", "action": "Kept processed events and any independent outputs.", "severity": "ERROR", "context": {}, "timestamp": "2026-11-19T17:45:29.557166+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 1096, in run_multi_camera
+    write_report(report, report_path)
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/reporting/report.py", line 920, in write_report
+    os.makedirs(d, exist_ok=True)
+  File "<frozen os>", line 225, in makedirs
+FileExistsError: [Errno 17] File exists: '/tmp/pytest-of-agent/pytest-24/test_non_cancelled_job_cannot_0/65d6c75574b44bb0ae4a6013deb10da8'
+- generated xml file: /workspace/work/evidence/smart_parking_s1_complete/reports/final_verification/raw/fault-before.xml -
+=========================== short test summary info ============================
+FAILED tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D01] - AssertionError: assert not True
+ +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770>.last_frame_ok
+ +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770> = namespace(cfg={'camera_id': '9f213fa2fbf844898a13f1fe722ebba6', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/7e4abedc94054ba388b47bfee583ed75.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/02e4e6671ac14aa2ba2400097216ac31.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': 'aa44328767184056b4e2f6bc14e46288', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/2d4486db7f104860b1fe58ef88427603.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '207dfc3e25b24789a1a13ed53f521e0d', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529493192208'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcfb8de0770>, publisher=<s1.main.MemoryPublisher object at 0x7fcf92945910>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/7e4abedc94054ba388b47bfee583ed75.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/02e4e6671ac14aa2ba2400097216ac31.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer0/2d4486db7f104860b1fe58ef88427603.json')).pipe
+FAILED tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D02] - AssertionError: assert not True
+ +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20>.last_frame_ok
+ +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20> = namespace(cfg={'camera_id': '3b8331dfe92341f5801e1feeed068180', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/3d66d86c70684c798e4126ff4be2bc81.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/ba6216c702f44bad9e3f111fb78931de.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': '7d835bc8d3be45139796e4b1d013e092', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/1c46c2d4003f488a915b1e917ae43409.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '2952a4a1f3544896ba583b80f9ead8b9', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529494149888'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90d8ea20>, publisher=<s1.main.MemoryPublisher object at 0x7fcf90d8e780>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/3d66d86c70684c798e4126ff4be2bc81.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/ba6216c702f44bad9e3f111fb78931de.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer1/1c46c2d4003f488a915b1e917ae43409.json')).pipe
+FAILED tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D03] - AssertionError: assert not True
+ +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0>.last_frame_ok
+ +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0> = namespace(cfg={'camera_id': '0f73569b21d64deaa044d235c1d21170', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/503d3af958c04aafb7661732c415019b.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/dcb41e8d994f4537a18b03ceea540214.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': '3f6162003ca840578188908cf48c65e9', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/51c282631da94832a16b0d56ea5f279c.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '81b0f8eb58074252b6c11331075a34a2', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529462766256'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b569c0>, publisher=<s1.main.MemoryPublisher object at 0x7fcf911bba10>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/503d3af958c04aafb7661732c415019b.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/dcb41e8d994f4537a18b03ceea540214.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer2/51c282631da94832a16b0d56ea5f279c.json')).pipe
+FAILED tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D04] - AssertionError: assert not True
+ +  where True = <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0>.last_frame_ok
+ +    where <s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0> = namespace(cfg={'camera_id': 'c5a2310176d54bbdb5a1530e1f07020a', 'source': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/066014825966481c965cafa58a4c138e.mp4', 'replay': 'sync', 'replay_start_time': None, 'geometry_file': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/d2be8d9a555d426ca71545589f67a222.json', 'detector': {'model_path': 'models/yolox_nano.onnx', 'input_size': 416, 'score_thr': 0.15, 'nms_thr': 0.45, 'classes': {2: 'car', 3: 'motorcycle', 5: 'bus', 7: 'truck'}, 'max_fps': 10, 'threads': 2}, 'tracker': {'high_thr': 0.45, 'low_thr': 0.15, 'match_iou': 0.25, 'low_match_iou': 0.15, 'max_age_s': 2.0, 'min_hits': 2}, 'gate': {'margin_px': 12, 'size_samples': 3, 'min_size_change': 0.15}, 'color': {'interval_s': 1.0, 'max_samples': 8, 'min_box_h': 60}, 'plate': {'enabled': False, 'min_vehicle_height_px': 100, 'interval_s': 0.3, 'detector_model': 'yolo-v9-t-384-license-plate-end2end', 'ocr_model': 'cct-xs-v2-global-model', 'min_ocr_conf': 0.5, 'confirm_reads': 3, 'confirm_conf': 0.75, 'max_attempts': 40, 'emit_deadline_s': 3.0, 'min_crop_brightness': 8.0, 'max_crop_brightness': 247.0, 'min_crop_contrast': 5.0, 'min_crop_laplacian_var': 2.0, 'min_plate_detector_conf': 0.3, 'min_plate_width_px': 24, 'min_plate_height_px': 8, 'min_plate_aspect_ratio': 1.5, 'max_plate_aspect_ratio': 7.0}, 'parking': {'footprint_frac': 0.25, 'min_overlap': 0.18, 'leave_overlap': 0.3, 'park_dwell_s': 4.0, 'leave_dwell_s': 3.0, 'still_frac': 0.12, 'moved_frac': 0.35, 'gone_frac': 1.0, 'lost_grace_s': 30.0, 'baseline_window_s': 2.0, 'candidate_gap_grace_s': 0.6, 'candidate_switch_confirm_s': 0.6, 'publish_exit': False}, 'publisher': {'s2_url': 'https://smart-parking-data-service.onrender.com/internal/events/vehicle', 'outbox_db': 'data/outbox.db', 'snapshot_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/snapshots'}, 'inference': {'frame_buffer_capacity': 3, 'max_frame_age_ms': 1500, 'max_camera_wait_ms': 750, 'scheduler_poll_ms': 5, 'activity_threshold': 0.025, 'camera_startup_wait_s': 0.4, 'motion_gate': {'enabled': False, 'on_threshold': 0.025, 'off_ratio': 0.5, 'hold_s': 3.0, 'wake_frames': 1, 'idle_track_heartbeat_s': 0.5, 'idle_empty_heartbeat_s': 3.0}}, 'gpu': {'aux_device': 'auto'}, 'demo_video': {'enabled': False, 'path': 'data/demo_multicam.mp4', 'fps': 10, 'tile_height': 720}, 'handoff': {'enabled': True, 'entry_wait_s': 4.0, 'exit_wait_s': 8.0, 'transfer_window_s': 30.0}, 'parking_area_id': 'e432e1e98d4a448a86f9802b057020ea', 'global_reid': {'enabled': False}, 'camera_motion': {'enabled': False}, 'exit_restore': {'preview_db_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3'}, 'report': {'path': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/12728ca0baee45548b060a68e5f75dad.json', 'plate_evidence_dir': '/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/evidence'}}, geometry={'frame_size': [96, 64], 'tripwire': [[0, 21], [95, 21]], 'inside_point': [48, 62], 'slots': [{'slot_id': '80125ae910eb4b448014593935b31c68', 'polygon': [[8, 26], [68, 26], [68, 58], [8, 58]]}]}, image=array([[[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       ...,\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]],\n\n       [[90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90],\n        ...,\n        [90, 90, 90],\n        [90, 90, 90],\n        [90, 90, 90]]], shape=(64, 96, 3), dtype=uint8), detector=<Mock id='140529462769616'>, pipe=<s1.integration.vehicle_parking_bridge.Pipeline object at 0x7fcf90b575c0>, publisher=<s1.main.MemoryPublisher object at 0x7fcfae1181d0>, source=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/066014825966481c965cafa58a4c138e.mp4'), location=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/d2be8d9a555d426ca71545589f67a222.json'), report=PosixPath('/tmp/pytest-of-agent/pytest-24/test_invalid_frames_skip_infer3/12728ca0baee45548b060a68e5f75dad.json')).pipe
+FAILED tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T01] - TypeError: 'Mock' object is not iterable
+FAILED tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T02] - TypeError: 'Mock' object is not iterable
+FAILED tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G01] - Failed: DID NOT RAISE ValueError
+FAILED tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G02] - Failed: DID NOT RAISE ValueError
+FAILED tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G03] - Failed: DID NOT RAISE ValueError
+FAILED tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M01] - FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-of-agent/pytest-24/test_camera_failure_leaves_oth0/570f3b352c194585b2e3b1ac1a9a6b61.json'
+FAILED tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M04] - AttributeError: 'NoneType' object has no attribute 'shape'
+FAILED tests/fault_injection/test_faults.py::test_non_cancelled_job_cannot_succeed_after_report_failure - Failed: DID NOT RAISE ProcessingError
+======================== 12 failed, 20 passed in 9.40s =========================

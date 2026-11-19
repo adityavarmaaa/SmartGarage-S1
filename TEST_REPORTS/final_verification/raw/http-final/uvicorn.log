@@ -1,0 +1,480 @@
+INFO:     Started server process [5768]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on socket ('127.0.0.1', 44797) (Press CTRL+C to quit)
+INFO:     127.0.0.1:51592 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET / HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /redoc HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /docs/oauth2-redirect HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /api/video/uploaded HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "GET /api/frames/latest HTTP/1.1" 501 Not Implemented
+INFO:     127.0.0.1:51592 - "GET /api/output/stream HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51592 - "HEAD /api/output/stream HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51592 - "POST /api/live/stop HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51592 - "POST /api/live/start HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51592 - "POST /api/live/start HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51592 - "POST /api/live/start HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51592 - "POST /api/live/start HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51592 - "GET /missing-0d3bad0af1664f138a8fc00c34e99f33 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51592 - "PUT /health HTTP/1.1" 405 Method Not Allowed
+INFO:     127.0.0.1:51592 - "POST /api/upload HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51592 - "POST /api/upload HTTP/1.1" 415 Unsupported Media Type
+INFO:     127.0.0.1:51592 - "POST /api/upload HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51592 - "POST /api/upload HTTP/1.1" 413 Request Entity Too Large
+2026-11-19 17:50:47,162 ERROR s1.api: API_STORAGE_FAILED while saving upload
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 438, in save_and_start
+    UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1311, in mkdir
+    os.mkdir(self, mode)
+FileExistsError: [Errno 17] File exists: '/tmp/tmp6icfks32/uploads'
+INFO:     127.0.0.1:51592 - "POST /api/upload HTTP/1.1" 500 Internal Server Error
+2026-11-19 17:50:47,209 ERROR s1.api: API_INTERNAL method=GET route=/api/video/uploaded
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 1281, in handle
+    await super().handle(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/routing.py", line 280, in handle
+    await self.app(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 506, in uploaded_videos
+    for path in sorted(UPLOAD_DIR.iterdir()):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: '/tmp/tmp6icfks32/uploads'
+INFO:     127.0.0.1:51592 - "GET /api/video/uploaded HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/uvicorn/protocols/http/h11_impl.py", line 416, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/uvicorn/middleware/proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/applications.py", line 96, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/middleware/errors.py", line 186, in __call__
+    raise exc
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/middleware/errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/middleware/exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/middleware/asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/routing.py", line 670, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 2734, in app
+    await route.handle(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 1281, in handle
+    await super().handle(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/routing.py", line 280, in handle
+    await self.app(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 158, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 144, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 706, in app
+    raw_response = await run_endpoint_function(
+                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/fastapi/routing.py", line 354, in run_endpoint_function
+    return await run_in_threadpool(dependant.call, **values)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/starlette/concurrency.py", line 34, in run_in_threadpool
+    return await anyio.to_thread.run_sync(func)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/to_thread.py", line 65, in run_sync
+    return await get_async_backend().run_sync_in_worker_thread(
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 2641, in run_sync_in_worker_thread
+    return await future
+           ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/site-packages/anyio/_backends/_asyncio.py", line 1033, in run
+    result = context.run(func, *args)
+             ^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 506, in uploaded_videos
+    for path in sorted(UPLOAD_DIR.iterdir()):
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/pathlib.py", line 1056, in iterdir
+    for name in os.listdir(self):
+                ^^^^^^^^^^^^^^^^
+NotADirectoryError: [Errno 20] Not a directory: '/tmp/tmp6icfks32/uploads'
+INFO:     127.0.0.1:51594 - "GET /api/video/uploaded HTTP/1.1" 200 OK
+2026-11-19 17:50:47,223 INFO s1.api: Starting job=817829a1243f4b798b6aa3d3251dfe34 replay=realtime plates=False
+2026-11-19 17:50:47,223 ERROR s1.api: {"code": "CONFIG_VALIDATION_FAILED", "module": "CONFIGURATION", "component": "processing worker", "operation": "execute", "category": "processing", "message": "Job configuration could not be loaded.", "recoverable": false, "result": "failed", "action": "Released the worker slot.", "severity": "ERROR", "context": {"job_id": "817829a1243f4b798b6aa3d3251dfe34"}, "timestamp": "2026-11-19T17:50:47.223923+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/common/config.py", line 129, in load_config
+    raise ValueError("detector.max_fps must be a finite positive number")
+ValueError: detector.max_fps must be a finite positive number
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 301, in _worker_run
+    cfg = _make_job_config(source, replay, no_plates)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 273, in _make_job_config
+    cfg = load_config(str(CONFIG_PATH))
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/common/config.py", line 134, in load_config
+    raise ConfigurationError(Diagnostic(
+s1.common.errors.ConfigurationError: CONFIG_VALIDATION_FAILED: Configuration could not be loaded: detector.max_fps must be a finite positive number
+INFO:     127.0.0.1:51594 - "POST /api/live/start HTTP/1.1" 202 Accepted
+2026-11-19 17:50:47,225 INFO s1.api: [JOB 817829a1243f4b798b6aa3d3251dfe34] Worker stopped; state=error
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+2026-11-19 17:50:47,317 INFO s1.api: Starting job=b8a72a82088c4afab0e235526d6d32c0 replay=sync plates=False
+INFO:     127.0.0.1:51594 - "POST /api/upload?replay=sync&no_plates=true HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+Creating new Ultralytics Settings v0.0.8 file ✅ 
+View Ultralytics Settings with 'yolo settings' or at '/tmp/tmp6icfks32/yolo/Ultralytics/settings.json'
+Update Settings with 'yolo settings key=value', i.e. 'yolo settings runs_dir=path/to/dir'. For help see https://docs.ultralytics.com/usage/settings
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+2026-11-19 17:50:54,042 INFO multicam: DETERMINISM enabled=True reason=auto_on_all_sources_are_files timestamp_source=laptop seed=1234
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+2026-11-19 17:50:55,648 INFO determinism: DETERMINISM seed=1234 pinned=python.random,numpy,cv2,torch+cudnn
+2026-11-19 17:50:55,649 INFO multicam: REID backend=disabled device=cpu shares_with_yolo=False
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+[mov,mp4,m4a,3gp,3g2,mj2 @ 0x7fb2bb23f740] moov atom not found
+2026-11-19 17:50:55,651 ERROR multicam: {"code": "VIDEO_SOURCE_OPEN_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "open", "category": "availability", "message": "Camera source could not be opened.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "e4b7d215b10a4430ad4f3957235c50c4"}, "timestamp": "2026-11-19T17:50:55.651186+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 535, in run_multi_camera
+    source = open_source(camera_cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/video/grabber.py", line 756, in open_source
+    return SequentialFileSource(src, start).start()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/video/grabber.py", line 707, in start
+    raise ProcessingError(Diagnostic(
+s1.common.errors.ProcessingError: VIDEO_SOURCE_OPEN_FAILED: Could not open the input video.
+2026-11-19 17:50:55,657 INFO plate_evidence: PLATE_EVIDENCE encrypted=0 dir=/tmp/tmp6icfks32/evidence
+2026-11-19 17:50:55,659 ERROR s1.api: {"code": "MULTICAMERA_NO_CAMERAS_INITIALIZED", "module": "MULTICAMERA", "component": "processing worker", "operation": "execute", "category": "processing", "message": "Processing could not complete. Consult the job's internal logs.", "recoverable": false, "result": "failed", "action": "Released the worker slot.", "severity": "ERROR", "context": {"job_id": "b8a72a82088c4afab0e235526d6d32c0"}, "timestamp": "2026-11-19T17:50:55.659176+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/api.py", line 311, in _worker_run
+    result = run(cfg, show=False, no_publisher=not PUBLISH_ENABLED, cancel_event=cancel_event,
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/main.py", line 89, in run
+    return run_multi_camera(cfg, detector, show=show, no_publisher=no_publisher,
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/evidence/smart_parking_s1_complete/s1/multicam/multicam.py", line 550, in run_multi_camera
+    raise ProcessingError(Diagnostic(
+s1.common.errors.ProcessingError: MULTICAMERA_NO_CAMERAS_INITIALIZED: No configured cameras could be initialized.
+2026-11-19 17:50:55,696 INFO s1.api: [JOB b8a72a82088c4afab0e235526d6d32c0] Worker stopped; state=error
+JSON report saved: /tmp/tmp6icfks32/report.json
+
+==============================================================================
+SMART PARKING - FINAL MULTI-CAMERA REPORT
+==============================================================================
+ReID: disabled | Plate engine: OFF | YOLO batches: 0 (max size 0)
+
+Vehicles:
+  none confirmed
+\nEXIT VEHICLE DETAILS (actual EXIT lifecycle events):
+  No EXIT vehicle records with a track ID or vehicle UID.
+\nALL SLOT DETAILS (current occupancy + vehicle history):
+  Total=0 | Occupied=0 | Free=0 | With departed history=0
+
+Service 2 payloads: 0 ENTRY, 0 EXIT | PARK_END: 0 | camera transfers: 0
+Validation: local_tracking=NO_TRACKS, vehicle_records=NO_VEHICLES, cross_camera_reidentification=NOT_DEMONSTRATED, plate_detection_ocr=NO_PLATE_READS, vehicle_attributes=NO_ATTRIBUTES, multi_camera_processing=PARTIAL, camera_scale_validation=NOT_TESTED_10_20_30_CAMERA_LOAD, slot_integrity=PASS, vehicle_slot_consistency=PASS, confirmed_plate_integrity=PASS, service2_entry_emitted=NONE, service2_exit_emitted=NOT_DEMONSTRATED, lifecycle_park_start=NOT_DEMONSTRATED, lifecycle_park_end=NOT_DEMONSTRATED, lifecycle_exit=NOT_DEMONSTRATED
+==============================================================================
+
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+2026-11-19 17:50:55,755 INFO s1.api: Starting job=9d1a93c7446a48c88e45ef9042f41cf2 replay=sync plates=False
+INFO:     127.0.0.1:51594 - "POST /api/upload?replay=sync&no_plates=true HTTP/1.1" 202 Accepted
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "POST /api/live/start HTTP/1.1" 409 Conflict
+INFO:     127.0.0.1:51594 - "GET /api/output/stream HTTP/1.1" 409 Conflict
+2026-11-19 17:50:55,923 INFO multicam: DETERMINISM enabled=True reason=auto_on_all_sources_are_files timestamp_source=laptop seed=1234
+2026-11-19 17:50:55,933 INFO determinism: DETERMINISM seed=1234 pinned=python.random,numpy,cv2,torch+cudnn
+2026-11-19 17:50:55,933 INFO multicam: REID backend=disabled device=cpu shares_with_yolo=False
+2026-11-19 17:50:55,935 INFO multicam: camera e4b7d215b10a4430ad4f3957235c50c4 capture started (file/device source)
+2026-11-19 17:50:55,953 INFO multicam: camera e4b7d215b10a4430ad4f3957235c50c4 motion_roi={'enabled': True, 'source': 'hull(slots+tripwire+inside_point)', 'area_frac': 0.5363}
+2026-11-19 17:50:55,959 INFO pipeline: Pending-event recovery loaded 0 event(s)
+2026-11-19 17:50:55,959 INFO multicam: camera e4b7d215b10a4430ad4f3957235c50c4 ready: 320x240 slots=3
+2026-11-19 17:50:55,959 INFO multicam: DEMO_VIDEO recording to /tmp/tmp6icfks32/outputs/9d1a93c7446a48c88e45ef9042f41cf2.mp4
+INFO:     127.0.0.1:51594 - "GET /api/output/stream?live=invalid HTTP/1.1" 422 Unprocessable Entity
+INFO:     127.0.0.1:51594 - "GET /api/output/stream?live=true HTTP/1.1" 200 OK
+2026-11-19 17:50:56,746 INFO multicam: YOLO_BATCH size=1 elapsed_ms=743.0 avg_frame_ms=743.0
+2026-11-19 17:50:56,747 INFO multicam: CAMERA_METRICS camera=e4b7d215b10a4430ad4f3957235c50c4 seen=1 processed=1 dropped=0 frame_age_ms=80.1 infer_ms=743.0 activity=0.000 idle_skipped=0
+2026-11-19 17:50:56,804 INFO s1.api: API_CANCEL_REQUESTED job=9d1a93c7446a48c88e45ef9042f41cf2
+INFO:     127.0.0.1:41510 - "POST /api/live/stop HTTP/1.1" 200 OK
+2026-11-19 17:50:57,004 INFO multicam: YOLO_BATCH size=1 elapsed_ms=248.3 avg_frame_ms=248.3
+2026-11-19 17:50:57,004 INFO multicam: MULTICAMERA_CANCELLED finalizing processed frames and events
+2026-11-19 17:50:57,024 INFO plate_evidence: PLATE_EVIDENCE encrypted=0 dir=/tmp/tmp6icfks32/evidence
+2026-11-19 17:50:57,025 INFO s1.api: Finished job=9d1a93c7446a48c88e45ef9042f41cf2 cancellation_requested=True
+2026-11-19 17:50:57,025 INFO s1.api: [JOB 9d1a93c7446a48c88e45ef9042f41cf2] Worker stopped; state=cancelled
+DEMO VIDEO: /tmp/tmp6icfks32/outputs/9d1a93c7446a48c88e45ef9042f41cf2.mp4 (2 frames, 0 render errors)
+JSON report saved: /tmp/tmp6icfks32/report.json
+
+==============================================================================
+SMART PARKING - FINAL MULTI-CAMERA REPORT
+==============================================================================
+ReID: disabled | Plate engine: OFF | YOLO batches: 2 (max size 1)
+
+e4b7d215b10a4430ad4f3957235c50c4: seen=2 processed=2 dropped=0 idle_skipped=0 motion_roi=54% of frame
+  slots: 0 occupied / 3 free
+     B-01 | NO-PLATE     (UNKNOWN) | -        | FREE
+     B-02 | NO-PLATE     (UNKNOWN) | -        | FREE
+     B-03 | NO-PLATE     (UNKNOWN) | -        | FREE
+
+Vehicles:
+  none confirmed
+\nEXIT VEHICLE DETAILS (actual EXIT lifecycle events):
+  No EXIT vehicle records with a track ID or vehicle UID.
+\nALL SLOT DETAILS (current occupancy + vehicle history):
+  Total=3 | Occupied=0 | Free=3 | With departed history=0
+\n  B-01 | e4b7d215b10a4430ad4f3957235c50c4 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+\n  B-02 | e4b7d215b10a4430ad4f3957235c50c4 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+\n  B-03 | e4b7d215b10a4430ad4f3957235c50c4 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+
+Service 2 payloads: 0 ENTRY, 0 EXIT | PARK_END: 0 | camera transfers: 0
+Validation: local_tracking=NO_TRACKS, vehicle_records=NO_VEHICLES, cross_camera_reidentification=NOT_DEMONSTRATED, plate_detection_ocr=NO_PLATE_READS, vehicle_attributes=NO_ATTRIBUTES, multi_camera_processing=PARTIAL, camera_scale_validation=NOT_TESTED_10_20_30_CAMERA_LOAD, slot_integrity=PASS, vehicle_slot_consistency=PASS, confirmed_plate_integrity=PASS, service2_entry_emitted=NONE, service2_exit_emitted=NOT_DEMONSTRATED, lifecycle_park_start=NOT_DEMONSTRATED, lifecycle_park_end=NOT_DEMONSTRATED, lifecycle_exit=NOT_DEMONSTRATED
+==============================================================================
+
+INFO:     127.0.0.1:51594 - "GET /api/status HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "HEAD /api/output/stream HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/output/stream HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /api/output/stream HTTP/1.1" 206 Partial Content
+INFO:     127.0.0.1:51594 - "GET /api/output/stream HTTP/1.1" 416 Requested Range Not Satisfiable
+INFO:     127.0.0.1:51594 - "GET /api/output/stream HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:51594 - "GET /api/output/stream?live=true HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:51594 - "GET /api/video/uploaded HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51594 - "GET /health HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41524 - "GET /docs HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41524 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41524 - "GET /redoc HTTP/1.1" 200 OK
+INFO:     127.0.0.1:41524 - "GET /openapi.json HTTP/1.1" 200 OK
+INFO:     Shutting down
+INFO:     Waiting for application shutdown.
+INFO:     Application shutdown complete.
+INFO:     Finished server process [5768]

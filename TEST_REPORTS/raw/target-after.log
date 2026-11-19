@@ -1,0 +1,81 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.2.0, pluggy-1.7.0 -- /workspace/work/venv/bin/python
+rootdir: /workspace/work/production/smart_parking_s1_complete
+configfile: pyproject.toml
+collecting ... collected 13 items
+
+tests/production/test_production_lifecycle.py::test_semantic_park_start_retry_after_restart 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:398 ENTRY remembered without plate vehicle_uid=0c0aca2a087e41fda41676d20e5a247f timestamp=2026-01-01T00:00:00+00:00
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=0c0aca2a087e41fda41676d20e5a247f timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=af85d240570e4507bd2333b7abf45b32
+PASSED                                                                   [  7%]
+tests/production/test_production_lifecycle.py::test_retry_uses_first_id_after_outbox_failure 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=fd2145a2f7fd408abad90068dbf9d1d9 timestamp=2026-01-01T00:01:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+PASSED                                                                   [ 15%]
+tests/production/test_production_lifecycle.py::test_delayed_duplicate_entry_cannot_reopen_parked_session 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:398 ENTRY remembered without plate vehicle_uid=5356be761996481ca874408d566ab68a timestamp=2026-01-01T00:00:00+00:00
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=5356be761996481ca874408d566ab68a timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:387 LIFECYCLE_ENTRY_REPLAY vehicle_uid=5356be761996481ca874408d566ab68a
+INFO     s2_mapper:s2_mapper.py:669 S2 EXIT published vehicle_uid=5356be761996481ca874408d566ab68a timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00 received_at=2026-01-01T00:02:00+00:00 slot=b01b5b6e9e5d4b239740554ebd1c5a50
+WARNING  s2_mapper:s2_mapper.py:612 EXIT has no stored PARKED session vehicle_uid=5356be761996481ca874408d566ab68a slot=b01b5b6e9e5d4b239740554ebd1c5a50 event_id=182ddef1a4ae476d944ff272c0bf5d04
+INFO     s2_mapper:s2_mapper.py:744 Internal event not sent to Service 2: EXIT event_id=554e9af00a9f4ea59c0133e536bb217f
+PASSED                                                                   [ 23%]
+tests/production/test_production_lifecycle.py::test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:472 Lifecycle PARK_START remembered first_seen=2026-01-01T00:01:00+00:00 captured_at=2026-01-01T00:01:00+00:00 slot=4c8c606ac822487e8f5e268848fdd7ff
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=00a8a15e880e42eba77ac69db65f5766 timestamp=2026-01-01T00:01:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:472 Lifecycle PARK_START remembered first_seen=2026-01-01T00:02:00+00:00 captured_at=2026-01-01T00:02:00+00:00 slot=d538cb8957b44e6795a9e1713de023e5
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=533793b5aff941c19382b20b0aa4c2df timestamp=2026-01-01T00:02:00+00:00 captured_at=2026-01-01T00:02:00+00:00
+WARNING  s2_mapper:s2_mapper.py:600 LIFECYCLE_EXIT_ASSOCIATION_CONFLICT event_id=0ce0f3ff848f4686a5604e5921e3d798 vehicle_uid=00a8a15e880e42eba77ac69db65f5766
+PASSED                                                                   [ 30%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[ENTRY] PASSED [ 38%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_START] PASSED [ 46%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_END] PASSED [ 53%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[EXIT] PASSED [ 61%]
+tests/production/test_production_lifecycle.py::test_unconfirmed_ocr_never_reaches_downstream_payload 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=f48201b8938b48709784295e9159201a timestamp=2026-01-01T00:01:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+PASSED                                                                   [ 69%]
+tests/production/test_production_lifecycle.py::test_concurrent_start_retries_queue_once 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=c045edf0814d46d8b069f5043dcc31fb timestamp=2026-01-01T00:01:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+INFO     s2_mapper:s2_mapper.py:519 LIFECYCLE_PARK_START_REPLAY event_id=f3afec17c9d84ac69abaf59d7709d762
+PASSED                                                                   [ 76%]
+tests/production/test_production_lifecycle.py::test_trace_preserves_original_time_slot_and_uid 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:398 ENTRY remembered without plate vehicle_uid=ca2c9b3e6d3948c3aeb9cd81b5d3c66f timestamp=2026-01-01T00:00:00+00:00
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=ca2c9b3e6d3948c3aeb9cd81b5d3c66f timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:669 S2 EXIT published vehicle_uid=ca2c9b3e6d3948c3aeb9cd81b5d3c66f timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00 received_at=2026-01-01T00:02:00+00:00 slot=5160bf02cdf34ea0ba27b91489440a67
+INFO     s2_mapper:s2_mapper.py:744 Internal event not sent to Service 2: EXIT event_id=5fd8553b5d7346658ae89a36bd036b94
+PASSED                                                                   [ 84%]
+tests/production/test_production_lifecycle.py::test_stale_end_cannot_close_a_newer_parking_cycle 
+-------------------------------- live log call ---------------------------------
+INFO     s2_mapper:s2_mapper.py:398 ENTRY remembered without plate vehicle_uid=9197bd161d3f4f839e769ba096bd652b timestamp=2026-01-01T00:00:00+00:00
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=9197bd161d3f4f839e769ba096bd652b timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00
+INFO     s2_mapper:s2_mapper.py:669 S2 EXIT published vehicle_uid=9197bd161d3f4f839e769ba096bd652b timestamp=2026-01-01T00:00:00+00:00 captured_at=2026-01-01T00:01:00+00:00 received_at=2026-01-01T00:02:00+00:00 slot=e992f5c4f80d4dafae977f9a84463933
+INFO     s2_mapper:s2_mapper.py:398 ENTRY remembered without plate vehicle_uid=9197bd161d3f4f839e769ba096bd652b timestamp=2026-01-01T00:05:00+00:00
+INFO     s2_mapper:s2_mapper.py:563 S2 ENTRY published vehicle_uid=9197bd161d3f4f839e769ba096bd652b timestamp=2026-01-01T00:05:00+00:00 captured_at=2026-01-01T00:06:00+00:00
+WARNING  s2_mapper:s2_mapper.py:622 LIFECYCLE_EXIT_BEFORE_PARK_START event_id=a6774e2a490447669ff4a8bc20913027 vehicle_uid=9197bd161d3f4f839e769ba096bd652b
+PASSED                                                                   [ 92%]
+tests/production/test_production_parking.py::test_full_lot_does_not_assign_an_already_occupied_slot 
+-------------------------------- live log call ---------------------------------
+INFO     s1.logic:logic.py:565 SLOT_DIAG track=1 ts=100.00 bbox=(17,40,57,88) ground_ref=(37,88) contact=43facad25b5e46e7a932c190cf0b36ce top=[('43facad25b5e46e7a932c190cf0b36ce', 1.0), ('014811c6435046b1954ce7c97ff70a8f', 0.0)]
+INFO     s1.logic:logic.py:673 BASELINE_DIAG track=1 slot=43facad25b5e46e7a932c190cf0b36ce ts=100.000 first_ts=100.000 first_offset=0.000 stream_start=100.000 window=0.80 eligible=True contact=True overlap=1.000 stationary=0.00 votes=0 required=3
+INFO     s1.logic:logic.py:565 SLOT_DIAG track=2 ts=100.00 bbox=(107,40,147,88) ground_ref=(127,88) contact=014811c6435046b1954ce7c97ff70a8f top=[('014811c6435046b1954ce7c97ff70a8f', 1.0), ('43facad25b5e46e7a932c190cf0b36ce', 0.0)]
+INFO     s1.logic:logic.py:673 BASELINE_DIAG track=2 slot=014811c6435046b1954ce7c97ff70a8f ts=100.000 first_ts=100.000 first_offset=0.000 stream_start=100.000 window=0.80 eligible=True contact=True overlap=1.000 stationary=0.00 votes=0 required=3
+INFO     s1.logic:logic.py:852 BASELINE_OCCUPANT slot=43facad25b5e46e7a932c190cf0b36ce vehicle=33dc8eb80b294025a7499d8f48a85394 parked_at=100.000; ENTRY suppressed
+INFO     s1.logic:logic.py:852 BASELINE_OCCUPANT slot=014811c6435046b1954ce7c97ff70a8f vehicle=c2eb2cac32254866b9cefa83cd28dd63 parked_at=100.000; ENTRY suppressed
+INFO     s1.logic:logic.py:565 SLOT_DIAG track=3 ts=101.10 bbox=(17,40,57,88) ground_ref=(37,88) contact=None top=[('43facad25b5e46e7a932c190cf0b36ce', 1.0), ('014811c6435046b1954ce7c97ff70a8f', 0.0)]
+PASSED                                                                   [100%]
+
+- generated xml file: /workspace/work/production/smart_parking_s1_complete/reports/production_handover/raw/target.xml -
+============================== 13 passed in 0.67s ==============================

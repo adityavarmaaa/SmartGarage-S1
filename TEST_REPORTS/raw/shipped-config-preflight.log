@@ -1,0 +1,8 @@
+OK detector weights — yolo11n.pt
+FAIL CAM-01 source — Local input is missing
+OK CAM-01 geometry
+FAIL CAM-02 source — Local input is missing
+OK CAM-02 geometry
+OK Ultralytics import
+WARN ANPR dependency — Install fast-alpr for plate reads
+NOT READY

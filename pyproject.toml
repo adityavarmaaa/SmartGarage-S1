@@ -1,0 +1,30 @@
+[project]
+name = "smart-parking-s1"
+version = "0.1.0"
+description = "Smart Parking Service 1 vehicle, parking, and event pipeline."
+readme = "README.md"
+requires-python = ">=3.10"
+
+[tool.pytest.ini_options]
+norecursedirs = [
+    "scripts",
+    "IMG2138*",
+    "backup_before_lifecycle_determinism",
+    "identity_handoff_backup",
+    "final_run_backup",
+    "*.egg",
+    ".*",
+    "_darcs",
+    "build",
+    "CVS",
+    "dist",
+    "node_modules",
+    "{arch}",
+]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["s1", "s1.*"]

@@ -1,0 +1,16 @@
+usage: main.py [-h] [--config CONFIG] [--source SOURCE]
+               [--replay {realtime,sync}] [--show] [--no-plates]
+               [--no-publisher]
+
+Garage vision service (S1)
+
+options:
+  -h, --help            show this help message and exit
+  --config CONFIG
+  --source SOURCE       video file or rtsp:// URL (overrides config)
+  --replay {realtime,sync}
+                        file replay mode
+  --show                show debug window (SPACE starts/pauses/resumes; Q
+                        quits)
+  --no-plates           disable plate reading (speed test)
+  --no-publisher        disable Service 2 publishing for local video testing

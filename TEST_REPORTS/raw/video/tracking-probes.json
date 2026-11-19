@@ -1,0 +1,1250 @@
+[
+  {
+    "source": "data/IMG_2138_entry_annotated.mp4",
+    "source_sha256": "891a5c93204d91078b71298b99745631ff5130b02f372e58b8b39d8a799600fd",
+    "camera": "CAM-01",
+    "geometry": "data/geometry_img2138_4slots.json",
+    "sample_count": 24,
+    "total_detections": 48,
+    "peak_detections": 3,
+    "tracks": [
+      1,
+      2
+    ],
+    "reobserved_after_injection": [
+      1,
+      2
+    ],
+    "video": "tracking-probe-1.mp4",
+    "frames": [
+      {
+        "frame": 120,
+        "seconds": 10.0,
+        "detections": 1,
+        "confidence": [
+          0.2974
+        ],
+        "boxes": [
+          [
+            0,
+            453,
+            195,
+            634
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 122,
+        "seconds": 10.166666666666666,
+        "detections": 1,
+        "confidence": [
+          0.3717
+        ],
+        "boxes": [
+          [
+            1,
+            453,
+            194,
+            627
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 124,
+        "seconds": 10.333333333333334,
+        "detections": 3,
+        "confidence": [
+          0.4519,
+          0.4118,
+          0.1847
+        ],
+        "boxes": [
+          [
+            0,
+            453,
+            154,
+            621
+          ],
+          [
+            323,
+            478,
+            447,
+            573
+          ],
+          [
+            126,
+            466,
+            229,
+            539
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 126,
+        "seconds": 10.5,
+        "detections": 2,
+        "confidence": [
+          0.3045,
+          0.2936
+        ],
+        "boxes": [
+          [
+            323,
+            479,
+            448,
+            574
+          ],
+          [
+            14,
+            455,
+            232,
+            563
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 128,
+        "seconds": 10.666666666666666,
+        "detections": 3,
+        "confidence": [
+          0.3947,
+          0.1895,
+          0.1598
+        ],
+        "boxes": [
+          [
+            322,
+            478,
+            448,
+            573
+          ],
+          [
+            102,
+            462,
+            230,
+            549
+          ],
+          [
+            3,
+            449,
+            128,
+            588
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 130,
+        "seconds": 10.833333333333334,
+        "detections": 3,
+        "confidence": [
+          0.5813,
+          0.398,
+          0.2785
+        ],
+        "boxes": [
+          [
+            322,
+            478,
+            448,
+            573
+          ],
+          [
+            1,
+            451,
+            112,
+            590
+          ],
+          [
+            94,
+            462,
+            235,
+            550
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 132,
+        "seconds": 11.0,
+        "detections": 2,
+        "confidence": [
+          0.3381,
+          0.1683
+        ],
+        "boxes": [
+          [
+            322,
+            478,
+            447,
+            574
+          ],
+          [
+            4,
+            456,
+            236,
+            548
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 134,
+        "seconds": 11.166666666666666,
+        "detections": 3,
+        "confidence": [
+          0.5105,
+          0.2908,
+          0.1971
+        ],
+        "boxes": [
+          [
+            65,
+            462,
+            232,
+            545
+          ],
+          [
+            323,
+            477,
+            447,
+            573
+          ],
+          [
+            2,
+            453,
+            67,
+            539
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 136,
+        "seconds": 11.333333333333334,
+        "detections": 1,
+        "confidence": [
+          0.2972
+        ],
+        "boxes": [
+          [
+            56,
+            463,
+            229,
+            546
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 138,
+        "seconds": 11.5,
+        "detections": 1,
+        "confidence": [
+          0.4242
+        ],
+        "boxes": [
+          [
+            62,
+            464,
+            225,
+            547
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 140,
+        "seconds": 11.666666666666666,
+        "detections": 2,
+        "confidence": [
+          0.4668,
+          0.187
+        ],
+        "boxes": [
+          [
+            59,
+            462,
+            225,
+            546
+          ],
+          [
+            3,
+            463,
+            35,
+            545
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": true
+      },
+      {
+        "frame": 142,
+        "seconds": 11.833333333333334,
+        "detections": 2,
+        "confidence": [
+          0.5134,
+          0.2965
+        ],
+        "boxes": [
+          [
+            57,
+            462,
+            230,
+            546
+          ],
+          [
+            321,
+            477,
+            445,
+            573
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": true
+      },
+      {
+        "frame": 144,
+        "seconds": 12.0,
+        "detections": 3,
+        "confidence": [
+          0.4999,
+          0.2238,
+          0.1776
+        ],
+        "boxes": [
+          [
+            55,
+            462,
+            231,
+            546
+          ],
+          [
+            321,
+            476,
+            446,
+            574
+          ],
+          [
+            4,
+            465,
+            33,
+            566
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 146,
+        "seconds": 12.166666666666666,
+        "detections": 1,
+        "confidence": [
+          0.5013
+        ],
+        "boxes": [
+          [
+            55,
+            462,
+            232,
+            546
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 148,
+        "seconds": 12.333333333333334,
+        "detections": 2,
+        "confidence": [
+          0.5022,
+          0.2706
+        ],
+        "boxes": [
+          [
+            54,
+            461,
+            231,
+            546
+          ],
+          [
+            321,
+            475,
+            445,
+            574
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 150,
+        "seconds": 12.5,
+        "detections": 2,
+        "confidence": [
+          0.6871,
+          0.2904
+        ],
+        "boxes": [
+          [
+            54,
+            459,
+            232,
+            545
+          ],
+          [
+            321,
+            474,
+            447,
+            574
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 152,
+        "seconds": 12.666666666666666,
+        "detections": 2,
+        "confidence": [
+          0.6968,
+          0.5522
+        ],
+        "boxes": [
+          [
+            55,
+            458,
+            232,
+            546
+          ],
+          [
+            321,
+            474,
+            446,
+            572
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 154,
+        "seconds": 12.833333333333334,
+        "detections": 2,
+        "confidence": [
+          0.5967,
+          0.4827
+        ],
+        "boxes": [
+          [
+            55,
+            459,
+            228,
+            545
+          ],
+          [
+            321,
+            474,
+            446,
+            572
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 156,
+        "seconds": 13.0,
+        "detections": 2,
+        "confidence": [
+          0.5356,
+          0.3147
+        ],
+        "boxes": [
+          [
+            55,
+            458,
+            229,
+            546
+          ],
+          [
+            319,
+            475,
+            445,
+            573
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 158,
+        "seconds": 13.166666666666666,
+        "detections": 2,
+        "confidence": [
+          0.6207,
+          0.5043
+        ],
+        "boxes": [
+          [
+            55,
+            458,
+            229,
+            545
+          ],
+          [
+            322,
+            473,
+            447,
+            571
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 160,
+        "seconds": 13.333333333333334,
+        "detections": 2,
+        "confidence": [
+          0.6817,
+          0.5646
+        ],
+        "boxes": [
+          [
+            55,
+            458,
+            233,
+            544
+          ],
+          [
+            322,
+            472,
+            445,
+            571
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 162,
+        "seconds": 13.5,
+        "detections": 2,
+        "confidence": [
+          0.6035,
+          0.5963
+        ],
+        "boxes": [
+          [
+            321,
+            473,
+            445,
+            570
+          ],
+          [
+            55,
+            458,
+            231,
+            545
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 164,
+        "seconds": 13.666666666666666,
+        "detections": 2,
+        "confidence": [
+          0.6172,
+          0.5744
+        ],
+        "boxes": [
+          [
+            320,
+            473,
+            445,
+            570
+          ],
+          [
+            56,
+            458,
+            226,
+            545
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 166,
+        "seconds": 13.833333333333334,
+        "detections": 2,
+        "confidence": [
+          0.6549,
+          0.5733
+        ],
+        "boxes": [
+          [
+            55,
+            457,
+            227,
+            543
+          ],
+          [
+            320,
+            473,
+            445,
+            571
+          ]
+        ],
+        "confirmed_track_ids": [
+          1,
+          2
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      }
+    ]
+  },
+  {
+    "source": "data/IMG_2136_entry_annotated.mp4",
+    "source_sha256": "86fe34f0733ee16ed71f3f8da3fa75b53451cfa6b53417a24f452fd3aabf933a",
+    "camera": "CAM-02",
+    "geometry": "data/geometry_img2136_cam02.json",
+    "sample_count": 24,
+    "total_detections": 30,
+    "peak_detections": 2,
+    "tracks": [
+      1
+    ],
+    "reobserved_after_injection": [
+      1
+    ],
+    "video": "tracking-probe-2.mp4",
+    "frames": [
+      {
+        "frame": 34,
+        "seconds": 2.8333333333333335,
+        "detections": 1,
+        "confidence": [
+          0.897
+        ],
+        "boxes": [
+          [
+            115,
+            456,
+            514,
+            684
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 36,
+        "seconds": 3.0,
+        "detections": 1,
+        "confidence": [
+          0.7688
+        ],
+        "boxes": [
+          [
+            55,
+            456,
+            412,
+            656
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 38,
+        "seconds": 3.1666666666666665,
+        "detections": 1,
+        "confidence": [
+          0.9002
+        ],
+        "boxes": [
+          [
+            5,
+            456,
+            331,
+            637
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 40,
+        "seconds": 3.3333333333333335,
+        "detections": 1,
+        "confidence": [
+          0.5299
+        ],
+        "boxes": [
+          [
+            6,
+            455,
+            273,
+            622
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 42,
+        "seconds": 3.5,
+        "detections": 1,
+        "confidence": [
+          0.6037
+        ],
+        "boxes": [
+          [
+            3,
+            456,
+            221,
+            616
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 44,
+        "seconds": 3.6666666666666665,
+        "detections": 1,
+        "confidence": [
+          0.5918
+        ],
+        "boxes": [
+          [
+            1,
+            455,
+            179,
+            614
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 46,
+        "seconds": 3.8333333333333335,
+        "detections": 2,
+        "confidence": [
+          0.7808,
+          0.2983
+        ],
+        "boxes": [
+          [
+            1,
+            457,
+            139,
+            611
+          ],
+          [
+            363,
+            447,
+            517,
+            573
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 48,
+        "seconds": 4.0,
+        "detections": 1,
+        "confidence": [
+          0.7487
+        ],
+        "boxes": [
+          [
+            1,
+            457,
+            112,
+            610
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 50,
+        "seconds": 4.166666666666667,
+        "detections": 1,
+        "confidence": [
+          0.679
+        ],
+        "boxes": [
+          [
+            1,
+            455,
+            110,
+            609
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 52,
+        "seconds": 4.333333333333333,
+        "detections": 2,
+        "confidence": [
+          0.6627,
+          0.1625
+        ],
+        "boxes": [
+          [
+            1,
+            456,
+            111,
+            610
+          ],
+          [
+            361,
+            430,
+            509,
+            572
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 54,
+        "seconds": 4.5,
+        "detections": 1,
+        "confidence": [
+          0.5608
+        ],
+        "boxes": [
+          [
+            1,
+            457,
+            110,
+            610
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": true
+      },
+      {
+        "frame": 56,
+        "seconds": 4.666666666666667,
+        "detections": 2,
+        "confidence": [
+          0.5847,
+          0.1732
+        ],
+        "boxes": [
+          [
+            1,
+            456,
+            107,
+            609
+          ],
+          [
+            359,
+            439,
+            516,
+            579
+          ]
+        ],
+        "confirmed_track_ids": [],
+        "removed": [],
+        "injected_missing_observations": true
+      },
+      {
+        "frame": 58,
+        "seconds": 4.833333333333333,
+        "detections": 1,
+        "confidence": [
+          0.7748
+        ],
+        "boxes": [
+          [
+            1,
+            457,
+            112,
+            610
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 60,
+        "seconds": 5.0,
+        "detections": 2,
+        "confidence": [
+          0.7841,
+          0.1827
+        ],
+        "boxes": [
+          [
+            3,
+            457,
+            117,
+            610
+          ],
+          [
+            358,
+            445,
+            516,
+            576
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 62,
+        "seconds": 5.166666666666667,
+        "detections": 2,
+        "confidence": [
+          0.5407,
+          0.2596
+        ],
+        "boxes": [
+          [
+            2,
+            454,
+            133,
+            611
+          ],
+          [
+            359,
+            430,
+            511,
+            576
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 64,
+        "seconds": 5.333333333333333,
+        "detections": 2,
+        "confidence": [
+          0.663,
+          0.188
+        ],
+        "boxes": [
+          [
+            1,
+            458,
+            159,
+            606
+          ],
+          [
+            358,
+            429,
+            513,
+            577
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 66,
+        "seconds": 5.5,
+        "detections": 1,
+        "confidence": [
+          0.6555
+        ],
+        "boxes": [
+          [
+            3,
+            455,
+            210,
+            601
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 68,
+        "seconds": 5.666666666666667,
+        "detections": 1,
+        "confidence": [
+          0.7639
+        ],
+        "boxes": [
+          [
+            4,
+            454,
+            246,
+            602
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 70,
+        "seconds": 5.833333333333333,
+        "detections": 1,
+        "confidence": [
+          0.825
+        ],
+        "boxes": [
+          [
+            4,
+            454,
+            252,
+            603
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 72,
+        "seconds": 6.0,
+        "detections": 1,
+        "confidence": [
+          0.7959
+        ],
+        "boxes": [
+          [
+            4,
+            454,
+            249,
+            603
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 74,
+        "seconds": 6.166666666666667,
+        "detections": 1,
+        "confidence": [
+          0.7064
+        ],
+        "boxes": [
+          [
+            1,
+            454,
+            231,
+            603
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 76,
+        "seconds": 6.333333333333333,
+        "detections": 1,
+        "confidence": [
+          0.5436
+        ],
+        "boxes": [
+          [
+            3,
+            452,
+            203,
+            604
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 78,
+        "seconds": 6.5,
+        "detections": 1,
+        "confidence": [
+          0.4876
+        ],
+        "boxes": [
+          [
+            2,
+            452,
+            205,
+            604
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      },
+      {
+        "frame": 80,
+        "seconds": 6.666666666666667,
+        "detections": 1,
+        "confidence": [
+          0.2756
+        ],
+        "boxes": [
+          [
+            2,
+            453,
+            212,
+            602
+          ]
+        ],
+        "confirmed_track_ids": [
+          1
+        ],
+        "removed": [],
+        "injected_missing_observations": false
+      }
+    ]
+  }
+]

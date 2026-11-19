@@ -1,0 +1,126 @@
+{
+  "source": [
+    {
+      "event_type": "ENTRY",
+      "event_id": "36e492107b1a4781beeb27b14f35b436",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:00:00+00:00",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "plate_status": "UNCONFIRMED"
+    },
+    {
+      "event_type": "PARK_START",
+      "event_id": "3b1a900d94b14a2bb28216e0c80e8026",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:01:00+00:00",
+      "timestamp": "2026-01-01T00:01:00+00:00",
+      "plate_status": "UNCONFIRMED"
+    },
+    {
+      "event_type": "PARK_END",
+      "event_id": "a9abfed5c9ea42e29c48152bf2644c54",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:02:00+00:00",
+      "timestamp": "2026-01-01T00:02:00+00:00",
+      "plate_status": "UNCONFIRMED"
+    },
+    {
+      "event_type": "EXIT",
+      "event_id": "5fd8553b5d7346658ae89a36bd036b94",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:03:00+00:00",
+      "timestamp": "2026-01-01T00:03:00+00:00",
+      "plate_status": "UNCONFIRMED"
+    }
+  ],
+  "mapped": [
+    {
+      "event_type": "ENTRY",
+      "event_id": "3b1a900d94b14a2bb28216e0c80e8026",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:01:00+00:00",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "plate_status": "UNCONFIRMED",
+      "source_event_time": "2026-01-01T00:01:00+00:00",
+      "captured_at": "2026-01-01T00:01:00+00:00",
+      "received_at": null
+    },
+    {
+      "event_type": "EXIT",
+      "event_id": "a9abfed5c9ea42e29c48152bf2644c54",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "parking_area_id": "dfb38e59e7da48cf9fed204d60448dcf",
+      "parking": {
+        "slot_id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "bay": {
+        "id": "5160bf02cdf34ea0ba27b91489440a67"
+      },
+      "event_time": "2026-01-01T00:02:00+00:00",
+      "timestamp": "2026-01-01T00:00:00+00:00",
+      "plate_status": "UNCONFIRMED",
+      "captured_at": "2026-01-01T00:01:00+00:00",
+      "received_at": "2026-01-01T00:02:00+00:00"
+    }
+  ],
+  "timeline": [
+    {
+      "camera_id": "b7dc4b9395024ab591a7ec176aefadc3",
+      "vehicle_uid": "ca2c9b3e6d3948c3aeb9cd81b5d3c66f",
+      "slot_id": "5160bf02cdf34ea0ba27b91489440a67",
+      "plate": null,
+      "plate_status": "UNCONFIRMED",
+      "colour": null,
+      "vehicle_type": null,
+      "entry_time_ist": "2026-01-01T00:00:00+00:00",
+      "park_start_time_ist": "2026-01-01T00:01:00+00:00",
+      "park_end_time_ist": "2026-01-01T00:02:00+00:00",
+      "exit_time_ist": "2026-01-01T00:03:00+00:00",
+      "exit_inferred": false,
+      "parked_duration_s": 60.0,
+      "status": "EXITED"
+    }
+  ],
+  "test": "test_trace_preserves_original_time_slot_and_uid"
+}

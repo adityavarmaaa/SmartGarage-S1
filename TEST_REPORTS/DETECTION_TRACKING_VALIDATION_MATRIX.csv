@@ -1,0 +1,9 @@
+ID,Video,Frames,Scenario,Expected,Actual,Status,Evidence
+DT1-1,data/IMG_2138_entry_annotated.mp4,120–166,Detection validity and counts,Finite N×6 and ordered bounds,24 sampled frames; 48 detections; peak 3,PASS,raw/video/tracking-probes.json
+DT1-2,data/IMG_2138_entry_annotated.mp4,120–166,ID continuity after two injected empty observations,Re-observe an existing ID,"Observed IDs [1, 2]; returned IDs [1, 2]",PASS,raw/video/tracking-probe-1.mp4
+DT2-1,data/IMG_2136_entry_annotated.mp4,34–80,Detection validity and counts,Finite N×6 and ordered bounds,24 sampled frames; 30 detections; peak 2,PASS,raw/video/tracking-probes.json
+DT2-2,data/IMG_2136_entry_annotated.mp4,34–80,ID continuity after two injected empty observations,Re-observe an existing ID,Observed IDs [1]; returned IDs [1],PASS,raw/video/tracking-probe-2.mp4
+DT5,Synthetic fixture,,"Tracking expiry, multiple vehicles and recovery",Remove old IDs and reacquire distinct tracks,Expired both then assigned different IDs,PASS,raw/s1.xml#test_tracking_gap_expires_ids_and_reacquires
+DT6,Synthetic two-camera fixtures,,Per-camera fault isolation,Healthy independent processing,Isolated tracker fault and retained good camera progress,PASS,raw/s1.xml#test_camera_failure_leaves_other_camera_processing[M05]
+DT7,Configured raw recordings,,Full temporal ground truth,Review original input and identity changes,Configured originals absent,BLOCKED,VIDEO_INVENTORY.csv
+DT8,Cross-camera real footage,,"Verify ReID, occlusion, re-entry and fragmentation on annotated ground truth",Timestamp-aligned physical vehicle tracks,No matching cross-camera truth supplied,BLOCKED,VIDEO_INVENTORY.csv

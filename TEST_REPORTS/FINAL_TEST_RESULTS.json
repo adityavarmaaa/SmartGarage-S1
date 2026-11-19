@@ -1,0 +1,96 @@
+{
+  "source_sha256": "93a54d65c19183ab51ded83bad60c320bb2990e633b124af89a3c357f5253883",
+  "s1": {
+    "total": 172,
+    "passed": 172,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_s": 14.231
+  },
+  "s2": {
+    "total": 28,
+    "passed": 28,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_s": 1.741
+  },
+  "total": 200,
+  "passed": 200,
+  "failed": 0,
+  "errors": 0,
+  "skipped": 0,
+  "new_targeted": {
+    "total": 13,
+    "passed": 13,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_s": 0.668
+  },
+  "coverage": "61%",
+  "integration_passed": 81,
+  "dedicated_fault_passed": 45,
+  "fault_matrix": {
+    "PASS": 90,
+    "FAIL": 0,
+    "BLOCKED": 4,
+    "NOT TESTED": 15
+  },
+  "edge_baseline": {
+    "PASS": 32,
+    "FAIL": 0,
+    "BLOCKED": 1,
+    "NOT TESTED": 2,
+    "WARNING": 0
+  },
+  "priority": {
+    "PASS": 18,
+    "BLOCKED": 2,
+    "NOT TESTED": 3
+  },
+  "lifecycle": {
+    "PASS": 13,
+    "BLOCKED": 1,
+    "NOT TESTED": 2
+  },
+  "detection": {
+    "PASS": 6,
+    "BLOCKED": 2
+  },
+  "api": {
+    "PASS": 44
+  },
+  "swagger": {
+    "PASS": 10
+  },
+  "defects_fixed": 7,
+  "defects_discovered": 7,
+  "execution_environment": "Linux x86_64, Python 3.12, CPU; see prior environment record and current logs",
+  "unified_targeted": {
+    "total": 60,
+    "passed": 60,
+    "failed": 0,
+    "errors": 0,
+    "skipped": 0,
+    "duration_s": 11.932
+  },
+  "video_renderer_added": 2,
+  "submission_rerun": {
+    "s1": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 172,
+      "time": 14.123
+    },
+    "s2": {
+      "errors": 0,
+      "failures": 0,
+      "skipped": 0,
+      "tests": 28,
+      "time": 1.4
+    }
+  }
+}

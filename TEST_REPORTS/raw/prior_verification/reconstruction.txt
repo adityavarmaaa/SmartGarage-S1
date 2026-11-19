@@ -1,0 +1,3 @@
+Size: 340299494 bytes
+SHA-256: ff185cd8c38e4bfbf633449d3e5e5641e408ee03bd36b86cfb818c778835c20e
+CRC OK: 1471 entries, 364837688 uncompressed bytes

@@ -1,0 +1,1 @@
+VERIFIED Uvicorn, health/Swagger/ReDoc/OpenAPI, real CPU upload and live MJPEG decode, stop on an open live stream, multipart termination, cancelled report, playable MP4 and HTTP range/HEAD

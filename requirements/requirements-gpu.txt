@@ -1,0 +1,11 @@
+# Python 3.10 - 3.12. Install the CUDA build of PyTorch FIRST (pick your CUDA version at pytorch.org), e.g.:
+#   pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
+ultralytics>=8.3
+numpy
+scipy
+pyyaml
+opencv-python-headless
+# fast-alpr with GPU ONNX (do not install plain onnxruntime next to it):
+fast-alpr[onnx-gpu]
+cryptography>=42.0.0
+tzdata; sys_platform == "win32"

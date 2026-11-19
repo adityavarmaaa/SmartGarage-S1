@@ -1,0 +1,771 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.14, pytest-9.2.0, pluggy-1.7.0 -- /workspace/work/venv/bin/python
+rootdir: /workspace/work/final-unified/smart_parking_s1_complete
+configfile: pyproject.toml
+collecting ... collected 60 items
+
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D01] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "frame", "operation": "validate", "category": "validation", "message": "Frame pixels or capture metadata are invalid.", "recoverable": true, "result": "missing", "action": "Skipped frame before inference.", "severity": "ERROR", "context": {"camera_id": "890e965fe8a7436eb060ddb8c9410694", "frame_id": 0}, "timestamp": "2026-11-19T18:26:27.653901+00:00"}
+PASSED                                                                   [  1%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D02] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "frame", "operation": "validate", "category": "validation", "message": "Frame pixels or capture metadata are invalid.", "recoverable": true, "result": "missing", "action": "Skipped frame before inference.", "severity": "ERROR", "context": {"camera_id": "1ddc0eb6bee54699a97dd64beb73b80e", "frame_id": 0}, "timestamp": "2026-11-19T18:26:27.661426+00:00"}
+PASSED                                                                   [  3%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D03] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "frame", "operation": "validate", "category": "validation", "message": "Frame pixels or capture metadata are invalid.", "recoverable": true, "result": "missing", "action": "Skipped frame before inference.", "severity": "ERROR", "context": {"camera_id": "683206679bfd4e5497e98610f2d43002", "frame_id": 0}, "timestamp": "2026-11-19T18:26:27.663355+00:00"}
+PASSED                                                                   [  5%]
+tests/fault_injection/test_faults.py::test_invalid_frames_skip_inference_and_recover[D04] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "frame", "operation": "validate", "category": "validation", "message": "Frame pixels or capture metadata are invalid.", "recoverable": true, "result": "missing", "action": "Skipped frame before inference.", "severity": "ERROR", "context": {"camera_id": "ecd60f868787424a8c2b5f365a2f1190", "frame_id": 0}, "timestamp": "2026-11-19T18:26:27.696544+00:00"}
+PASSED                                                                   [  6%]
+tests/fault_injection/test_faults.py::test_missing_model_has_categorized_failure PASSED [  8%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D07] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "7931829cca444d36aed02d4456c98c0e", "frame_id": 0}, "timestamp": "2026-11-19T18:26:34.500440+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+PASSED                                                                   [ 10%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D08] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "89b3004e67f442adb3431c7df5f88999", "frame_id": 0}, "timestamp": "2026-11-19T18:26:34.504089+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1227, in process
+    dets = np.asarray(dets, dtype=np.float32)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: 'broken'
+PASSED                                                                   [ 11%]
+tests/fault_injection/test_faults.py::test_invalid_detection_output_recovers[D09] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "1b0dc879dfc14f02bf80146efb665cf7", "frame_id": 0}, "timestamp": "2026-11-19T18:26:34.507087+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+PASSED                                                                   [ 13%]
+tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T01] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_OUTPUT_INVALID", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "validate", "category": "validation", "message": "Tracker returned missing or duplicate identifiers.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "611e7bd22acc41feb3dbf56c22ddbeba", "frame_id": 0}, "timestamp": "2026-11-19T18:26:34.509613+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1255, in process
+    ids = [track.id for track in (*tracks, *removed)]
+           ^^^^^^^^
+AttributeError: 'types.SimpleNamespace' object has no attribute 'id'
+PASSED                                                                   [ 15%]
+tests/fault_injection/test_faults.py::test_invalid_association_is_categorized[T02] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_OUTPUT_INVALID", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "validate", "category": "validation", "message": "Tracker returned missing or duplicate identifiers.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "384d7ab45f554696bbfc0653596c7c82", "frame_id": 0}, "timestamp": "2026-11-19T18:26:34.512109+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1259, in process
+    raise ValueError("Tracker returned duplicate IDs")
+ValueError: Tracker returned duplicate IDs
+PASSED                                                                   [ 16%]
+tests/fault_injection/test_faults.py::test_tracking_gap_expires_ids_and_reacquires PASSED [ 18%]
+tests/fault_injection/test_faults.py::test_ocr_pins_result_keys_and_recovers_after_failure 
+-------------------------------- live log call ---------------------------------
+ERROR    plates:plate_recognition.py:619 OCR_WAIT_IDLE timed out after 0s with 3 job(s) unfinished
+ERROR    plates:errors.py:33 {"code": "ALPR_INFERENCE_FAILED", "module": "ANPR_OCR", "component": "plate worker", "operation": "read crop", "category": "inference", "message": "The combined plate detector and OCR reader failed.", "recoverable": true, "result": "missing", "action": "Returned no plate reads; vehicle processing continues.", "severity": "ERROR", "context": {"vehicle_key": "175fa37d339341c8adb94f820afc7e49"}, "timestamp": "2026-11-19T18:26:34.537590+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/vehicle_front/plate_recognition.py", line 557, in _run
+    reads = self.reader.read(crop)
+            ^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/tests/fault_injection/test_faults.py", line 157, in read
+    raise result
+RuntimeError: injected OCR failure
+ERROR    plates:errors.py:33 {"code": "ALPR_INFERENCE_FAILED", "module": "ANPR_OCR", "component": "plate worker", "operation": "read crop", "category": "inference", "message": "The combined plate detector and OCR reader failed.", "recoverable": true, "result": "missing", "action": "Returned no plate reads; vehicle processing continues.", "severity": "ERROR", "context": {"vehicle_key": "c73086ad8dac4af6be8f386ef994ee24"}, "timestamp": "2026-11-19T18:26:34.538115+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/vehicle_front/plate_recognition.py", line 562, in _run
+    "length": len(normalize(r.text)),
+                            ^^^^^^
+AttributeError: 'dict' object has no attribute 'text'
+PASSED                                                                   [ 20%]
+tests/fault_injection/test_faults.py::test_disappeared_vehicle_ocr_does_not_update_another 
+-------------------------------- live log call ---------------------------------
+WARNING  pipeline:vehicle_parking_bridge.py:926 Ignoring OCR result for unknown vehicle uid=c16a8883ff6043408d5caa2378612351
+PASSED                                                                   [ 21%]
+tests/fault_injection/test_faults.py::test_attribute_inference_fault_preserves_vehicle 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VEHICLE_ATTRIBUTE_FAILED", "module": "VEHICLE_ATTRIBUTES", "component": "colour", "operation": "estimate", "category": "processing", "message": "Colour estimate failed.", "recoverable": true, "result": "partial", "action": "Kept previous observations and continued parking processing.", "severity": "ERROR", "context": {"camera_id": "cd68a367575844eaac991c939bdab201", "frame_id": 1, "track_id": 1}, "timestamp": "2026-11-19T18:26:34.643752+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1436, in process
+    dominant_color_details(crop)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: colour failed
+ERROR    pipeline:errors.py:33 {"code": "VEHICLE_ATTRIBUTE_FAILED", "module": "VEHICLE_ATTRIBUTES", "component": "colour", "operation": "estimate", "category": "processing", "message": "Colour estimate failed.", "recoverable": true, "result": "partial", "action": "Kept previous observations and continued parking processing.", "severity": "ERROR", "context": {"camera_id": "cd68a367575844eaac991c939bdab201", "frame_id": 2, "track_id": 1}, "timestamp": "2026-11-19T18:26:34.645196+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1436, in process
+    dominant_color_details(crop)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1436, in process
+    dominant_color_details(crop)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: colour failed
+PASSED                                                                   [ 23%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G01] PASSED [ 25%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G02] PASSED [ 26%]
+tests/fault_injection/test_faults.py::test_bad_calibration_dimensions_rejected[G03] PASSED [ 28%]
+tests/fault_injection/test_faults.py::test_calibration_scaling_and_empty_slots PASSED [ 30%]
+tests/fault_injection/test_faults.py::test_invalid_event_time_is_rejected[L01] PASSED [ 31%]
+tests/fault_injection/test_faults.py::test_invalid_event_time_is_rejected[L02] PASSED [ 33%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V01] PASSED [ 35%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V02] 
+-------------------------------- live log call ---------------------------------
+WARNING  grabber:grabber.py:687 Video creation time unavailable for /tmp/pytest-of-agent/pytest-43/test_missing_empty_or_corrupt_1/9d6f58f1307d4ff3abb8b7749b512d7a.mp4: Command '['ffprobe', '-v', 'error', '-show_entries', 'format_tags=creation_time', '-of', 'default=noprint_wrappers=1:nokey=1', '/tmp/pytest-of-agent/pytest-43/test_missing_empty_or_corrupt_1/9d6f58f1307d4ff3abb8b7749b512d7a.mp4']' returned non-zero exit status 1.
+PASSED                                                                   [ 36%]
+tests/fault_injection/test_faults.py::test_missing_empty_or_corrupt_video_never_starts[V03] 
+-------------------------------- live log call ---------------------------------
+WARNING  grabber:grabber.py:687 Video creation time unavailable for /tmp/pytest-of-agent/pytest-43/test_missing_empty_or_corrupt_2/1f5ae162074a459eb2402e58e91dc2c8.mp4: Command '['ffprobe', '-v', 'error', '-show_entries', 'format_tags=creation_time', '-of', 'default=noprint_wrappers=1:nokey=1', '/tmp/pytest-of-agent/pytest-43/test_missing_empty_or_corrupt_2/1f5ae162074a459eb2402e58e91dc2c8.mp4']' returned non-zero exit status 1.
+PASSED                                                                   [ 38%]
+tests/fault_injection/test_faults.py::test_video_writer_open_and_write_faults 
+-------------------------------- live log call ---------------------------------
+ERROR    demo_video:errors.py:33 {"code": "VIDEO_OUTPUT_FRAME_FAILED", "module": "VIDEO_PROCESSING", "component": "demo recorder", "operation": "render", "category": "output", "message": "Could not render or write a video frame.", "recoverable": true, "result": "partial", "action": "Continued processing without this output frame.", "severity": "ERROR", "context": {"frames_written": 0}, "timestamp": "2026-11-19T18:26:34.868775+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/video/demo_video.py", line 195, in tick
+    raise RuntimeError("cv2.VideoWriter could not open " + self.raw_path)
+RuntimeError: cv2.VideoWriter could not open /tmp/pytest-of-agent/pytest-43/test_video_writer_open_and_wri0/tmpfdxpu3_r.mp4
+ERROR    demo_video:errors.py:33 {"code": "VIDEO_OUTPUT_FRAME_FAILED", "module": "VIDEO_PROCESSING", "component": "demo recorder", "operation": "render", "category": "output", "message": "Could not render or write a video frame.", "recoverable": true, "result": "partial", "action": "Continued processing without this output frame.", "severity": "ERROR", "context": {"frames_written": 0}, "timestamp": "2026-11-19T18:26:34.877555+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/video/demo_video.py", line 197, in tick
+    self.writer.write(frame)
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+OSError: injected writer failure
+PASSED                                                                   [ 40%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M01] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "VIDEO_FRAME_READ_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "read", "category": "decode", "message": "Camera source could not supply its next frame.", "recoverable": true, "result": "partial", "action": "Stopped scheduling this camera.", "severity": "ERROR", "context": {"camera_id": "729963050c3646009e7e42003cf2ba45", "last_frame_id": 0}, "timestamp": "2026-11-19T18:26:36.626780+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 762, in run_multi_camera
+    frame = rt.source.read(rt.last_idx, timeout=0.0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1202, in _execute_mock_call
+    raise result
+OSError: decoder broke
+PASSED                                                                   [ 41%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M02] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "VIDEO_SOURCE_OPEN_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "open", "category": "availability", "message": "Camera source could not be opened.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "8dfb9452b1fd44d6bff271db6d97618d"}, "timestamp": "2026-11-19T18:26:36.653547+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 535, in run_multi_camera
+    source = open_source(camera_cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/tests/fault_injection/test_faults.py", line 278, in open_source
+    raise OSError("capture init failed")
+OSError: capture init failed
+PASSED                                                                   [ 43%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M03] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "SLOT_GEOMETRY_INVALID", "module": "SLOT_GEOMETRY", "component": "camera geometry", "operation": "load and validate", "category": "validation", "message": "Camera geometry could not be loaded.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "bba4168fab2447359ee69e594864f895", "file": "/tmp/pytest-of-agent/pytest-43/test_camera_failure_leaves_oth2/287b06e3845a423ca819a1bcd21bd53a.json.missing"}, "timestamp": "2026-11-19T18:26:36.680995+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 523, in run_multi_camera
+    geometry = Geometry.load(camera_cfg["geometry_file"])
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/parking/slot_geometry.py", line 20, in load
+    with open(path, "r", encoding="utf-8") as f:
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+FileNotFoundError: [Errno 2] No such file or directory: '/tmp/pytest-of-agent/pytest-43/test_camera_failure_leaves_oth2/287b06e3845a423ca819a1bcd21bd53a.json.missing'
+PASSED                                                                   [ 45%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M04] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "first frame", "category": "validation", "message": "Could not calibrate from an invalid starting frame.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "c4b8469ac6d247569d7fe754857f4621"}, "timestamp": "2026-11-19T18:26:36.716826+00:00"}
+PASSED                                                                   [ 46%]
+tests/fault_injection/test_faults.py::test_camera_failure_leaves_other_camera_processing[M05] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_UPDATE_FAILED", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "associate", "category": "processing", "message": "Tracker could not associate detections.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "b59300f55afb479c809ca275e93f56af", "frame_id": 0}, "timestamp": "2026-11-19T18:26:36.833793+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker failed
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_UPDATE_FAILED", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "associate", "category": "processing", "message": "Tracker could not associate detections.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "b59300f55afb479c809ca275e93f56af", "frame_id": 1}, "timestamp": "2026-11-19T18:26:36.837485+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker failed
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_UPDATE_FAILED", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "associate", "category": "processing", "message": "Tracker could not associate detections.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "b59300f55afb479c809ca275e93f56af", "frame_id": 2}, "timestamp": "2026-11-19T18:26:36.848918+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker failed
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_UPDATE_FAILED", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "associate", "category": "processing", "message": "Tracker could not associate detections.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "b59300f55afb479c809ca275e93f56af", "frame_id": 3}, "timestamp": "2026-11-19T18:26:36.851720+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker failed
+ERROR    pipeline:errors.py:33 {"code": "TRACKER_UPDATE_FAILED", "module": "VEHICLE_TRACKING", "component": "tracker", "operation": "associate", "category": "processing", "message": "Tracker could not associate detections.", "recoverable": true, "result": "partial", "action": "Skipped downstream updates for this frame.", "severity": "ERROR", "context": {"camera_id": "b59300f55afb479c809ca275e93f56af", "frame_id": 4}, "timestamp": "2026-11-19T18:26:36.857372+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1245, in process
+    tracks, removed = self.tracker.update(dets, frame.ts)
+                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker failed
+PASSED                                                                   [ 48%]
+tests/fault_injection/test_faults.py::test_report_write_failure_keeps_previous_version[R01] PASSED [ 50%]
+tests/fault_injection/test_faults.py::test_report_write_failure_keeps_previous_version[R02] PASSED [ 51%]
+tests/fault_injection/test_faults.py::test_non_cancelled_job_cannot_succeed_after_report_failure 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "REPORT_GENERATION_FAILED", "module": "REPORTING", "component": "multicamera report", "operation": "write", "category": "output", "message": "The final report could not be generated.", "recoverable": true, "result": "partial", "action": "Kept processed events and any independent outputs.", "severity": "ERROR", "context": {}, "timestamp": "2026-11-19T18:26:36.953246+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 1125, in run_multi_camera
+    write_report(report, report_path)
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/reporting/report.py", line 920, in write_report
+    os.makedirs(d, exist_ok=True)
+  File "<frozen os>", line 225, in makedirs
+FileExistsError: [Errno 17] File exists: '/tmp/pytest-of-agent/pytest-43/test_non_cancelled_job_cannot_0/ac05637f652a433bb382e5505337f515'
+PASSED                                                                   [ 53%]
+tests/fault_injection/test_faults.py::test_conflicting_reads_never_confirm_a_plate PASSED [ 55%]
+tests/fault_injection/test_faults.py::test_outbox_write_failure_can_retry_without_duplicate_rows PASSED [ 56%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M06] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "ALPR_MODEL_LOAD_FAILED", "module": "ANPR_OCR", "component": "plate worker", "operation": "initialize", "category": "initialization", "message": "The plate reader could not initialize.", "recoverable": true, "result": "partial", "action": "Continued without plate reads.", "severity": "ERROR", "context": {"camera_id": "3946e0d2caf74fd2ae9fde975b6566c2"}, "timestamp": "2026-11-19T18:26:37.218325+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 617, in run_multi_camera
+    rt.plate_worker = PlateWorker(PlateReader(
+                                  ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: no OCR model for test
+PASSED                                                                   [ 58%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M07] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:multicam.py:1031 camera=21e9e8c74e0b4c7aa008c312f7dd11fe frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: slot failed
+ERROR    multicam:multicam.py:1031 camera=21e9e8c74e0b4c7aa008c312f7dd11fe frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: slot failed
+ERROR    multicam:multicam.py:1031 camera=21e9e8c74e0b4c7aa008c312f7dd11fe frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: slot failed
+ERROR    multicam:multicam.py:1031 camera=21e9e8c74e0b4c7aa008c312f7dd11fe frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: slot failed
+ERROR    multicam:multicam.py:1031 camera=21e9e8c74e0b4c7aa008c312f7dd11fe frame processing failed; other cameras continue
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 923, in run_multi_camera
+    events = rt.pipeline.process(
+             ^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1514, in process
+    for slot_event, v, et, sid, inferred in self.slots.update(
+                                            ^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: slot failed
+PASSED                                                                   [ 60%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M08] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "CAMERA_STARTUP_TIMEOUT", "module": "MULTICAMERA", "component": "capture", "operation": "first frame", "category": "timeout", "message": "Camera did not provide a usable frame before the startup deadline.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "0fbae166228c468fa524d37b7838e417"}, "timestamp": "2026-11-19T18:26:37.847869+00:00"}
+PASSED                                                                   [ 61%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M09] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "VIDEO_FRAME_INVALID", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "validate", "category": "validation", "message": "Frame is invalid or differs from the calibrated frame size.", "recoverable": true, "result": "missing", "action": "Skipped this frame.", "severity": "ERROR", "context": {"camera_id": "db8fc4786ea049c29987dfec5cb5c551"}, "timestamp": "2026-11-19T18:26:37.942889+00:00"}
+ERROR    multicam:errors.py:33 {"code": "VIDEO_FRAME_READ_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "read", "category": "decode", "message": "Camera source could not supply its next frame.", "recoverable": true, "result": "partial", "action": "Stopped scheduling this camera.", "severity": "ERROR", "context": {"camera_id": "db8fc4786ea049c29987dfec5cb5c551", "last_frame_id": 1}, "timestamp": "2026-11-19T18:26:37.945785+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 762, in run_multi_camera
+    frame = rt.source.read(rt.last_idx, timeout=0.0)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1202, in _execute_mock_call
+    raise result
+OSError: end isolated source
+PASSED                                                                   [ 63%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M10] 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "f9855d7874014666bc24be0f4ef414d2", "frame_id": 0}, "timestamp": "2026-11-19T18:26:38.001980+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "f9855d7874014666bc24be0f4ef414d2", "frame_id": 1}, "timestamp": "2026-11-19T18:26:38.002919+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "f9855d7874014666bc24be0f4ef414d2", "frame_id": 2}, "timestamp": "2026-11-19T18:26:38.007748+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "f9855d7874014666bc24be0f4ef414d2", "frame_id": 3}, "timestamp": "2026-11-19T18:26:38.010060+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+ERROR    pipeline:errors.py:33 {"code": "DETECTION_OUTPUT_INVALID", "module": "VEHICLE_DETECTION", "component": "detector", "operation": "validate detections", "category": "validation", "message": "Detector output is malformed.", "recoverable": true, "result": "missing", "action": "Skipped frame without advancing tracking or parking.", "severity": "ERROR", "context": {"camera_id": "f9855d7874014666bc24be0f4ef414d2", "frame_id": 4}, "timestamp": "2026-11-19T18:26:38.011643+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 1231, in process
+    raise ValueError("Expected finite N-by-6 detections with positive box dimensions.")
+ValueError: Expected finite N-by-6 detections with positive box dimensions.
+PASSED                                                                   [ 65%]
+tests/fault_injection/test_faults.py::test_camera_specific_component_faults[M11] 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "CAMERA_PIPELINE_INIT_FAILED", "module": "MULTICAMERA", "component": "pipeline", "operation": "initialize", "category": "initialization", "message": "Camera pipeline could not initialize.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "b261e000daff4df297b95f1a27a69587"}, "timestamp": "2026-11-19T18:26:38.041251+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 633, in run_multi_camera
+    rt.pipeline = Pipeline(
+                  ^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/tests/fault_injection/test_faults.py", line 423, in make_pipeline
+    return factory(config, *args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/integration/vehicle_parking_bridge.py", line 134, in __init__
+    self.tracker = ByteTracker(
+                   ^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1139, in __call__
+    return self._mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1143, in _mock_call
+    return self._execute_mock_call(*args, **kwargs)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/unittest/mock.py", line 1198, in _execute_mock_call
+    raise effect
+RuntimeError: tracker init broke
+PASSED                                                                   [ 66%]
+tests/fault_injection/test_faults.py::test_backwards_frame_clock_never_reaches_tracker 
+-------------------------------- live log call ---------------------------------
+ERROR    pipeline:errors.py:33 {"code": "VIDEO_TIMESTAMP_OUT_OF_ORDER", "module": "VIDEO_PROCESSING", "component": "frame", "operation": "validate", "category": "validation", "message": "Capture timestamp moved backwards.", "recoverable": true, "result": "missing", "action": "Skipped frame to keep tracker and lifecycle time monotonic.", "severity": "ERROR", "context": {"camera_id": "5e72aa08c3974b469c0b60056cbd9173", "frame_id": 2}, "timestamp": "2026-11-19T18:26:38.069013+00:00"}
+PASSED                                                                   [ 68%]
+tests/fault_injection/test_faults.py::test_all_camera_sources_unavailable_reports_structured_terminal_failure 
+-------------------------------- live log call ---------------------------------
+ERROR    multicam:errors.py:33 {"code": "VIDEO_SOURCE_OPEN_FAILED", "module": "VIDEO_PROCESSING", "component": "capture", "operation": "open", "category": "availability", "message": "Camera source could not be opened.", "recoverable": true, "result": "missing", "action": "Skipped this camera.", "severity": "ERROR", "context": {"camera_id": "9df9e9360d334a6c8c46d223981973a3"}, "timestamp": "2026-11-19T18:26:38.072336+00:00"}
+Traceback (most recent call last):
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/multicam/multicam.py", line 535, in run_multi_camera
+    source = open_source(camera_cfg)
+             ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/workspace/work/final-unified/smart_parking_s1_complete/s1/video/grabber.py", line 747, in open_source
+    raise ProcessingError(Diagnostic(
+s1.common.errors.ProcessingError: VIDEO_SOURCE_NOT_FOUND: Configured local video or device does not exist.
+PASSED                                                                   [ 70%]
+tests/fault_injection/test_faults.py::test_below_tracker_threshold_does_not_seed_track PASSED [ 71%]
+tests/fault_injection/test_faults.py::test_empty_ocr_crop_does_not_reach_reader 
+-------------------------------- live log call ---------------------------------
+WARNING  plates:errors.py:33 {"code": "PLATE_CROP_INVALID", "module": "ANPR_PLATE_DETECTION", "component": "plate worker", "operation": "validate crop", "category": "validation", "message": "The submitted vehicle crop cannot be read.", "recoverable": true, "result": "missing", "action": "Skipped OCR and returned no plate reads.", "severity": "WARNING", "context": {"vehicle_key": "98a0636291d145838b24b5d02728bee6"}, "timestamp": "2026-11-19T18:26:38.079870+00:00"}
+PASSED                                                                   [ 73%]
+tests/fault_injection/test_faults.py::test_invalid_polygon_is_rejected PASSED [ 75%]
+tests/production/test_production_lifecycle.py::test_semantic_park_start_retry_after_restart PASSED [ 76%]
+tests/production/test_production_lifecycle.py::test_retry_uses_first_id_after_outbox_failure PASSED [ 78%]
+tests/production/test_production_lifecycle.py::test_delayed_duplicate_entry_cannot_reopen_parked_session 
+-------------------------------- live log call ---------------------------------
+WARNING  s2_mapper:s2_mapper.py:612 EXIT has no stored PARKED session vehicle_uid=836bbb6220574cd785e6ddd624661b2e slot=97ff7256c2e4466891d1ff645ce3280c event_id=5084dfd1574e4add80caada445d90f2d
+PASSED                                                                   [ 80%]
+tests/production/test_production_lifecycle.py::test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate 
+-------------------------------- live log call ---------------------------------
+WARNING  s2_mapper:s2_mapper.py:600 LIFECYCLE_EXIT_ASSOCIATION_CONFLICT event_id=cb59d508713c4c4aa0a84bc6b8ceddf2 vehicle_uid=41b7937a1905485e9d3e41f4e1f8fa11
+PASSED                                                                   [ 81%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[ENTRY] PASSED [ 83%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_START] PASSED [ 85%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_END] PASSED [ 86%]
+tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[EXIT] PASSED [ 88%]
+tests/production/test_production_lifecycle.py::test_unconfirmed_ocr_never_reaches_downstream_payload PASSED [ 90%]
+tests/production/test_production_lifecycle.py::test_concurrent_start_retries_queue_once PASSED [ 91%]
+tests/production/test_production_lifecycle.py::test_trace_preserves_original_time_slot_and_uid PASSED [ 93%]
+tests/production/test_production_lifecycle.py::test_stale_end_cannot_close_a_newer_parking_cycle 
+-------------------------------- live log call ---------------------------------
+WARNING  s2_mapper:s2_mapper.py:622 LIFECYCLE_EXIT_BEFORE_PARK_START event_id=9ca33f6d5d324e579a478beba668e02c vehicle_uid=e94e5261a2fc4d24ad53338e0f67b13f
+PASSED                                                                   [ 95%]
+tests/production/test_production_parking.py::test_full_lot_does_not_assign_an_already_occupied_slot PASSED [ 96%]
+tests/production/test_production_video_validation.py::test_annotation_preserves_pixel_detail_and_input PASSED [ 98%]
+tests/production/test_production_video_validation.py::test_encoder_padding_keeps_original_pixels_and_decodes PASSED [100%]
+
+- generated xml file: /workspace/work/final-unified/smart_parking_s1_complete/reports/production_handover/raw/unified-targeted.xml -
+============================= 60 passed in 11.94s ==============================

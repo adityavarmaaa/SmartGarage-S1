@@ -1,0 +1,46 @@
+{
+  "date": "2026-11-15",
+  "scope": "frozen Smart Parking checkpoint extracted into isolated finalization workspace",
+  "results": {
+    "baseline_regression_before_api_changes": {
+      "status": "PASS",
+      "passed": 64
+    },
+    "api_tests": {
+      "status": "PASS",
+      "passed": 6
+    },
+    "combined_regression": {
+      "status": "PASS",
+      "passed": 70
+    },
+    "python_compile_s1": {
+      "status": "PASS"
+    },
+    "synthetic_single_camera_smoke": {
+      "status": "FAIL",
+      "exit_code": 1,
+      "details": "Expected ENTRY/EXIT assertions failed; report had no Service 2 events and assigned baseline parked car to A-02 rather than expected A-01."
+    },
+    "synthetic_two_camera_transfer_smoke": {
+      "status": "COMMAND_EXITED_ZERO",
+      "exit_code": 0,
+      "details": "Output showed one ENTRY on camera B and transfer observations. Not evidence of full production lifecycle or visual ReID."
+    },
+    "automatic_geometry_real_footage": {
+      "status": "FAIL",
+      "details": "Candidate polygons outlined roof/sky rather than ground parking bays; detector remains quarantined from production."
+    },
+    "full_two_camera_entry_exit_rerun": {
+      "status": "NOT_RUN",
+      "reason": "Original video datasets are mounted in the user's Kaggle environment, not in this local finalization workspace."
+    }
+  },
+  "limitations": [
+    "OSNet cross-camera visual ReID not demonstrated when histogram fallback is used.",
+    "Graceful API job cancellation is not implemented.",
+    "Processed-frame and output-stream API endpoints return HTTP 501.",
+    "API authentication is not implemented; deploy only behind a secured gateway.",
+    "Annotated real-camera videos and fresh real-camera JSON evidence have not been regenerated in this workspace."
+  ]
+}

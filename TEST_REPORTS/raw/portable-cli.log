@@ -1,0 +1,51 @@
+/workspace/work/production-portable/preview.yaml
+OK detector weights — /workspace/work/production/smart_parking_s1_complete/yolo11n.pt
+OK CAM-01 source — Availability checked during startup
+OK CAM-01 geometry
+OK Ultralytics import
+READY
+2026-11-19 18:10:09,258 INFO [20261119_181009_7500b6] s1.obs: LOGGING_READY run_id=20261119_181009_7500b6 dir=/workspace/work/production/smart_parking_s1_complete/logs
+2026-11-19 18:10:15,424 INFO [20261119_181009_7500b6] multicam: DETERMINISM enabled=True reason=auto_on_all_sources_are_files timestamp_source=laptop seed=1234
+2026-11-19 18:10:16,516 INFO [20261119_181009_7500b6] determinism: DETERMINISM seed=1234 pinned=python.random,numpy,cv2,torch+cudnn
+2026-11-19 18:10:16,516 INFO [20261119_181009_7500b6] multicam: REID backend=disabled device=cpu shares_with_yolo=False
+2026-11-19 18:10:16,518 INFO [20261119_181009_7500b6] multicam: camera CAM-01 capture started (file/device source)
+2026-11-19 18:10:16,522 INFO [20261119_181009_7500b6] multicam: camera CAM-01 motion_roi={'enabled': True, 'source': 'hull(slots+tripwire+inside_point)', 'area_frac': 0.5363}
+2026-11-19 18:10:16,527 INFO [20261119_181009_7500b6] pipeline: Pending-event recovery loaded 0 event(s)
+2026-11-19 18:10:16,527 INFO [20261119_181009_7500b6] multicam: camera CAM-01 ready: 320x410 slots=3
+2026-11-19 18:10:16,888 INFO [20261119_181009_7500b6] multicam: YOLO_BATCH size=1 elapsed_ms=360.4 avg_frame_ms=360.4
+2026-11-19 18:10:16,888 INFO [20261119_181009_7500b6] multicam: CAMERA_METRICS camera=CAM-01 seen=1 processed=1 dropped=0 frame_age_ms=1103.8 infer_ms=360.4 activity=0.000 idle_skipped=0
+2026-11-19 18:10:16,974 INFO [20261119_181009_7500b6] multicam: YOLO_BATCH size=1 elapsed_ms=82.5 avg_frame_ms=82.5
+2026-11-19 18:10:16,981 INFO [20261119_181009_7500b6] plate_evidence: PLATE_EVIDENCE encrypted=0 dir=/workspace/work/production-portable/evidence
+JSON report saved: /workspace/work/production-portable/report.json
+
+==============================================================================
+SMART PARKING - FINAL MULTI-CAMERA REPORT
+==============================================================================
+ReID: disabled | Plate engine: OFF | YOLO batches: 2 (max size 1)
+
+CAM-01: seen=2 processed=2 dropped=0 idle_skipped=0 motion_roi=54% of frame
+  slots: 0 occupied / 3 free
+     B-01 | NO-PLATE     (UNKNOWN) | -        | FREE
+     B-02 | NO-PLATE     (UNKNOWN) | -        | FREE
+     B-03 | NO-PLATE     (UNKNOWN) | -        | FREE
+
+Vehicles:
+  none confirmed
+\nEXIT VEHICLE DETAILS (actual EXIT lifecycle events):
+  No EXIT vehicle records with a track ID or vehicle UID.
+\nALL SLOT DETAILS (current occupancy + vehicle history):
+  Total=3 | Occupied=0 | Free=3 | With departed history=0
+\n  B-01 | CAM-01 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+\n  B-02 | CAM-01 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+\n  B-03 | CAM-01 | FREE | Level=L1
+    CURRENT: No vehicle
+    HISTORY: No departed vehicle history recorded.
+
+Service 2 payloads: 0 ENTRY, 0 EXIT | PARK_END: 0 | camera transfers: 0
+Validation: local_tracking=NO_TRACKS, vehicle_records=NO_VEHICLES, cross_camera_reidentification=NOT_DEMONSTRATED, plate_detection_ocr=NO_PLATE_READS, vehicle_attributes=NO_ATTRIBUTES, multi_camera_processing=PARTIAL, camera_scale_validation=NOT_TESTED_10_20_30_CAMERA_LOAD, slot_integrity=PASS, vehicle_slot_consistency=PASS, confirmed_plate_integrity=PASS, service2_entry_emitted=NONE, service2_exit_emitted=NOT_DEMONSTRATED, lifecycle_park_start=NOT_DEMONSTRATED, lifecycle_park_end=NOT_DEMONSTRATED, lifecycle_exit=NOT_DEMONSTRATED
+==============================================================================
+

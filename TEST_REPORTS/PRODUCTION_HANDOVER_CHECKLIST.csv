@@ -1,0 +1,11 @@
+Item,Status,Evidence,Remarks,Remaining action
+Verified source and prior releases,PASS,FINAL_RELEASE_MANIFEST.json,Source SHA-256 verified,Retain old release and DB backups
+CPU detector and tracker,PASS,DETECTION_TRACKING_VALIDATION_REPORT.md,Bounded annotated-footage probes,Validate raw deployed views
+B-03 physical plate continuity,INCONCLUSIVE,B03_PLATE_ASSOCIATION_AUDIT.md,Candidate and missing trusted linkage,Match original raw entry and exit with authorized crops
+Priority parking and lifecycle,PASS,EVENT_LIFECYCLE_AUDIT_MATRIX.csv,Synthetic and regression evidence,Accept real site scenarios
+Faults and recovery,PASS,FINAL_ERROR_HANDLING_EVIDENCE_AUDIT.md,Isolated tests,Plan native stall recovery
+API and browser docs,PASS,API_AND_SWAGGER_FINAL_AUDIT.md,Loopback only,Protect production ingress
+Production configuration and sources,BLOCKED,raw/shipped-config-preflight.log,Historical raw files are absent,Supply approved camera geometry and sources
+Live ANPR OSNet RTSP and physical devices,BLOCKED,DETECTION_TRACKING_VALIDATION_REPORT.md,No isolated deployment resources,Provision models and matched footage
+Windows and GPU,NOT TESTED,../../docs/INSTALLATION_GUIDE.md,Reference run uses Linux CPU,Verify only if deployment requires them
+Remote publishing and persistence,BLOCKED,BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md,No isolated site destination,Run staging acceptance with test credentials

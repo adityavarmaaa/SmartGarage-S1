@@ -1,0 +1,36 @@
+Test ID,Scenario,Expected behavior,Actual behavior,Evidence,Status,Fault mapping
+E01,Empty frame,Reject before inference,Detector did not receive the payload,raw/final-s1.xml#test_invalid_frames_skip_inference_and_recover[D01],PASS,D01
+E02,Missing file,Reject capture startup,Structured capture exception emitted,raw/final-s1.xml#test_missing_empty_or_corrupt_video_never_starts[V01],PASS,V01
+E03,Corrupt media container,Reject capture startup,Structured capture exception emitted,raw/final-s1.xml#test_missing_empty_or_corrupt_video_never_starts[V03],PASS,V03
+E04,Asynchronous configuration failure,HTTP 200,HTTP 200,raw/http-final/http-responses.json#H27,PASS,J27
+E05,Model unavailable,Categorize fatal initialization,Model wrapper raised structured exception,raw/final-s1.xml#test_missing_model_has_categorized_failure,PASS,D05
+E06,Low-confidence detection,Discard before track creation,Low-score detection did not seed a track,raw/final-s1.xml#test_below_tracker_threshold_does_not_seed_track,PASS,T06
+E07,Ambiguous overlapping assignment candidates,Avoid arbitrary assignment,No slot assigned,raw/final-s1.xml#test_overlap_fallback_rejects_ambiguous_adjacent_slot_overlap,PASS,G05
+E08,Inference exception and no vehicles,Skip first; process empty result,No tracker update on fault; valid empty advanced tracker,raw/final-s1.xml#test_detection_failure_skips_only_affected_frame[failure0-YOLO_INFERENCE_FAILED] | raw/final-s1.xml#test_detection_failure_skips_only_affected_frame[failure1-DETECTION_OUTPUT_INVALID],PASS,D06
+E09,No read and low-confidence text,Preserve ENTRY and null plate,ENTRY emitted with UNCONFIRMED plate,raw/final-s1.xml#test_unconfirmed_ocr_preserves_entry_contract[-0.0] | raw/final-s1.xml#test_unconfirmed_ocr_preserves_entry_contract[DL01AB1234-0.2] | raw/final-s1.xml#test_unconfirmed_ocr_preserves_entry_contract[DL01AB1234-0.93] | raw/final-s1.xml#test_unconfirmed_ocr_preserves_entry_contract[INVALID-0.93],PASS,A03
+E10,"Async failure, malformed result, wait timeout and recovery",Preserve keys and resume after transient fault,Timed wait returned false; failed reads empty; result keys matched all jobs,raw/final-s1.xml#test_ocr_pins_result_keys_and_recovers_after_failure,PASS,A04
+E11,Vehicle disappears or unknown result key,Do not associate to another vehicle,Existing voter unchanged,raw/final-s1.xml#test_disappeared_vehicle_ocr_does_not_update_another,PASS,A05
+E12,Frame gap and two vehicles,Expire both old tracks,Old IDs removed and distinct IDs allocated on return,raw/final-s1.xml#test_tracking_gap_expires_ids_and_reacquires,PASS,T04
+E13,Unavailable occupancy,Use UNKNOWN,Slot state UNKNOWN without vehicle UID,raw/final-s1.xml#test_unavailable_occupancy_is_reported_as_unknown,PASS,G06
+E14,PARK_START lacks ENTRY,Suppress PARK_START,No start event and no occupant,raw/final-s1.xml#test_live_parking_requires_confirmed_entry_crossing,PASS,L03
+E15,Invalid PARK_START envelope,Reject malformed event,No publication,raw/final-s1.xml#test_invalid_lifecycle_event_is_not_published,PASS,L04
+E16,Interruption while evidence is pinned,Mark capture interruption,Evidence state was interrupted,raw/final-s1.xml#test_stopping_grabber_marks_unfinished_event_interrupted,PASS,L07
+E17,Naive event timestamp,Reject invalid envelope,Validation rejected timestamp,raw/final-s1.xml#test_invalid_event_time_is_rejected[L02],PASS,L02
+E18,Backwards timestamp,Keep tracker clock monotonic,Second frame rejected,raw/final-s1.xml#test_backwards_frame_clock_never_reaches_tracker,PASS,T05
+E19,Decoder abort mid-file,Mark early EOF differently,Decode error retained frame context,raw/final-s1.xml#test_early_video_decode_failure_has_frame_context,PASS,V04
+E20,Writer initialization and frame write failure,Release both handles and avoid invalid output,Two faults counted; output absent,raw/final-s1.xml#test_video_writer_open_and_write_faults,PASS,V05
+E21,Stop while frames are being processed,Finalize partial video and report,"Report cancelled, playable MP4 and valid byte range",raw/final-s1.xml#test_cancel_upload_finalizes_report_and_range_video,PASS,V06
+E22,Unplayable temporary video,Preserve previous final output,Previous bytes unchanged; temp removed,raw/final-s1.xml#test_unplayable_recorder_does_not_replace_existing_video,PASS,V07
+E23,Decoder fails after first frame,Healthy camera finishes processing,Healthy camera processed frames and run was marked partial,raw/final-s1.xml#test_camera_failure_leaves_other_camera_processing[M01],PASS,M01
+E24,Shared batch transient exception,Resume with real slot assignment,Partial report contained initial occupant; no invented event,raw/final-s1.xml#test_shared_inference_recovers_without_inventing_a_parking_transition,PASS,M13
+E25,Disk full simulation,Keep previous valid report,Previous JSON survived and temp was removed,raw/final-s1.xml#test_report_write_failure_keeps_previous_version[R01],PASS,R01
+E26,JSON serializer fails during finalization,Preserve prior report and signal failure,Stayed valid and prior bytes were preserved,raw/final-s1.xml#test_cancelled_run_surfaces_report_failure_and_preserves_previous_file,PASS,R03
+E27,Outbox SQLite write error and duplicate envelope,Rollback and persist once on retry,No row on failure; one row and one send on retry,raw/final-s1.xml#test_outbox_write_failure_can_retry_without_duplicate_rows,PASS,R05
+E28,Publish error while closing session,Keep session open,UID session stayed open,raw/final-s1.xml#test_publisher_failure_does_not_close_uid_session,PASS,L06
+E29,Malformed JSON,HTTP 422,HTTP 422,raw/http-final/http-responses.json#H16,PASS,J16
+E30,Valid camera request conflicts with active upload,HTTP 409,HTTP 409,raw/http-final/http-responses.json#H31,PASS,J31
+E31,Cancellation while MJPEG response is open,HTTP 200,HTTP 200,raw/http-final/http-responses.json#H34,PASS,J34
+E32,Live JPEG decoded and stream ended,HTTP 200,HTTP 200,raw/http-final/http-responses.json#H35,PASS,J35
+E33,Semantic duplicates with different IDs for all four transitions,Build evidence only if supported,Exact repeated key tested; broader lifecycle sequence coverage incomplete,No execution evidence for this case,NOT TESTED,U08
+E34,Cancel only one camera,Build evidence only if supported,Available interface cancels the whole job,No execution evidence for this case,NOT TESTED,U10
+E35,Remote Supabase/database outage,Build evidence only if supported,No isolated Supabase destination available,No execution evidence for this case,BLOCKED,U12

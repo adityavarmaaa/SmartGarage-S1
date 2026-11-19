@@ -1,0 +1,59 @@
+{
+  "fault_matrix": {
+    "PASS": 83,
+    "FAIL": 0,
+    "BLOCKED": 4,
+    "NOT TESTED": 15,
+    "WARNING": 0
+  },
+  "dedicated_fault_suite": {
+    "total": 45,
+    "pass": 45,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "duration": 10.296
+  },
+  "api": {
+    "PASS": 44,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT TESTED": 0,
+    "WARNING": 0
+  },
+  "swagger": {
+    "PASS": 10,
+    "FAIL": 0,
+    "BLOCKED": 0,
+    "NOT TESTED": 0,
+    "WARNING": 0
+  },
+  "edges": {
+    "PASS": 32,
+    "FAIL": 0,
+    "BLOCKED": 1,
+    "NOT TESTED": 2,
+    "WARNING": 0
+  },
+  "s1": {
+    "total": 157,
+    "pass": 157,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "duration": 17.905
+  },
+  "s2": {
+    "total": 28,
+    "pass": 28,
+    "fail": 0,
+    "error": 0,
+    "skip": 0,
+    "duration": 1.783
+  },
+  "baseline_pass": 140,
+  "integration_pytest_pass": 81,
+  "coverage": "59%",
+  "defects_discovered": 7,
+  "defects_fixed": 7
+}

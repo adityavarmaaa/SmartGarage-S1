@@ -1,0 +1,1 @@
+"""Vehicle Front package."""

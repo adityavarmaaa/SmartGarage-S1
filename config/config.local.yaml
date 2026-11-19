@@ -1,0 +1,106 @@
+# Laptop/desktop config (same settings as config.kaggle_flow.yaml; only video paths differ).
+camera_id: multicamera
+parking_area_id: MULTI-AREA
+replay: realtime
+detector:
+  model_path: yolo11n.pt
+  max_fps: 5
+  threads: 2
+  input_size: 640
+  score_thr: 0.15
+  nms_thr: 0.45
+  classes:
+    2: car
+  device: cpu
+tracker:
+  high_thr: 0.45
+  low_thr: 0.15
+  match_iou: 0.25
+  low_match_iou: 0.15
+  max_age_s: 2.0
+  min_hits: 3
+plate:
+  enabled: true
+  min_vehicle_height_px: 70
+  interval_s: 0.1
+  confirm_reads: 3
+  confirm_conf: 0.8
+  emit_deadline_s: 10.0
+  min_ocr_conf: 0.75
+  min_plate_detector_conf: 0.5
+  min_plate_width_px: 40
+  min_plate_height_px: 14
+publisher:
+  outbox_db: data/outbox_live.db
+  s2_url: https://smart-parking-data-service.onrender.com/internal/events/vehicle
+  snapshot_dir: data/snapshots
+parking:
+  baseline_confirm_frames: 3
+  candidate_gap_grace_s: 1.0
+  candidate_switch_confirm_s: 1.0
+  baseline_window_s: 15.0
+  slot_boundary_margin_px: 6.0
+  slot_boundary_switch_fraction: 0.55
+  # Conservative fallback for clipped/padded detector ground-contact boxes.
+  slot_overlap_fallback_min: 0.35
+  slot_overlap_fallback_margin: 0.15
+camera_motion:
+  enabled: true
+  diagnostics_path: data/camera_motion_diagnostics.csv
+  max_dimension: 800
+  min_inliers: 8
+  max_translation_fraction: 0.35
+  max_rotation_deg: 20.0
+  min_scale: 0.65
+  max_scale: 1.5
+  smoothing: 0.9
+inference:
+  max_frame_age_ms: 1500
+  max_camera_wait_ms: 750
+  scheduler_poll_ms: 5
+  activity_threshold: 0.025
+  camera_startup_wait_s: 10
+  frame_buffer_capacity: 3
+  batch_size: 20
+  motion_roi:
+    enabled: true
+    margin_frac: 0.06
+    min_blob_px: 6
+  motion_gate:
+    enabled: true
+    on_threshold: 0.025
+    hold_s: 3.0
+    idle_track_heartbeat_s: 0.5
+    idle_empty_heartbeat_s: 3.0
+global_reid:
+  enabled: true
+  async: true
+  similarity_threshold: 0.75
+  fallback_similarity_threshold: 0.93
+  embedding_interval_s: 0.5
+gpu:
+  aux_device: auto
+handoff:
+  enabled: true
+  entry_wait_s: 4.0
+  exit_wait_s: 8.0
+  transfer_window_s: 30.0
+report:
+  path: smart_parking_final_report.json
+demo_video:
+  enabled: true
+  path: data/demo_multicam.mp4
+  fps: 12
+  tile_height: 960
+cameras:
+- camera_id: CAM-01
+  parking_area_id: AREA-01
+  source: C:/Users/lekya/Downloads/IMG_2138.MOV
+  geometry_file: data/geometry_img2138_4slots.json
+- camera_id: CAM-02
+  parking_area_id: AREA-01
+  source: C:/Users/lekya/Downloads/IMG_2136.MOV
+  geometry_file: data/geometry_img2136_cam02.json
+
+
+

@@ -1,0 +1,36 @@
+[
+  {
+    "source": "data/IMG_2138_entry_annotated.mp4",
+    "source_sha256": "891a5c93204d91078b71298b99745631ff5130b02f372e58b8b39d8a799600fd",
+    "camera": "CAM-01",
+    "geometry": "data/geometry_img2138_4slots.json",
+    "sample_count": 24,
+    "total_detections": 48,
+    "peak_detections": 3,
+    "tracks": [
+      1,
+      2
+    ],
+    "reobserved_after_injection": [
+      1,
+      2
+    ],
+    "video": "tracking-probe-1.mp4"
+  },
+  {
+    "source": "data/IMG_2136_entry_annotated.mp4",
+    "source_sha256": "86fe34f0733ee16ed71f3f8da3fa75b53451cfa6b53417a24f452fd3aabf933a",
+    "camera": "CAM-02",
+    "geometry": "data/geometry_img2136_cam02.json",
+    "sample_count": 24,
+    "total_detections": 30,
+    "peak_detections": 2,
+    "tracks": [
+      1
+    ],
+    "reobserved_after_injection": [
+      1
+    ],
+    "video": "tracking-probe-2.mp4"
+  }
+]

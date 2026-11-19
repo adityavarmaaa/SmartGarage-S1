@@ -1,0 +1,12 @@
+[
+  {
+    "id": "S09",
+    "status": "PASS",
+    "evidence": "swagger.png"
+  },
+  {
+    "id": "S10",
+    "status": "PASS",
+    "evidence": "redoc.png"
+  }
+]

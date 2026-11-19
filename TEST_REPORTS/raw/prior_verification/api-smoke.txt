@@ -1,0 +1,1 @@
+VERIFIED Uvicorn startup, health, Swagger HTML, ReDoc, OpenAPI, real local upload and CPU YOLO job

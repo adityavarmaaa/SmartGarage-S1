@@ -1,0 +1,31 @@
+{
+  "original_shape_hwc": [
+    1130,
+    540,
+    3
+  ],
+  "post_annotation_shape_hwc": [
+    1130,
+    540,
+    3
+  ],
+  "writer_input_shape_hwc": [
+    1130,
+    540,
+    3
+  ],
+  "writer_input_dtype": "uint8",
+  "annotation_changed_pixel_fraction": 0.007828580793182563,
+  "mean_absolute_error_decoded_vs_writer_input": 2.954757456571616,
+  "mean_absolute_error_decoded_vs_source": 3.981259150005463,
+  "decoded_frames": 13,
+  "encoding": {
+    "codec_name": "mpeg4",
+    "width": 540,
+    "height": 1130,
+    "pix_fmt": "yuv420p",
+    "avg_frame_rate": "6/1",
+    "bit_rate": "3548359",
+    "nb_frames": "13"
+  }
+}

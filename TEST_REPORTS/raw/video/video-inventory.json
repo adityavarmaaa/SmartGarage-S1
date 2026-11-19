@@ -1,0 +1,340 @@
+[
+  {
+    "reference": "IMG_2138_entry_annotated.mp4",
+    "sha256": "24232849585fd47bb84c0cae52cf0f20f5793116e896ff47fddefafa33a4ecef",
+    "bytes": 11988179,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "13.916667",
+    "width": 540,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "167",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/IMG_2136_entry_annotated.mp4",
+    "sha256": "86fe34f0733ee16ed71f3f8da3fa75b53451cfa6b53417a24f452fd3aabf933a",
+    "bytes": 9326691,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "11.166667",
+    "width": 540,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "134",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/IMG_2138_entry_annotated.mp4",
+    "sha256": "891a5c93204d91078b71298b99745631ff5130b02f372e58b8b39d8a799600fd",
+    "bytes": 36622121,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "55.333333",
+    "width": 540,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "664",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/demo_multicam.mp4",
+    "sha256": "2253a5f861083e24f8398ff3dd05db41a82c82a90dea8ed02e7d3ebef4d8a9f7",
+    "bytes": 11544695,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.000000",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "96",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/entry_20261114_140604.mp4",
+    "sha256": "b7088892688431f7fbed963393c64b5c3d342f45bfdf7e8bbb8aea9e13d2dfcf",
+    "bytes": 10924601,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "20.666667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "248",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/entry_20261114_141336.mp4",
+    "sha256": "b7088892688431f7fbed963393c64b5c3d342f45bfdf7e8bbb8aea9e13d2dfcf",
+    "bytes": 10924601,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "20.666667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "248",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/exit_20261114_140604.mp4",
+    "sha256": "8fd1651de4649d409ff27e8e4b09c08e7a2a4164c8dd9d3785f568338f26b8c8",
+    "bytes": 4282757,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.166667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "98",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/exit_20261114_141336.mp4",
+    "sha256": "8fd1651de4649d409ff27e8e4b09c08e7a2a4164c8dd9d3785f568338f26b8c8",
+    "bytes": 4282757,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.166667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "98",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/exit_demo_multicam.mp4",
+    "sha256": "d1006cad72b871962138e995c30a0274687243386ed65e3e1e3fe5e80a2057cd",
+    "bytes": 4287446,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.166667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "98",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/exit_demo_multicam_compatible.mp4",
+    "sha256": "aea625940a7c07ca248e11c840e39a85aefcdfccf231fec5a26c312aec0794c7",
+    "bytes": 5327693,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.166667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "98",
+    "codec": "h264"
+  },
+  {
+    "reference": "data/exit_preview_3e8c41ea9b.mp4",
+    "sha256": "2253a5f861083e24f8398ff3dd05db41a82c82a90dea8ed02e7d3ebef4d8a9f7",
+    "bytes": 11544695,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.000000",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "96",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/exit_preview_4bd56cac66.mp4",
+    "sha256": "12442f6f49a3dfafde8a7aeba37df0f81ea0fa2bc670c7b5a25ce903dd00675a",
+    "bytes": 29956536,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "22.833333",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "274",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/exit_preview_bfdfee6edf.mp4",
+    "sha256": "2253a5f861083e24f8398ff3dd05db41a82c82a90dea8ed02e7d3ebef4d8a9f7",
+    "bytes": 11544695,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.000000",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "96",
+    "codec": "mpeg4"
+  },
+  {
+    "reference": "data/uploads/0c3e93af1b1f4a019dcf45617c76280d.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/0c3e93af1b1f4a019dcf45617c76280d.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/14018a54ad0344b2b38075190b557059.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/14018a54ad0344b2b38075190b557059.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/3eecb8b4fbd3495898ee4dc4261d2f87.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/3eecb8b4fbd3495898ee4dc4261d2f87.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/4565b32310f7450093f5d54080566bce.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/4565b32310f7450093f5d54080566bce.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/47cc7d2cc8c5439fb68a2183f5402272.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/47cc7d2cc8c5439fb68a2183f5402272.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/492c8bc7f70c472c8766cb7a80de6504.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/492c8bc7f70c472c8766cb7a80de6504.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/5b2c0813c5264c799d9fba0da15e19ba.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/5b2c0813c5264c799d9fba0da15e19ba.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/5fbab41209fe48a28545c844834f14a9.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/5fbab41209fe48a28545c844834f14a9.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/699b4b86630847b781f231b28639d1bf.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/699b4b86630847b781f231b28639d1bf.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/764f8cf9606b45088893298b7dbad4f8.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/764f8cf9606b45088893298b7dbad4f8.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/7ad33b3d3af541b4b7956c81058e6de1.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/7ad33b3d3af541b4b7956c81058e6de1.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/93927ee3ecc14c22b99285de2215ca40.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/93927ee3ecc14c22b99285de2215ca40.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/a040cf1c4ff64bb48bcd2c5a5911b11d.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/a040cf1c4ff64bb48bcd2c5a5911b11d.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/b6a56ad5d6f94001835bf34704b34266.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/b6a56ad5d6f94001835bf34704b34266.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/be8e23c54bfe4f6db7bbfff9640fd1f7.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/be8e23c54bfe4f6db7bbfff9640fd1f7.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/c7c168f632864f0685a04d2920fdd385.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/c7c168f632864f0685a04d2920fdd385.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/c9b49232509840e3b924b7912905f3c2.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/c9b49232509840e3b924b7912905f3c2.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "data/uploads/edd88ff976b84a3f8f157d7fbb51e0e3.mp4",
+    "sha256": "c4fea2d9202c99e56b11f0992a0e28c9f1127f319cf1a48e918c11307933557e",
+    "bytes": 16,
+    "status": "FAIL",
+    "note": "ffprobe rejected file",
+    "diagnostic": "/workspace/work/s1root/data/uploads/edd88ff976b84a3f8f157d7fbb51e0e3.mp4: Invalid data found when processing input"
+  },
+  {
+    "reference": "final_run_backup/20261114_071749/exit_demo_multicam.mp4",
+    "sha256": "8fd1651de4649d409ff27e8e4b09c08e7a2a4164c8dd9d3785f568338f26b8c8",
+    "bytes": 4282757,
+    "status": "PASS",
+    "note": "First frame decoded",
+    "duration": "8.166667",
+    "width": 1080,
+    "height": 1130,
+    "fps": "12/1",
+    "frame_count_metadata": "98",
+    "codec": "h264"
+  },
+  {
+    "reference": "IMG_2138.MOV",
+    "camera": "CAM-01",
+    "status": "BLOCKED",
+    "note": "Configured raw media absent"
+  },
+  {
+    "reference": "IMG_2136.MOV",
+    "camera": "CAM-02",
+    "status": "BLOCKED",
+    "note": "Configured raw media absent"
+  }
+]

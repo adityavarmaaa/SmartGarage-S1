@@ -1,0 +1,216 @@
+{
+  "report_version": 2,
+  "generated_at": "2026-11-19T23:40:16.983097+05:30",
+  "run_status": "COMPLETED",
+  "processing_mode": "MULTI_CAMERA_SHARED_GPU_BATCHING",
+  "service2_publishing": false,
+  "timestamp_note": "All times are IST. Live cameras: laptop/server clock at frame decode. File replay: laptop clock captured once at run start + video offset (determinism.timestamp_source=laptop), so relative timings are identical on every run of the same video; only the absolute start differs.",
+  "run_info": {
+    "determinism": {
+      "enabled": true,
+      "reason": "auto_on_all_sources_are_files",
+      "seed": 1234,
+      "timestamp_source": "laptop",
+      "run_start_epoch": 1795111815.4240627
+    }
+  },
+  "pipeline_health": {
+    "reid_backend": "disabled",
+    "reid_threshold": null,
+    "plate_engine": "OFF",
+    "yolo_batches": {
+      "calls": 2,
+      "frames": 2,
+      "max_size": 1,
+      "sizes": {
+        "1": 2
+      },
+      "configured_batch_size": 20,
+      "max_possible_batch_size_for_this_run": 1,
+      "average_batch_size": 1.0,
+      "batch_fill_ratio": 1.0
+    },
+    "motion_roi": {
+      "CAM-01": {
+        "enabled": true,
+        "source": "hull(slots+tripwire+inside_point)",
+        "area_frac": 0.5363
+      }
+    },
+    "logging": {
+      "error_count": 0,
+      "warning_count": 0,
+      "errors_by_component": {},
+      "warnings_by_component": {},
+      "recent_errors": []
+    }
+  },
+  "summary": {
+    "cameras": 1,
+    "vehicles_seen": 0,
+    "vehicles_parked": 0,
+    "vehicle_identity_conflicts": 0,
+    "plates_confirmed": 0,
+    "plate_conflicts": 0,
+    "slots_occupied": 0,
+    "slots_free": 3,
+    "slots_unknown": 0,
+    "service2_entry_events": 0,
+    "service2_exit_events": 0,
+    "park_end_events": 0,
+    "exit_tripwire_vehicle_records": 0,
+    "camera_transfers": 0,
+    "parked_vehicle_slot_difference": 0
+  },
+  "vehicles": [],
+  "service2_events": [],
+  "lifecycle_events": [],
+  "exit_vehicle_details": [],
+  "lifecycle_timeline": [],
+  "plate_evidence": [],
+  "camera_transfers": [],
+  "global_reid": {
+    "backend": "disabled",
+    "model": null,
+    "similarity_threshold": null,
+    "identities": []
+  },
+  "cameras": {
+    "CAM-01": {
+      "frames_seen": 2,
+      "processed_frames": 2,
+      "dropped_frames": 0,
+      "skipped_idle_frames": 0,
+      "motion_roi": {
+        "enabled": true,
+        "source": "hull(slots+tripwire+inside_point)",
+        "area_frac": 0.5363
+      },
+      "slots_total": 3,
+      "occupied_slots": 0,
+      "free_slots": 3,
+      "unknown_slots": 0,
+      "slots": [
+        {
+          "slot_id": "B-01",
+          "level": "L1",
+          "state": "FREE",
+          "track_id": null,
+          "vehicle_uid": null,
+          "occupancy_source": null,
+          "camera_id": "CAM-01",
+          "plate": null,
+          "plate_status": "UNKNOWN",
+          "vehicle_type": null,
+          "colour": null,
+          "baseline": false,
+          "parked_at": null,
+          "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+          "parked_at_epoch": null,
+          "parked_at_label": null,
+          "parked_at_ist": null
+        },
+        {
+          "slot_id": "B-02",
+          "level": "L1",
+          "state": "FREE",
+          "track_id": null,
+          "vehicle_uid": null,
+          "occupancy_source": null,
+          "camera_id": "CAM-01",
+          "plate": null,
+          "plate_status": "UNKNOWN",
+          "vehicle_type": null,
+          "colour": null,
+          "baseline": false,
+          "parked_at": null,
+          "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+          "parked_at_epoch": null,
+          "parked_at_label": null,
+          "parked_at_ist": null
+        },
+        {
+          "slot_id": "B-03",
+          "level": "L1",
+          "state": "FREE",
+          "track_id": null,
+          "vehicle_uid": null,
+          "occupancy_source": null,
+          "camera_id": "CAM-01",
+          "plate": null,
+          "plate_status": "UNKNOWN",
+          "vehicle_type": null,
+          "colour": null,
+          "baseline": false,
+          "parked_at": null,
+          "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+          "parked_at_epoch": null,
+          "parked_at_label": null,
+          "parked_at_ist": null
+        }
+      ],
+      "event_counts": {},
+      "recent_events": []
+    }
+  },
+  "track_observations": [],
+  "validation": {
+    "local_tracking": "NO_TRACKS",
+    "vehicle_records": "NO_VEHICLES",
+    "cross_camera_reidentification": "NOT_DEMONSTRATED",
+    "plate_detection_ocr": "NO_PLATE_READS",
+    "vehicle_attributes": "NO_ATTRIBUTES",
+    "multi_camera_processing": "PARTIAL",
+    "camera_scale_validation": "NOT_TESTED_10_20_30_CAMERA_LOAD",
+    "slot_integrity": "PASS",
+    "vehicle_slot_consistency": "PASS",
+    "confirmed_plate_integrity": "PASS",
+    "service2_entry_emitted": "NONE",
+    "service2_exit_emitted": "NOT_DEMONSTRATED",
+    "lifecycle_park_start": "NOT_DEMONSTRATED",
+    "lifecycle_park_end": "NOT_DEMONSTRATED",
+    "lifecycle_exit": "NOT_DEMONSTRATED"
+  },
+  "slot_details": [
+    {
+      "camera_id": "CAM-01",
+      "slot_id": "B-01",
+      "level": "L1",
+      "state": "FREE",
+      "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+      "current_vehicle": null,
+      "vehicle_history": [],
+      "lifecycle_history": []
+    },
+    {
+      "camera_id": "CAM-01",
+      "slot_id": "B-02",
+      "level": "L1",
+      "state": "FREE",
+      "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+      "current_vehicle": null,
+      "vehicle_history": [],
+      "lifecycle_history": []
+    },
+    {
+      "camera_id": "CAM-01",
+      "slot_id": "B-03",
+      "level": "L1",
+      "state": "FREE",
+      "recording_started_at_ist": "2026-11-19T23:40:15+05:30",
+      "current_vehicle": null,
+      "vehicle_history": [],
+      "lifecycle_history": []
+    }
+  ],
+  "slot_details_summary": {
+    "total_slots": 3,
+    "occupied_slots": 0,
+    "free_slots": 3,
+    "unknown_slots": 0,
+    "slots_with_departed_vehicle_history": 0
+  },
+  "failed_camera_ids": [],
+  "processing_failures": 0,
+  "processing_status": "completed"
+}

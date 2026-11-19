@@ -1,0 +1,18 @@
+# Sample 58 evidence-rendering correction
+
+The historical supplied media `data/IMG_2136_entry_annotated.mp4` decodes frame 58 at 540 × 1130, 12 fps. It already contains original project overlays. The configured raw MOV was absent, so the comparison starts with this supplied historical MP4. Frame 58 is zero-based and corresponds to about 4.833 seconds and frame 12 of the previous probe export.
+
+The old handover probe imposed a full-frame pixelation effect before annotations. It downsampled to 33 × 70 and upscaled using nearest-neighbor back to 540 × 1130. The pixel blocks appear in the reconstructed pre-annotation stage. The original detector consumed the original decoded pixels. Old JPEG and MP4 both inherited the lossy visualization. The old file had 540 × 1130 MPEG-4 Part 2 with yuv420p, 6 fps, 1,651,626 bit/s and 24 frames. The source used MPEG-4 Part 2 with yuv420p, 12 fps, 6,680,667 bit/s and 134 frames.
+
+The evidence renderer now annotates a copy of the original decoded BGR uint8 frame. Odd dimensions receive at most one replicated border pixel per axis for encoder compatibility. For this source, original, annotated, writer and decoded stages are all 540 × 1130. No new spatial resizing or BGR/RGB swap occurs. The encoder performs its ordinary conversion to yuv420p. Both regression tests passed.
+
+The correction sampled only 13 frames, centered on sample 58, using the real detector and a new local tracker. It exported and decoded all 13 frames with the same codec and nominal 6 fps as the old probe. The corrected clip bitrate was 3,548,359 bit/s. Visual inspection showed that the vehicle edges, scene detail and text were retained. The overlay changed about 0.78% of pixels before encoding. The older resize alone changed the average absolute pixel intensity by 15.71 on a 0–255 scale; the corrected decoded MP4 is 2.95 levels from its annotated writer input on the same metric. The original runtime recorder and input media were left untouched.
+
+`sample58-stage-comparison.png` shows each stage left to right. The old pre-annotation image is a reconstruction of the recorded script's original resize. The old annotated still and decoded export come from the previous shipped artifacts. The fixed renderer and tests are already integrated into this archive. Both representative clips were regenerated. Each contains 24 decoded frames at 540 × 1130 and 6 fps, using MPEG-4 Part 2/yuv420p. The two clip bitrates were 3.77 and 3.55 Mb/s. The previous release retains its original intentionally pixelated evidence for traceability.
+
+- [Five-stage comparison](raw/video-quality/sample58-fix/sample58-stage-comparison.png)
+- [Corrected short segment](raw/video-quality/sample58-fix/corrected-short-segment.mp4)
+- [Corrected 13-frame measurements](raw/video-quality/sample58-fix/corrected-measurements.json)
+- [Metadata for both regenerated production probes](raw/video/decoded-probe-verification.json)
+- [Old pre-annotation reconstruction](raw/video-quality/sample58-before/old-before-annotation.png)
+- [Corrected frame after annotation](raw/video-quality/sample58-fix/corrected-after-annotation.png)

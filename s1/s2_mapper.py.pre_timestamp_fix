@@ -1,0 +1,535 @@
+import logging
+import os
+import sqlite3
+
+log = logging.getLogger("s2_mapper")
+
+_MAP = {
+    "PARK_START": "ENTRY",
+    "PARK_END": "EXIT",
+}
+
+
+class S2Mapper:
+    """Maps Service 1 parking lifecycle events to the Service 2 contract.
+
+    Internal lifecycle:
+        ENTRY      = first vehicle sighting
+        PARK_START = vehicle confirmed parked
+        PARK_END   = vehicle confirmed gone from slot
+
+    Service 2 receives:
+        ENTRY:
+            timestamp   = original first-seen time
+            captured_at = parking confirmation time
+            received_at = null
+
+        EXIT:
+            timestamp   = same first-seen time as ENTRY
+            captured_at = same parking confirmation time as ENTRY
+            received_at = actual leave time
+
+    Lifecycle state is persisted in SQLite so an EXIT can occur in a
+    different Service 1 process/run from the ENTRY.
+    """
+
+    def __init__(self, inner, db_path="data/lifecycle.db"):
+        self._inner = inner
+        self._db_path = db_path
+
+        parent = os.path.dirname(os.path.abspath(db_path))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+
+        self._db = sqlite3.connect(
+            self._db_path,
+            timeout=10,
+            check_same_thread=False,
+        )
+        self._db.execute(
+            """
+            CREATE TABLE IF NOT EXISTS parking_sessions (
+                plate TEXT NOT NULL,
+                camera_id TEXT NOT NULL,
+                parking_area_id TEXT,
+                slot_id TEXT,
+                first_seen TEXT NOT NULL,
+                parked_at TEXT,
+                status TEXT NOT NULL DEFAULT 'OPEN',
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (
+                    plate,
+                    camera_id,
+                    parking_area_id
+                )
+            )
+            """
+        )
+        self._db.execute(
+            """
+            CREATE TABLE IF NOT EXISTS parking_sessions_by_uid (
+                vehicle_uid TEXT NOT NULL,
+                camera_id TEXT NOT NULL,
+                parking_area_key TEXT NOT NULL,
+                parking_area_id TEXT,
+                slot_id TEXT,
+                first_seen TEXT NOT NULL,
+                parked_at TEXT,
+                status TEXT NOT NULL DEFAULT 'OPEN',
+                created_at TEXT DEFAULT CURRENT_TIMESTAMP,
+                PRIMARY KEY (vehicle_uid, camera_id, parking_area_key)
+            )
+            """
+        )
+        self._db.commit()
+
+    @staticmethod
+    def _plate(event):
+        vehicle = event.get("vehicle") or {}
+        plate = vehicle.get("plate")
+
+        if not plate:
+            plate_obj = event.get("plate") or {}
+            plate = plate_obj.get("text")
+
+        return str(plate).strip().upper() if plate else None
+
+    @staticmethod
+    def _slot(event):
+        return (event.get("parking") or {}).get("slot_id")
+
+    @staticmethod
+    def _camera(event):
+        return event.get("camera_id") or ""
+
+    @staticmethod
+    def _area(event):
+        return event.get("parking_area_id")
+
+    @staticmethod
+    def _uid(event):
+        return event.get("vehicle_uid")
+
+    def _uid_session(self, event, status=None):
+        uid = self._uid(event)
+        if not uid:
+            return None
+        area_key = str(self._area(event) or "")
+        sql = (
+            "SELECT first_seen, parked_at, slot_id, status "
+            "FROM parking_sessions_by_uid "
+            "WHERE vehicle_uid=? AND camera_id=? AND parking_area_key=?"
+        )
+        args = [str(uid), self._camera(event), area_key]
+        if status:
+            sql += " AND status=?"
+            args.append(status)
+        return self._db.execute(sql, args).fetchone()
+
+    def _upsert_uid_session(
+        self, event, first_seen, parked_at=None, status="OPEN", slot_id=None
+    ):
+        uid = self._uid(event)
+        if not uid or not first_seen:
+            return False
+        area = self._area(event)
+        self._db.execute(
+            """
+            INSERT INTO parking_sessions_by_uid (
+                vehicle_uid, camera_id, parking_area_key, parking_area_id,
+                slot_id, first_seen, parked_at, status
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT (vehicle_uid, camera_id, parking_area_key)
+            DO UPDATE SET
+                parking_area_id=excluded.parking_area_id,
+                slot_id=COALESCE(excluded.slot_id, parking_sessions_by_uid.slot_id),
+                first_seen=excluded.first_seen,
+                parked_at=excluded.parked_at,
+                status=excluded.status
+            """,
+            (
+                str(uid), self._camera(event), str(area or ""), area,
+                slot_id or self._slot(event), first_seen, parked_at, status,
+            ),
+        )
+        self._db.commit()
+        return True
+
+    def _remember_entry(self, event):
+        plate = self._plate(event)
+        first_seen = event.get("event_time") or event.get("timestamp")
+
+        if not first_seen:
+            log.warning(
+                "Cannot remember ENTRY without timestamp event_id=%s",
+                event.get("event_id"),
+            )
+            return
+
+        # Always retain the entry time by vehicle UID. OCR may not have a
+        # trustworthy registration yet, but the vehicle was still observed.
+        self._upsert_uid_session(event, first_seen, status="OPEN")
+
+        if not plate:
+            log.info(
+                "ENTRY remembered without plate by vehicle_uid=%s timestamp=%s",
+                self._uid(event), first_seen,
+            )
+            return
+
+        camera = self._camera(event)
+        area = self._area(event)
+
+        self._db.execute(
+            """
+            INSERT INTO parking_sessions (
+                plate,
+                camera_id,
+                parking_area_id,
+                slot_id,
+                first_seen,
+                parked_at,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?, NULL, 'OPEN')
+            ON CONFLICT (
+                plate,
+                camera_id,
+                parking_area_id
+            )
+            DO UPDATE SET
+                first_seen = excluded.first_seen,
+                slot_id = excluded.slot_id,
+                parked_at = NULL,
+                status = 'OPEN'
+            """,
+            (
+                plate,
+                camera,
+                area,
+                self._slot(event),
+                first_seen,
+            ),
+        )
+        self._db.commit()
+
+        log.info(
+            "Lifecycle ENTRY remembered plate=%s first_seen=%s slot=%s",
+            plate,
+            first_seen,
+            self._slot(event),
+        )
+
+    def _remember_park_start(self, event):
+        plate = self._plate(event)
+
+        if not plate:
+            log.warning(
+                "Cannot remember PARK_START without plate event_id=%s",
+                event.get("event_id"),
+            )
+            return None
+
+        parked_at = event.get("detected_at") or event.get("event_time") or event.get("timestamp")
+        camera = self._camera(event)
+        area = self._area(event)
+        slot = self._slot(event)
+
+        row = self._db.execute(
+            """
+            SELECT first_seen
+            FROM parking_sessions
+            WHERE plate = ?
+              AND camera_id = ?
+              AND parking_area_id IS ?
+              AND status = 'OPEN'
+            """,
+            (plate, camera, area),
+        ).fetchone()
+
+        uid_row = self._uid_session(event)
+        if row:
+            first_seen = row[0]
+        elif uid_row:
+            first_seen = uid_row[0]
+        else:
+            # Recovery case: no earlier ENTRY was observed; PARK_START is the
+            # best available first-seen timestamp.
+            first_seen = event.get("event_time") or event.get("timestamp")
+
+        self._db.execute(
+            """
+            INSERT INTO parking_sessions (
+                plate,
+                camera_id,
+                parking_area_id,
+                slot_id,
+                first_seen,
+                parked_at,
+                status
+            )
+            VALUES (?, ?, ?, ?, ?, ?, 'PARKED')
+            ON CONFLICT (
+                plate,
+                camera_id,
+                parking_area_id
+            )
+            DO UPDATE SET
+                slot_id = excluded.slot_id,
+                parked_at = excluded.parked_at,
+                status = 'PARKED'
+            """,
+            (
+                plate,
+                camera,
+                area,
+                slot,
+                first_seen,
+                parked_at,
+            ),
+        )
+        self._db.commit()
+        self._upsert_uid_session(
+            event, first_seen, parked_at=parked_at, status="PARKED", slot_id=slot
+        )
+
+        log.info(
+            "Lifecycle PARK_START remembered plate=%s "
+            "first_seen=%s captured_at=%s slot=%s",
+            plate,
+            first_seen,
+            parked_at,
+            slot,
+        )
+
+        return first_seen, parked_at
+
+    def _build_entry(self, event, first_seen, parked_at):
+        out = dict(event)
+
+        # Preserve original replay/source time separately.
+        out["source_event_time"] = event.get("event_time") or first_seen
+
+        # Always capture the live runtime system clock in IST when ENTRY is built.
+        wall_time = datetime.now(ZoneInfo("Asia/Kolkata")).isoformat(
+            timespec="milliseconds"
+        )
+
+        out["event_type"] = "ENTRY"
+        out["timestamp"] = wall_time
+        out["captured_at"] = wall_time
+        out["received_at"] = None
+
+        return out
+
+    def _build_exit(self, event, first_seen, parked_at):
+        out = dict(event)
+
+        received_at = event.get("detected_at") or event.get("timestamp")
+
+        out["event_type"] = "EXIT"
+        out["timestamp"] = received_at
+        out["captured_at"] = parked_at
+        out["received_at"] = received_at
+
+        return out
+
+    def _publish_entry(self, event):
+        plate = self._plate(event)
+        if plate:
+            result = self._remember_park_start(event)
+            if not result:
+                return
+            first_seen, parked_at = result
+        else:
+            parked_at = event.get("detected_at") or event.get("event_time") or event.get("timestamp")
+            uid_row = self._uid_session(event)
+            first_seen = uid_row[0] if uid_row else parked_at
+            if not first_seen or not parked_at:
+                log.warning(
+                    "Cannot publish PARK_START without timestamp event_id=%s",
+                    event.get("event_id"),
+                )
+                return
+            self._upsert_uid_session(
+                event, first_seen, parked_at=parked_at, status="PARKED",
+                slot_id=self._slot(event),
+            )
+
+        out = self._build_entry(event, first_seen, parked_at)
+        self._inner.publish(out)
+
+        log.info(
+            "S2 ENTRY published plate=%s vehicle_uid=%s timestamp=%s captured_at=%s",
+            self._plate(out), self._uid(out), out.get("timestamp"), out.get("captured_at"),
+        )
+
+    def _publish_exit(self, event):
+        plate = self._plate(event)
+        camera = self._camera(event)
+        area = self._area(event)
+        slot = self._slot(event)
+
+        row = None
+        if plate:
+            row = self._db.execute(
+                """
+                SELECT first_seen, parked_at, slot_id
+                FROM parking_sessions
+                WHERE plate = ?
+                  AND camera_id = ?
+                  AND parking_area_id IS ?
+                  AND status = 'PARKED'
+                """,
+                (plate, camera, area),
+            ).fetchone()
+
+        uid_row = self._uid_session(event, status="PARKED")
+        if row:
+            first_seen, parked_at, stored_slot = row
+        elif uid_row:
+            first_seen, parked_at, stored_slot, _status = uid_row
+        else:
+            log.warning(
+                "Not sent to Service 2: EXIT has no stored PARKED session "
+                "plate=%s vehicle_uid=%s slot=%s event_id=%s",
+                plate, self._uid(event), slot, event.get("event_id"),
+            )
+            return
+
+        received_at = event.get("detected_at") or event.get("timestamp")
+
+        if parked_at and received_at and received_at < parked_at:
+            log.warning(
+                "EXIT received_at is earlier than captured_at "
+                "plate=%s captured_at=%s received_at=%s",
+                plate,
+                parked_at,
+                received_at,
+            )
+
+        out = self._build_exit(
+            event,
+            first_seen,
+            parked_at,
+        )
+
+        self._inner.publish(out)
+
+        self._db.execute(
+            """
+            UPDATE parking_sessions
+            SET status = 'CLOSED'
+            WHERE plate = ?
+              AND camera_id = ?
+              AND parking_area_id IS ?
+              AND status = 'PARKED'
+            """,
+            (plate, camera, area),
+        )
+        self._db.execute(
+            """
+            UPDATE parking_sessions_by_uid
+            SET status='CLOSED'
+            WHERE vehicle_uid=? AND camera_id=? AND parking_area_key=?
+              AND status='PARKED'
+            """,
+            (str(self._uid(event) or ""), camera, str(area or "")),
+        )
+        self._db.commit()
+
+        log.info(
+            "S2 EXIT published plate=%s vehicle_uid=%s timestamp=%s "
+            "captured_at=%s received_at=%s slot=%s",
+            plate,
+            out.get("timestamp"),
+            out.get("captured_at"),
+            out.get("received_at"),
+            stored_slot,
+        )
+
+    def publish(self, event):
+        etype = event.get("event_type")
+
+        # ENTRY is internal to S1. Remember it, but don't send it yet.
+        if etype == "ENTRY":
+            self._remember_entry(event)
+            return
+
+        # PARK_START becomes the Service 2 ENTRY.
+        if etype == "PARK_START":
+            slot = self._slot(event)
+
+            if not slot:
+                log.warning(
+                    "Not sent to Service 2: PARK_START without "
+                    "parking.slot_id event_id=%s",
+                    event.get("event_id"),
+                )
+                return
+
+            self._publish_entry(event)
+            return
+
+        # A late plate result must never replace the original timestamps or
+        # vehicle UID. Keep the local session associated so a later PARK_END
+        # can carry the confirmed plate while retaining its true times.
+        if etype == "VEHICLE_UPDATE":
+            plate = self._plate(event)
+            uid_row = self._uid_session(event)
+            if plate and uid_row:
+                first_seen, parked_at, slot_id, status = uid_row
+                camera = self._camera(event)
+                area = self._area(event)
+                self._db.execute(
+                    """
+                    INSERT INTO parking_sessions (
+                        plate, camera_id, parking_area_id, slot_id,
+                        first_seen, parked_at, status
+                    ) VALUES (?, ?, ?, ?, ?, ?, ?)
+                    ON CONFLICT (plate, camera_id, parking_area_id)
+                    DO UPDATE SET
+                        slot_id=excluded.slot_id,
+                        first_seen=excluded.first_seen,
+                        parked_at=excluded.parked_at,
+                        status=excluded.status
+                    """,
+                    (plate, camera, area, slot_id, first_seen, parked_at,
+                     status if status in ("OPEN", "PARKED") else "CLOSED"),
+                )
+                self._db.commit()
+            log.info(
+                "Late plate update associated locally plate=%s vehicle_uid=%s; "
+                "timestamps retained",
+                plate, self._uid(event),
+            )
+            return
+
+        # PARK_END becomes the Service 2 EXIT.
+        if etype == "PARK_END":
+            slot = self._slot(event)
+
+            if not slot:
+                log.warning(
+                    "Not sent to Service 2: PARK_END without "
+                    "parking.slot_id event_id=%s",
+                    event.get("event_id"),
+                )
+                return
+
+            self._publish_exit(event)
+            return
+
+        log.info(
+            "Not sent to Service 2 (internal event): %s event_id=%s",
+            etype,
+            event.get("event_id"),
+        )
+
+    def stop(self, wait=True, timeout=5.0):
+        self._db.close()
+        return self._inner.stop(wait=wait, timeout=timeout)
+
+    def __getattr__(self, name):
+        return getattr(self._inner, name)
+

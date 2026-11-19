@@ -1,0 +1,106 @@
+FFFFFFFFFF.F.                                                            [100%]
+=================================== FAILURES ===================================
+_________________ test_semantic_park_start_retry_after_restart _________________
+tests/production/test_production_lifecycle.py:45: in test_semantic_park_start_retry_after_restart
+    assert sender.publish.call_count == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = <Mock name='mock.publish' id='140538481888048'>.call_count
+E    +    where <Mock name='mock.publish' id='140538481888048'> = <Mock id='140537670125760'>.publish
+________________ test_retry_uses_first_id_after_outbox_failure _________________
+tests/production/test_production_lifecycle.py:61: in test_retry_uses_first_id_after_outbox_failure
+    assert [c.args[0]["event_id"] for c in sender.publish.call_args_list] == [start["event_id"]] * 2
+E   AssertionError: assert ['86df6435491...07c4851963d4'] == ['86df6435491...25a548b5f23b']
+E     
+E     At index 1 diff: '1619ea31de444cdfa9ec07c4851963d4' != '86df6435491848a09ede25a548b5f23b'
+E     Use -v to get more diff
+__________ test_delayed_duplicate_entry_cannot_reopen_parked_session ___________
+tests/production/test_production_lifecycle.py:73: in test_delayed_duplicate_entry_cannot_reopen_parked_session
+    assert mapper._uid_session(start)[3] == "PARKED"
+E   AssertionError: assert 'OPEN' == 'PARKED'
+E     
+E     - PARKED
+E     + OPEN
+_____ test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate ______
+tests/production/test_production_lifecycle.py:95: in test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate
+    assert mapper._uid_session(first)[3] == "PARKED"
+E   AssertionError: assert 'CLOSED' == 'PARKED'
+E     
+E     - PARKED
+E     + CLOSED
+__________ test_report_ignores_same_observation_with_fresh_id[ENTRY] ___________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': '00e1b7847c444059a3cf8eeb409493ea', 'vehicle_uid': '97f39cd7f20543e8996ef7212bc51980', 'slot_id': '53c0... 'vehicle_uid': '97f39cd7f20543e8996ef7212bc51980', 'slot_id': '53c004d881d54decbbfe24334de2811e', 'plate': None, ...}])
+________ test_report_ignores_same_observation_with_fresh_id[PARK_START] ________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': '2eb5d6151c884120a514b35003d191e2', 'vehicle_uid': '6ae3971e161b45088ae473bda34018ca', 'slot_id': 'd563... 'vehicle_uid': '6ae3971e161b45088ae473bda34018ca', 'slot_id': 'd563396308de4945acac6e81b957211d', 'plate': None, ...}])
+_________ test_report_ignores_same_observation_with_fresh_id[PARK_END] _________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': '7d15df5dc68d40538ecf2f1f0e3c8eec', 'vehicle_uid': 'b9ea1edf0fcb4fb5b2768f2e0918d83f', 'slot_id': 'd857... 'vehicle_uid': 'b9ea1edf0fcb4fb5b2768f2e0918d83f', 'slot_id': 'd857c1cadb414bb5999cc90cf19c42ec', 'plate': None, ...}])
+___________ test_report_ignores_same_observation_with_fresh_id[EXIT] ___________
+tests/production/test_production_lifecycle.py:108: in test_report_ignores_same_observation_with_fresh_id
+    assert len(rows) == 1
+E   AssertionError: assert 2 == 1
+E    +  where 2 = len([{'camera_id': 'a38044566bf9462d92ee9f77720d4ebe', 'vehicle_uid': '7d4cfd5dc0d74d6eaca4a9c1bdaaadc5', 'slot_id': '1472... 'vehicle_uid': '7d4cfd5dc0d74d6eaca4a9c1bdaaadc5', 'slot_id': '1472802d25d749939ee2a7c9514d665e', 'plate': None, ...}])
+____________ test_unconfirmed_ocr_never_reaches_downstream_payload _____________
+tests/production/test_production_lifecycle.py:122: in test_unconfirmed_ocr_never_reaches_downstream_payload
+    assert candidate not in json.dumps(published)
+E   assert '08e6e68f677...c54feb4c08cf' not in '{"event_typ...d_at": null}'
+E     
+E     '08e6e68f677f44fb935ac54feb4c08cf' is contained here:
+E     ?         -----------------------                                            ^^^^^^^^^^^^                                   ^
+E       "plate": "08e6e68f677f44fb935ac54feb4c08cf"}, "plate": {"text": "08e6e68f677f44fb935ac54feb4c08cf"}, "plate_candidate": "08e6e68f677f44fb935ac54feb4c08cf", "source_event_time": "2026-01-01T00:01:00+00:00", "captured_at": "2026-01-01T00:01:00+00:00", "received_at": null}
+E     ?                                                     ^^^^^^^^^^^                                   ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+___________________ test_concurrent_start_retries_queue_once ___________________
+tests/production/test_production_lifecycle.py:139: in test_concurrent_start_retries_queue_once
+    list(pool.map(mapper.publish, reruns))
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:619: in result_iterator
+    yield _result_or_cancel(fs.pop())
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:317: in _result_or_cancel
+    return fut.result(timeout)
+           ^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:449: in result
+    return self.__get_result()
+           ^^^^^^^^^^^^^^^^^^^
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/_base.py:401: in __get_result
+    raise self._exception
+/opt/codex/runtimes/codex-primary-runtime/dependencies/python/lib/python3.12/concurrent/futures/thread.py:59: in run
+    result = self.fn(*self.args, **self.kwargs)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+s1/publishing/s2_mapper.py:623: in publish
+    self._publish_entry(event)
+s1/publishing/s2_mapper.py:480: in _publish_entry
+    uid_row = self._uid_session(event)
+              ^^^^^^^^^^^^^^^^^^^^^^^^
+s1/publishing/s2_mapper.py:192: in _uid_session
+    return self._db.execute(sql, args).fetchone()
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+E   sqlite3.InterfaceError: bad parameter or other API misuse
+______________ test_stale_end_cannot_close_a_newer_parking_cycle _______________
+tests/production/test_production_lifecycle.py:184: in test_stale_end_cannot_close_a_newer_parking_cycle
+    assert mapper._uid_session(old_end)[3] == "PARKED"
+E   AssertionError: assert 'CLOSED' == 'PARKED'
+E     
+E     - PARKED
+E     + CLOSED
+------------------------------ Captured log call -------------------------------
+WARNING  s2_mapper:s2_mapper.py:555 EXIT received_at is earlier than captured_at captured_at=2026-01-01T00:06:00+00:00 received_at=2026-01-01T00:02:00+00:00
+=========================== short test summary info ============================
+FAILED tests/production/test_production_lifecycle.py::test_semantic_park_start_retry_after_restart
+FAILED tests/production/test_production_lifecycle.py::test_retry_uses_first_id_after_outbox_failure
+FAILED tests/production/test_production_lifecycle.py::test_delayed_duplicate_entry_cannot_reopen_parked_session
+FAILED tests/production/test_production_lifecycle.py::test_exit_cannot_close_another_slot_or_vehicle_on_conflicting_plate
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[ENTRY]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_START]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[PARK_END]
+FAILED tests/production/test_production_lifecycle.py::test_report_ignores_same_observation_with_fresh_id[EXIT]
+FAILED tests/production/test_production_lifecycle.py::test_unconfirmed_ocr_never_reaches_downstream_payload
+FAILED tests/production/test_production_lifecycle.py::test_concurrent_start_retries_queue_once
+FAILED tests/production/test_production_lifecycle.py::test_stale_end_cannot_close_a_newer_parking_cycle
+11 failed, 2 passed in 0.87s
