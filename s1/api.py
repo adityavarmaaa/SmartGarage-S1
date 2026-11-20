@@ -21,6 +21,8 @@ from urllib.parse import urlsplit
 from fastapi import FastAPI, File, HTTPException, Request, UploadFile
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import FileResponse, JSONResponse, Response, StreamingResponse
+from starlette.datastructures import MutableHeaders
+from starlette.types import Message, Receive, Scope, Send
 from starlette.exceptions import HTTPException as StarletteHTTPException
 from starlette.concurrency import run_in_threadpool
 from pydantic import BaseModel, Field
@@ -518,6 +520,20 @@ def latest_frame():
     raise HTTPException(status_code=501, detail="Processed-frame output is not implemented.")
 
 
+class _ProcessedVideoResponse(FileResponse):
+    async def __call__(self, scope: Scope, receive: Receive, send: Send) -> None:
+        async def send_response(message: Message) -> None:
+            if message["type"] == "http.response.start" and message["status"] == 416:
+                headers = MutableHeaders(scope=message)
+                content_range = headers.get("content-range", "")
+                # Older Starlette releases omit the range unit (RFC 9110 §14.4).
+                if content_range.startswith("*/"):
+                    headers["content-range"] = f"bytes {content_range}"
+            await send(message)
+
+        await super().__call__(scope, receive, send_response)
+
+
 _video_responses = {
     200: {"description": "Finalized MP4 or live MJPEG",
           "content": {"video/mp4": {}, "multipart/x-mixed-replace": {}}},
@@ -555,7 +571,9 @@ def output_stream(request: Request, live: bool = False):
         except FileNotFoundError:
             metadata = None
         if metadata is not None and stat.S_ISREG(metadata.st_mode) and metadata.st_size:
-            return FileResponse(path, media_type="video/mp4", stat_result=metadata,
-                                filename="processed.mp4", content_disposition_type="inline",
-                                headers={"Cache-Control": "no-store"})
+            return _ProcessedVideoResponse(
+                path, media_type="video/mp4", stat_result=metadata,
+                filename="processed.mp4", content_disposition_type="inline",
+                headers={"Cache-Control": "no-store"},
+            )
     raise HTTPException(404, "The latest job has no finalized processed video.")
