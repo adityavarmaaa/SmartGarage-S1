@@ -2,7 +2,7 @@
 
 The reference verification ran on Linux x86_64, Python 3.12.14, CPU PyTorch, OpenCV and FFmpeg. The pinned observations are in [the reference environment](../TEST_REPORTS/final_verification/raw/environment.json). The test environment already had its CPU packages provisioned. A wheel build and runtime preflight validate the delivered source and model. Dependency installation on another host is environment-specific. Windows, CUDA/GPU and live ANPR installation were outside this verification.
 
-From the extracted project root:
+The following environment setup is a reference procedure. A fresh dependency install was outside the final API audit. Run from the project root:
 
 ```bash
 python3.12 -m venv .venv
@@ -12,9 +12,9 @@ python -m pip install -r requirements-dev.txt
 python main.py --help
 ```
 
-The local config selects bundled `yolo11n.pt`. Set the detector model path explicitly if you use a separately approved model. Install FFmpeg for metadata and H.264 export. Configure Linux device IDs or authorized source URLs and matching geometry before using site cameras. ANPR requires provisioned detector and OCR models. OSNet requires its configured ONNX model. Verify providers before using GPU, and avoid installing conflicting CPU and GPU ONNX runtimes. See [Windows notes](../INSTALL_WINDOWS.md) and the [configuration reference](CONFIGURATION_REFERENCE.md).
+The local config selects bundled `yolo11n.pt`. Set the detector model path explicitly if you use a separately approved model. Install FFmpeg for metadata and H.264 export. For an NVIDIA deployment, select a compatible CUDA build of PyTorch and torchvision first, then install `requirements-gpu.txt`. Add `requirements-api.txt` if serving HTTP. GPU commands are unverified in this CPU environment. Configure Linux device IDs or authorized source URLs and matching geometry before using site cameras. ANPR requires provisioned detector and OCR models. OSNet requires its configured ONNX model. Verify providers before using GPU, and avoid installing conflicting CPU and GPU ONNX runtimes. See [Windows notes](../INSTALL_WINDOWS.md) and the [configuration reference](CONFIGURATION_REFERENCE.md).
 
-Try the portable preview on the synthetic MP4 from the HTTP verification. The generator uses a selected calibration and disables OCR, ReID and external publishing for this preview.
+The final audit ran the following portable preview on Linux with the existing Python 3.12 environment. Try it on the synthetic MP4 from the HTTP verification. The generator uses a selected calibration and disables OCR, ReID and external publishing for this preview.
 
 ```bash
 TMPDIR_S1="$(mktemp -d)"

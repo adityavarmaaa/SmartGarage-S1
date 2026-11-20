@@ -539,13 +539,39 @@ _video_responses = {
           "content": {"video/mp4": {}, "multipart/x-mixed-replace": {}}},
     206: {"description": "Byte range", "content": {"video/mp4": {}, "multipart/byteranges": {}}},
     400: {"description": "Invalid Range header", "content": {"text/plain": {}}},
-    416: {"description": "Range outside the file", "headers": {"Content-Range": {"schema": {"type": "string"}}}},
+    416: {"description": "Unsatisfiable byte range. The response body is empty.",
+          "headers": {"Content-Range": {
+              "description": "The byte-range unit and the complete file size.",
+              "schema": {"type": "string"},
+              "example": "bytes */1234",
+          }}},
     **_error_responses(s404="No finalized video is available", s409="Video pending or preview initializing", s422="Invalid live query value", s500="Video storage unavailable"),
 }
 
 
+# HEAD returns the same status and representation headers without a body.
+_video_head_responses = {
+    status: {key: value for key, value in response.items() if key not in {"content", "model"}}
+    for status, response in _video_responses.items()
+}
+_video_head_responses[200]["headers"] = {
+    "Content-Type": {
+        "description": "Media type of the selected MP4 or MJPEG representation.",
+        "schema": {"type": "string"},
+    },
+    "Content-Length": {
+        "description": "Finalized MP4 size in bytes. Omitted for live MJPEG.",
+        "schema": {"type": "integer"},
+    },
+    "Accept-Ranges": {
+        "description": "The value is bytes for finalized MP4. Omitted for live MJPEG.",
+        "schema": {"type": "string"},
+    },
+}
+
+
 @app.head("/api/output/stream", tags=["Processed Output"], response_class=FileResponse,
-          responses=_video_responses, description="Returns headers for the finalized demo MP4.")
+          responses=_video_head_responses, description="Returns headers for finalized MP4 or live MJPEG without a body.")
 @app.get("/api/output/stream", tags=["Processed Output"], response_class=FileResponse,
          responses=_video_responses,
          description="Streams a finalized MP4 with byte ranges or the active job's live MJPEG preview.")

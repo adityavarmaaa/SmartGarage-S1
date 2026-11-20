@@ -30,3 +30,15 @@ PYTHONPATH="$PWD" "$PY" scripts/production_video_validation.py --assets "$ASSETS
 ```
 
 The audit contains no deployable plate secrets. Verify the delivered archive before extracting it with `sha256sum -c SMART_PARKING_S1_PRODUCTION_HANDOVER_FINAL.zip.sha256` and `unzip -t SMART_PARKING_S1_PRODUCTION_HANDOVER_FINAL.zip`.
+
+## Final API audit selection
+
+With the CPU environment and isolation variables above, run:
+
+```bash
+"$PY" -m pytest tests/integration/test_api.py tests/integration/test_release_validation.py \
+  tests/integration/test_failure_recovery.py tests/fault_injection/test_faults.py \
+  -q -p no:cacheprovider --junitxml="$RUN/api-targeted.xml"
+```
+
+The [API audit](API_AUDIT_REPORT.md) records the targeted and complete suite counts, the loopback HTTP matrix, and the Swagger/ReDoc captures.

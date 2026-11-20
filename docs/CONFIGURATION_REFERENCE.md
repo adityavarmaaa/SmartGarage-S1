@@ -26,3 +26,5 @@
 | `S2_API_KEY`, `S2_API_KEY_HEADER` | Key unset; header `X-API-Key` | Outbox API credentials. Inject from the deployment secret manager. |
 | `SP_ENCRYPTION_KEYS`, `SP_ACTIVE_ENCRYPTION_KEY`, `SP_HMAC_KEY` | Unset | Required for applicable encrypted lifecycle/queue operations. Use approved secrets, preserve key IDs and retain key rotation history. |
 | `SNAPSHOT_STORAGE`, `S3_BUCKET`, `S3_PUBLIC_BASE_URL` | Storage off; bucket/base unset | Optional S3-compatible evidence upload. |
+
+For recorded-video verification, use the generated configuration in the [portable preview](INSTALLATION_GUIDE.md). For site calibration, verify the intended source dimensions, interior point, tripwire, and slot polygons for every camera. The checked-in `data/` geometry files are examples for their original recordings. `calibrate_entry_tripwire.py` is an interactive helper that accepts `--video` and `--geometry`; GUI calibration was outside the final API audit.

@@ -58,3 +58,37 @@ def test_upload_accepted_and_worker_is_mocked(monkeypatch):
     )
     assert response.status_code == 202
     assert response.json()["job_id"] == "test-job"
+
+
+def test_stream_openapi_matches_head_and_range_contract():
+    spec = client.get("/openapi.json").json()
+    operations = spec["paths"]["/api/output/stream"]
+    get = operations["get"]["responses"]
+    head = operations["head"]["responses"]
+    assert get.keys() == head.keys()
+    assert {"video/mp4", "multipart/x-mixed-replace"} <= get["200"]["content"].keys()
+    assert all("content" not in response for response in head.values())
+    assert {"Content-Type", "Content-Length", "Accept-Ranges"} <= head["200"]["headers"].keys()
+    for responses in (get, head):
+        assert responses["416"]["headers"]["Content-Range"]["example"] == "bytes */1234"
+
+
+def test_lifespan_signals_and_joins_active_worker(monkeypatch):
+    from threading import Event, Thread
+
+    cancel = Event()
+    observed = Event()
+
+    def worker_run():
+        if cancel.wait(5):
+            observed.set()
+
+    worker = Thread(target=worker_run)
+    monkeypatch.setattr(api, "_worker", worker)
+    monkeypatch.setattr(api, "_cancel_event", cancel)
+    worker.start()
+    with TestClient(api.app) as session:
+        assert session.get("/health").status_code == 200
+        assert worker.is_alive()
+    assert observed.is_set()
+    assert not worker.is_alive()

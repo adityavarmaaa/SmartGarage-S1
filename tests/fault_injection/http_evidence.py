@@ -174,9 +174,14 @@ def collect(dest, scratch):
                       and schemas["LiveStartRequest"]["properties"]["source"]["examples"]
                       and "422" in live_start["responses"], "camera request and examples")
                 stream = spec["paths"]["/api/output/stream"]
-                check("S07", all({"200", "206", "404", "409", "416"}.issubset(stream[m]["responses"])
-                                   and "video/mp4" in stream[m]["responses"]["200"]["content"]
-                                   for m in ("get", "head")), "MP4 and HEAD definitions")
+                get_responses = stream["get"]["responses"]
+                head_responses = stream["head"]["responses"]
+                check("S07", {"200", "206", "404", "409", "416"}.issubset(get_responses)
+                      and get_responses.keys() == head_responses.keys()
+                      and "video/mp4" in get_responses["200"]["content"]
+                      and all("content" not in item for item in head_responses.values())
+                      and "Content-Type" in head_responses["200"]["headers"],
+                      "MP4 and bodyless HEAD definitions")
                 check("S08", "ErrorResponse" in schemas and "HealthResponse" in schemas
                       and all(operation.get("description") or operation.get("summary")
                               for path in spec["paths"].values() for operation in path.values()), "response schemas and route descriptions")
@@ -276,7 +281,9 @@ def collect(dest, scratch):
                 assert ok and image is not None
                 ranged = req("H39", "GET", final["output_url"], 206, "Byte range", headers={"Range": "bytes=0-31"})
                 assert ranged.content == response.content[:32]
-                req("H40", "GET", final["output_url"], 416, "Range beyond EOF", headers={"Range": "bytes=999999999-"})
+                unsatisfied = req("H40", "GET", final["output_url"], 416, "Range beyond EOF", headers={"Range": "bytes=999999999-"})
+                assert unsatisfied.headers["content-range"] == f"bytes */{len(response.content)}"
+                assert not unsatisfied.content
                 req("H41", "GET", final["output_url"], 400, "Malformed range", headers={"Range": "bytes=bad"})
                 req("H42", "GET", ready["live_output_url"], 404, "Live stream after cancellation", "API_OUTPUT_UNAVAILABLE")
                 req("H43", "GET", "/api/video/uploaded", 200, "Accepted upload inventory")

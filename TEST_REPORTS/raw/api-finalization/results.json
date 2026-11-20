@@ -1,0 +1,91 @@
+{
+  "pytest": {
+    "targeted": {
+      "tests": 80,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 80,
+      "blocked": 0,
+      "seconds": 11.723
+    },
+    "s1": {
+      "tests": 174,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 174,
+      "blocked": 0,
+      "seconds": 12.661
+    },
+    "s2": {
+      "tests": 28,
+      "failures": 0,
+      "errors": 0,
+      "skipped": 0,
+      "passed": 28,
+      "blocked": 0,
+      "seconds": 1.352
+    }
+  },
+  "http_checks": 44,
+  "openapi_and_browser_checks": [
+    {
+      "id": "S01",
+      "status": "PASS",
+      "evidence": "H05"
+    },
+    {
+      "id": "S02",
+      "status": "PASS",
+      "evidence": "H06"
+    },
+    {
+      "id": "S03",
+      "status": "PASS",
+      "evidence": "openapi.json"
+    },
+    {
+      "id": "S04",
+      "status": "PASS",
+      "evidence": "openapi.json and runtime route declarations"
+    },
+    {
+      "id": "S05",
+      "status": "PASS",
+      "evidence": "upload schema"
+    },
+    {
+      "id": "S06",
+      "status": "PASS",
+      "evidence": "camera request and examples"
+    },
+    {
+      "id": "S07",
+      "status": "PASS",
+      "evidence": "MP4 and bodyless HEAD definitions"
+    },
+    {
+      "id": "S08",
+      "status": "PASS",
+      "evidence": "response schemas and route descriptions"
+    },
+    {
+      "id": "S09",
+      "status": "PASS",
+      "evidence": "swagger.png"
+    },
+    {
+      "id": "S10",
+      "status": "PASS",
+      "evidence": "redoc.png"
+    }
+  ],
+  "range_headers": {
+    "H39": "bytes 0-31/15930",
+    "H40": "bytes */15930"
+  },
+  "uvicorn_application_shutdown_complete": true,
+  "publishing": "disabled",
+  "camera_input": "synthetic recorded clip"
+}

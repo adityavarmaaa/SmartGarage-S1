@@ -15,19 +15,14 @@
 ## Important operating constraints
 
 - Current production geometry is calibrated JSON. Automatic geometry discovery remains experimental and is not connected to ENTRY/EXIT.
-- Current validated setup has two camera areas and six configured parking slots (three per area); code must continue to read slot definitions from geometry rather than hardcoding a count.
+- Camera count and slot polygons come from the configuration and calibration files. Each camera has independent tracking and occupancy state.
 - A histogram ReID fallback is weaker than OSNet and does not prove cross-camera visual ReID.
 - For prerecorded videos, event-processing timestamps in IST must not be described as original real-world capture/arrival timestamps unless the source provides that metadata.
 - Publishing must remain disabled for test runs unless an operator explicitly requests it.
 
-## Main entry points
+## Execution and verification
 
-- Kaggle: `python run_kaggle.py`
-- Local: `python run_local.py --videos videos`
-- API: `uvicorn s1.api:app --host 127.0.0.1 --port 8000`
-- Preflight: `python preflight.py config/config.local.yaml`
-- Regression: `python -m pytest -q --ignore=s1/test_yolo11n_detector_v1.py -p no:cacheprovider`
-- Synthetic smoke: `python tools/synth_smoke_test.py` and `python tools/synth_smoke_test.py --transfer`
+Use [installation and portable preview](INSTALLATION_GUIDE.md) for recorded video, the [API reference](API_SWAGGER.md) for the one-source HTTP workflow, and [reproduction commands](../TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md) for regression. The [Kaggle guide](../README_KAGGLE.md) covers notebook execution, which was outside the final API audit.
 
 ## Evidence to retain for each release
 

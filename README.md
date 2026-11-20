@@ -15,7 +15,7 @@ S1 decodes camera or recorded video, detects and tracks vehicles, collects plate
 
 ## Install and validate
 
-Use Python 3.10–3.12. Run from the project root.
+The package requires Python 3.10 or later. Use 3.10–3.12 for the documented ML dependency setup. This release was verified with Python 3.12 on Linux. Run from the project root. The environment setup commands are reference commands; fresh dependency installation and Windows/CUDA were not verified in the final audit.
 
 ```bash
 python -m venv .venv
@@ -25,11 +25,11 @@ python -m pytest tests -q -p no:cacheprovider
 python main.py --help
 ```
 
-Use `requirements.txt` for the pipeline and add `requirements-api.txt` for HTTP if development dependencies are unnecessary. The GPU variant uses `requirements-gpu.txt` after installing compatible CUDA PyTorch. FFmpeg is optional and provides H.264 export and input metadata. See [Windows installation](INSTALL_WINDOWS.md) and [Kaggle setup](README_KAGGLE.md).
+Use `requirements.txt` for the pipeline and add `requirements-api.txt` for HTTP if development dependencies are unnecessary. The GPU variant uses `requirements-gpu.txt` after installing compatible CUDA PyTorch. FFmpeg is optional and provides H.264 export and input metadata. See [Linux installation and CPU preview](docs/INSTALLATION_GUIDE.md), [Windows installation](INSTALL_WINDOWS.md) and [Kaggle setup](README_KAGGLE.md).
 
 ## Configure and run
 
-Configure every camera's source, calibrated geometry, and processing options in `config/config.local.yaml` or a copy. The original paths reference recordings from another workstation. Supply the corresponding footage and geometry, or calibrate your own cameras. For CPU use set `detector.device: cpu`. Preview runs preserve the Service 2 event shape locally.
+For a self-contained recorded-video smoke run, follow the portable preview in the installation guide. For site replay or live capture, configure every camera's source, calibrated geometry, and processing options in `config/config.local.yaml` or a copy. The original paths reference recordings from another workstation. Supply the corresponding footage and geometry, or calibrate your own cameras. For CPU use set `detector.device: cpu`. Preview runs preserve the Service 2 event shape locally.
 
 ```bash
 python preflight.py config/config.local.yaml
@@ -44,7 +44,7 @@ Remove `--no-plates` for ANPR. The reader models must be provisioned or availabl
 python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
 ```
 
-The API defaults to preview mode. Use `/docs` for Swagger, `/openapi.json` for the live contract, and `/health` for liveness. Poll `/api/status` after an upload or camera start. One worker processes one source at a time. See the [API guide](docs/API_SWAGGER.md) for inputs, HTTP statuses and environment variables.
+The API defaults to preview mode. Use `/docs` for Swagger, `/openapi.json` for the live contract, and `/health` for liveness. Poll `/api/status` after an upload or camera start. One worker processes one source at a time. See the [API guide](docs/API_SWAGGER.md) for inputs, HTTP statuses and environment variables. See the [API audit and final test counts](TEST_REPORTS/API_AUDIT_REPORT.md).
 
 ## Logs and output
 
@@ -66,5 +66,4 @@ ReDoc is at `/redoc`. Request cooperative API shutdown of a job with `POST /api/
 
 The published source comes from the verified handover ZIP. Its original
 checksum, member hashes, and fresh-extraction logs are in
-[TEST_REPORTS/raw](TEST_REPORTS/raw/). The release recorded 172 S1 and 28 S2
-passing tests. The evidence index describes the commands and deployment limits.
+[TEST_REPORTS/raw](TEST_REPORTS/raw/). The original handover recorded 172 S1 and 28 S2 passing tests. The final API audit added two S1 checks and recorded 174 S1 and 28 S2 passes. See the [documentation completion report](TEST_REPORTS/API_DOCUMENTATION_FINALIZATION_REPORT.md) and [reproduction commands](TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md).

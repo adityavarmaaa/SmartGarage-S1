@@ -42,7 +42,7 @@ report: {plate_evidence_dir: data/plate_evidence}
 
 ## Prove it
 ```
-python -m pytest -q --ignore=s1/test_yolo11n_detector_v1.py        # unit tests
+python -m pytest tests -q -p no:cacheprovider  # S1 suite
 python tools/determinism_check.py                                  # synthetic cameras, 3 runs x 3 scenarios
 python tools/determinism_check.py --real-config config/config.kaggle_flow.yaml --runs 3   # YOUR videos, GPU
 ```

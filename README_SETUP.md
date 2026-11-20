@@ -1,28 +1,7 @@
-# Smart Parking S1 - complete package (entry -> park start -> park end -> exit, IST, deterministic)
+# Smart Parking S1 setup
 
-## One-time setup (any teammate with an NVIDIA GPU)
-Windows PowerShell:
-```
-python -m venv .venv ; .\.venv\Scripts\Activate.ps1
-pip install torch torchvision --index-url https://download.pytorch.org/whl/cu121
-pip install -r requirements-gpu.txt
-python preflight.py config/config.local.yaml
-```
-Linux: same, with `source .venv/bin/activate`.
-Internet is needed on the first run (plate models download once). Optional: put the OSNet
-`osnet_ain_x1_0_vehicle_reid.onnx` in `models/`; without it a weaker colour ReID is used (labelled in the report).
+The [installation guide](docs/INSTALLATION_GUIDE.md) is the canonical Linux, CPU and model-provisioning reference. For Windows, follow the [PowerShell guide](INSTALL_WINDOWS.md). For GPU, choose a CUDA-compatible PyTorch build and use the GPU dependency list described in the installation guide. CUDA and Windows require validation on the deployment host.
 
-## Run
-1. Copy `IMG_2138.MOV` and `IMG_2136.MOV` into `videos/` (or use `--videos <folder>`).
-2. `python run_local.py`
-3. Open `smart_parking_final_report.json` -> `lifecycle_timeline` (entry / park start / park end / exit in IST),
-   `vehicles`, `service2_events`, `pipeline_health.logging`. Plate crops (+CLAHE): `data/plate_evidence/`. Logs: `logs/s1.log`.
+Follow the installation guide’s portable recorded-video preview before configuring site footage or live cameras. The [configuration reference](docs/CONFIGURATION_REFERENCE.md) describes the source, calibration, model and output settings. The [API guide](docs/API_SWAGGER.md) covers launching Uvicorn, sending requests and monitoring or cancelling a job.
 
-## Check it is repeatable on YOUR machine
-`python tools/determinism_check.py --real-config config/config.local.yaml --runs 3`
-(Kaggle: use `run_kaggle.py` and `config/config.kaggle_flow.yaml` as before.)
-
-## Tests
-`pip install pytest` then `python -m pytest -q --ignore=s1/test_yolo11n_detector_v1.py`
-
-See README_LIFECYCLE_DETERMINISM.md for exactly what changed and the known limits.
+Use the [verification commands](TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md) for S1, bundled S2 and loopback HTTP testing. [Lifecycle determinism notes](README_LIFECYCLE_DETERMINISM.md) explain the controlled replay workflow.

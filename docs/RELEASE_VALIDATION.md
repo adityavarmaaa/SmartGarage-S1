@@ -19,7 +19,7 @@ The previous handover ZIP, checksum, and engineering report were preserved. The 
 | Bundled S2 | 28 | 28 | 0 | 0 | 0 | 2.39 s |
 | Total | 131 | 140 | 0 | 0 | 0 | |
 
-S1 line coverage rose from **51% to 58%**. The [coverage report](verification/release/coverage.txt) has file-level metrics. The added tests cover resource teardown, cancellation before the first frame and during inference, HTTP ranges and malformed requests, preservation of a report on write failure, invalid video finalization, bounded MJPEG buffers, and recovery from shared inference failure through real slot assignment. Existing regression tests remain intact. Test output included the Starlette test-client adapter warning and S2's Pydantic settings deprecation warning.
+S1 line coverage rose from **51% to 58%**. The [coverage report](../TEST_REPORTS/raw/prior_verification/release/coverage.txt) has file-level metrics. The added tests cover resource teardown, cancellation before the first frame and during inference, HTTP ranges and malformed requests, preservation of a report on write failure, invalid video finalization, bounded MJPEG buffers, and recovery from shared inference failure through real slot assignment. Existing regression tests remain intact. Test output included the Starlette test-client adapter warning and S2's Pydantic settings deprecation warning.
 
 The outbox test used generated credentials, temporary SQLite and a loopback HTTP receiver. It verified the authenticated request, decrypted outbound JSON, the durable encrypted row and the acknowledgement. No production publishing occurred.
 

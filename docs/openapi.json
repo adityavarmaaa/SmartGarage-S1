@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Smart Parking — Service 1 API",
+    "title": "Smart Parking \u2014 Service 1 API",
     "description": "Video upload and live-camera processing API. Interactive Swagger UI is at /docs; OpenAPI schema is at /openapi.json. Processing is asynchronous and one job is allowed at a time. Jobs support cooperative cancellation and finalized MP4 delivery.",
     "contact": {
       "name": "Smart Parking Engineering"
@@ -379,12 +379,14 @@
             }
           },
           "416": {
-            "description": "Range outside the file",
+            "description": "Unsatisfiable byte range. The response body is empty.",
             "headers": {
               "Content-Range": {
+                "description": "The byte-range unit and the complete file size.",
                 "schema": {
                   "type": "string"
-                }
+                },
+                "example": "bytes */1234"
               }
             }
           },
@@ -435,7 +437,7 @@
           "Processed Output"
         ],
         "summary": "Output Stream",
-        "description": "Returns headers for the finalized demo MP4.",
+        "description": "Returns headers for finalized MP4 or live MJPEG without a body.",
         "operationId": "output_stream_api_output_stream_head",
         "parameters": [
           {
@@ -452,73 +454,56 @@
         "responses": {
           "200": {
             "description": "Finalized MP4 or live MJPEG",
-            "content": {
-              "video/mp4": {},
-              "multipart/x-mixed-replace": {}
-            }
-          },
-          "206": {
-            "description": "Byte range",
-            "content": {
-              "video/mp4": {},
-              "multipart/byteranges": {}
-            }
-          },
-          "400": {
-            "description": "Invalid Range header",
-            "content": {
-              "text/plain": {}
-            }
-          },
-          "416": {
-            "description": "Range outside the file",
             "headers": {
-              "Content-Range": {
+              "Content-Type": {
+                "description": "Media type of the selected MP4 or MJPEG representation.",
+                "schema": {
+                  "type": "string"
+                }
+              },
+              "Content-Length": {
+                "description": "Finalized MP4 size in bytes. Omitted for live MJPEG.",
+                "schema": {
+                  "type": "integer"
+                }
+              },
+              "Accept-Ranges": {
+                "description": "The value is bytes for finalized MP4. Omitted for live MJPEG.",
                 "schema": {
                   "type": "string"
                 }
               }
             }
           },
-          "404": {
-            "description": "No finalized video is available",
-            "content": {
-              "application/json": {
+          "206": {
+            "description": "Byte range"
+          },
+          "400": {
+            "description": "Invalid Range header"
+          },
+          "416": {
+            "description": "Unsatisfiable byte range. The response body is empty.",
+            "headers": {
+              "Content-Range": {
+                "description": "The byte-range unit and the complete file size.",
                 "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
+                  "type": "string"
+                },
+                "example": "bytes */1234"
               }
             }
+          },
+          "404": {
+            "description": "No finalized video is available"
           },
           "409": {
-            "description": "Video pending or preview initializing",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Video pending or preview initializing"
           },
           "422": {
-            "description": "Invalid live query value",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Invalid live query value"
           },
           "500": {
-            "description": "Video storage unavailable",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "description": "Video storage unavailable"
           }
         }
       }

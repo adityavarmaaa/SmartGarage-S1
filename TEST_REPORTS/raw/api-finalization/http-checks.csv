@@ -1,0 +1,45 @@
+id,method,path,scenario,expected,actual,expected_code,code,status
+H01,GET,/,Root service links,200,200,,,PASS
+H02,GET,/health,Health and process startup,200,200,,,PASS
+H03,GET,/api/status,Initial job status,200,200,,,PASS
+H04,GET,/openapi.json,Generated OpenAPI,200,200,,,PASS
+H05,GET,/docs,Swagger HTML,200,200,,,PASS
+H06,GET,/redoc,ReDoc HTML,200,200,,,PASS
+H07,GET,/docs/oauth2-redirect,Built-in OAuth redirect HTML,200,200,,,PASS
+H08,GET,/api/video/uploaded,Empty upload inventory,200,200,,,PASS
+H09,GET,/api/frames/latest,Documented unavailable frame endpoint,501,501,API_FEATURE_UNAVAILABLE,API_FEATURE_UNAVAILABLE,PASS
+H10,GET,/api/output/stream,No finalized output,404,404,API_OUTPUT_UNAVAILABLE,API_OUTPUT_UNAVAILABLE,PASS
+H11,HEAD,/api/output/stream,Missing output HEAD has no body,404,404,,,PASS
+H12,POST,/api/live/stop,Stop while idle,200,200,,,PASS
+H13,POST,/api/live/start,Missing camera source,422,422,API_VALIDATION,API_VALIDATION,PASS
+H14,POST,/api/live/start,Wrong source type,422,422,API_VALIDATION,API_VALIDATION,PASS
+H15,POST,/api/live/start,Invalid source scheme,400,400,API_INVALID_REQUEST,API_INVALID_REQUEST,PASS
+H16,POST,/api/live/start,Malformed JSON,422,422,API_VALIDATION,API_VALIDATION,PASS
+H17,GET,/missing-d63ba17a695c476787e0569b31b6695d,Unknown route,404,404,API_ROUTE_NOT_FOUND,API_ROUTE_NOT_FOUND,PASS
+H18,PUT,/health,Unsupported method,405,405,API_REQUEST_FAILED,API_REQUEST_FAILED,PASS
+H19,POST,/api/upload,Missing multipart file,422,422,API_VALIDATION,API_VALIDATION,PASS
+H20,POST,/api/upload,Unsupported upload extension,415,415,API_UNSUPPORTED_VIDEO_FORMAT,API_UNSUPPORTED_VIDEO_FORMAT,PASS
+H21,POST,/api/upload,Zero-byte upload,400,400,API_INVALID_REQUEST,API_INVALID_REQUEST,PASS
+H22,POST,/api/upload,Over configured size,413,413,API_UPLOAD_TOO_LARGE,API_UPLOAD_TOO_LARGE,PASS
+H23,POST,/api/upload,Upload destination cannot be created,500,500,API_STORAGE_FAILED,API_STORAGE_FAILED,PASS
+H24,GET,/api/video/uploaded,Upload inventory internal exception,500,500,API_INTERNAL,API_INTERNAL,PASS
+H25,GET,/api/video/uploaded,Inventory recovers after obstruction removal,200,200,,,PASS
+H26,POST,/api/live/start,Accepted camera job with a controlled invalid configuration,202,202,,,PASS
+H27,GET,/api/status,Asynchronous configuration failure,200,200,,,PASS
+H28,POST,/api/upload?replay=sync&no_plates=true,Queued corrupt video,202,202,,,PASS
+H29,GET,/api/status,Asynchronous capture failure,200,200,,,PASS
+H30,POST,/api/upload?replay=sync&no_plates=true,Real CPU processing job,202,202,,,PASS
+H31,POST,/api/live/start,Valid camera request conflicts with active upload,409,409,API_JOB_ACTIVE,API_JOB_ACTIVE,PASS
+H32,GET,/api/output/stream,Final video pending,409,409,API_OUTPUT_PENDING,API_OUTPUT_PENDING,PASS
+H33,GET,/api/output/stream?live=invalid,Invalid stream query,422,422,API_VALIDATION,API_VALIDATION,PASS
+H34,POST,/api/live/stop,Cancellation while MJPEG response is open,200,200,,,PASS
+H35,GET,/api/output/stream?live=true,Live JPEG decoded and stream ended,200,200,,,PASS
+H36,GET,/api/status,Pipeline released worker slot,200,200,,,PASS
+H37,HEAD,/api/output/stream,MP4 response headers,200,200,,,PASS
+H38,GET,/api/output/stream,Playable partial MP4,200,200,,,PASS
+H39,GET,/api/output/stream,Byte range,206,206,,,PASS
+H40,GET,/api/output/stream,Range beyond EOF,416,416,,,PASS
+H41,GET,/api/output/stream,Malformed range,400,400,,,PASS
+H42,GET,/api/output/stream?live=true,Live stream after cancellation,404,404,API_OUTPUT_UNAVAILABLE,API_OUTPUT_UNAVAILABLE,PASS
+H43,GET,/api/video/uploaded,Accepted upload inventory,200,200,,,PASS
+H44,GET,/health,Service recovered after repeated errors and cancellation,200,200,,,PASS

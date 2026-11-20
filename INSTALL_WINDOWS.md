@@ -32,4 +32,4 @@ Open `http://127.0.0.1:8000/docs`. Check liveness at `/health` and the job outco
 
 Install a compatible CUDA build of PyTorch first, then use `requirements-gpu.txt`. Keep exactly one ONNX Runtime provider installed. FFmpeg on PATH enables H.264 conversion and metadata probing. Without FFmpeg, demo output uses the OpenCV MP4 writer. The headless OpenCV runtime is intended for CLI and API operation. OpenCV GUI preview requires a GUI-capable OpenCV build.
 
-The commands and application were verified on Linux. Windows execution itself was outside the test environment.
+These PowerShell commands are reference instructions and were not executed on Windows. Linux CPU verification is recorded in the [final audit](TEST_REPORTS/API_DOCUMENTATION_FINALIZATION_REPORT.md).
