@@ -124,6 +124,8 @@ class DemoRecorder:
             if o is not None:
                 if getattr(o, "baseline", False):
                     parked = "parked before video start"
+                elif o.parked_at is None:
+                    parked = "occupied (entry unverified)"
                 else:
                     st = getattr(p.slots, "stream_start_ts", None) or o.parked_at
                     parked = f"parked @+{_hms(o.parked_at - st)} ({_hms(now_ts - o.parked_at)})"

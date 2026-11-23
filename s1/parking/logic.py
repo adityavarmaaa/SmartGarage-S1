@@ -201,7 +201,7 @@ class Tripwire:
 class Occupant:
     vehicle: object
     track_id: object
-    parked_at: float
+    parked_at: float | None
     last_seen: float
     lost_since: object = None
     baseline: bool = False
@@ -494,7 +494,10 @@ class SlotManager:
 
     def update(self, tracks, ts, registry):
         """Returns list of (event_type, vehicle, event_time, slot_id, inferred)."""
-        c, events = self.cfg, []
+        c = self.cfg
+        # Retire expired reservations before evaluating replacement tracks.
+        # A new occupant must not inherit a vehicle whose recovery grace ended.
+        events = self.expire(ts)
 
         if self.stream_start_ts is None:
             self.stream_start_ts = float(ts)
@@ -739,14 +742,6 @@ class SlotManager:
                         v_for_entry, "entry_crossing_ts", None
                     )
 
-                    if entry_crossing_ts is None:
-                        log.debug(
-                            "PARK_START_WAIT track=%s slot=%s "
-                            "reason=entry_tripwire_not_confirmed",
-                            t.id, sid,
-                        )
-                        continue
-
                     # Require overlap only for the fallback assignment path.
                     # When the ground-contact point is inside a calibrated bay,
                     # that geometric evidence is authoritative; overlap can be
@@ -769,14 +764,11 @@ class SlotManager:
                     slot_dwell_start = (
                         candidate_since if candidate_since is not None else start
                     )
-                    slot_dwell = max(
-                        0.0,
-                        ts - max(float(slot_dwell_start), float(entry_crossing_ts)),
-                    )
-                    stationary_dwell = max(
-                        0.0,
-                        ts - max(float(start), float(entry_crossing_ts)),
-                    )
+                    if entry_crossing_ts is not None:
+                        slot_dwell_start = max(slot_dwell_start, entry_crossing_ts)
+                        start = max(start, entry_crossing_ts)
+                    slot_dwell = max(0.0, ts - slot_dwell_start)
+                    stationary_dwell = max(0.0, ts - start)
                     required_dwell = float(c["park_dwell_s"])
 
                     if (
@@ -791,13 +783,11 @@ class SlotManager:
                         )
                         continue
 
-                    parking_start_ts = max(
-                        float(start),
-                        float(slot_dwell_start),
-                        float(entry_crossing_ts),
+                    parking_start_ts = (
+                        max(start, slot_dwell_start) if entry_crossing_ts is not None else None
                     )
                 else:
-                    parking_start_ts = float(start)
+                    parking_start_ts = None
 
                 occ = self.occupants.get(sid)
 
@@ -822,10 +812,6 @@ class SlotManager:
                 else:
                     v = registry.by_track[t.id]
 
-                    baseline_window = max(
-                        0.0,
-                        float(c.get("baseline_window_s", 2.0)),
-                    )
                     # Preserve the initial-scan decision. The stationary-history
                     # start may be later than stream start even for a vehicle
                     # confirmed as present during the baseline scan.
@@ -833,10 +819,14 @@ class SlotManager:
                     self.occupants[sid] = Occupant(
                         v,
                         t.id,
-                        (float(start) if is_baseline else parking_start_ts),
+                        parking_start_ts,
                         ts,
                         baseline=is_baseline,
-                        occupancy_source=("INITIAL_SCAN" if is_baseline else "LIVE_ENTRY"),
+                        occupancy_source=(
+                            "INITIAL_SCAN" if is_baseline else
+                            "LIVE_ENTRY" if parking_start_ts is not None else
+                            "OBSERVED_OCCUPANCY"
+                        ),
                     )
 
                     v.slot_id = sid
@@ -847,16 +837,12 @@ class SlotManager:
                         depart_since=None,
                     )
 
+                    v.has_parked = True
                     if is_baseline:
-                        v.has_parked = True
                         log.info(
-                            "BASELINE_OCCUPANT slot=%s vehicle=%s "
-                            "parked_at=%.3f; ENTRY suppressed",
-                            sid,
-                            v.uid,
-                            start,
+                            "BASELINE_OCCUPANT slot=%s vehicle=%s", sid, v.uid,
                         )
-                    else:
+                    elif parking_start_ts is not None:
                         events.append(
                             (
                                 "PARK_START",
@@ -865,6 +851,12 @@ class SlotManager:
                                 sid,
                                 False,
                             )
+                        )
+                    else:
+                        log.info(
+                            "OBSERVED_OCCUPANCY track=%s slot=%s vehicle=%s "
+                            "reason=entry_tripwire_not_confirmed",
+                            t.id, sid, v.uid,
                         )
 
             else:
@@ -952,7 +944,6 @@ class SlotManager:
                         depart_since=None,
                     )
 
-        events += self.expire(ts)
         return events
 
     def on_track_removed(self, track):

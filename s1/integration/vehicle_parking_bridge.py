@@ -1775,6 +1775,8 @@ class Pipeline:
             if occupant is not None:
                 if occupant.baseline:
                     parked_text = "Present at recording start"
+                elif occupant.parked_at is None:
+                    parked_text = "Occupied (entry unverified)"
                 else:
                     video_start = self.slots.stream_start_ts
                     parked_offset = max(

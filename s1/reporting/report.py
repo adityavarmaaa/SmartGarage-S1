@@ -112,6 +112,8 @@ def slot_records_for(rt):
         )
         rec["parked_at_label"] = (
             "Before video start" if (occ and baseline)
+            else "Occupied (entry unverified)"
+            if rec.get("occupancy_source") == "OBSERVED_OCCUPANCY"
             else (_vid_label(parked_offset) if parked_offset is not None else None)
         )
         rec["parked_at_ist"] = (
