@@ -14,7 +14,7 @@ A valid empty detector result advances tracker lifecycle. A failed observation s
 | Bundled S2 | 28 passed | 28 passed | 0 | 0 | 0 | 1.02 s |
 | Total | 113 passed | 131 passed | 0 | 0 | 0 | 10.70 s |
 
-S1 ran unit, regression and integration tests in the `tests` directory. The detector diagnostic under `s1` is a manual CLI and is outside the test count. An initial baseline from the shared root had six S2 collection errors because the bundled S2 imports `app` relative to its own working directory. The corrected S2 run used its own directory and isolated SQLite. No production publishing was enabled. S1 line coverage is in [the coverage report](../TEST_REPORTS/raw/prior_verification/coverage.txt). Remaining dependency warnings concern the Starlette test client adapter and S2's Pydantic settings syntax.
+S1 ran unit, regression and integration tests in the `tests` directory. The detector diagnostic under `vehicle_intelligence` is a manual CLI and is outside the test count. An initial baseline from the shared root had six S2 collection errors because the bundled S2 imports `app` relative to its own working directory. The corrected S2 run used its own directory and isolated SQLite. No production publishing was enabled. S1 line coverage is in [the coverage report](../TEST_REPORTS/raw/prior_verification/coverage.txt). Remaining dependency warnings concern the Starlette test client adapter and S2's Pydantic settings syntax.
 
 ## C. Integration testing
 
@@ -43,7 +43,7 @@ Final archive is `SMART_PARKING_S1_HANDOVER.zip`. Its SHA-256 is in the accompan
 
 ```bash
 python run_local.py --config config/config.local.yaml --videos videos --no-plates
-python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000
 ```
 
 ## H. Remaining issues

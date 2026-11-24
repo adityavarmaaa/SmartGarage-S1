@@ -29,7 +29,7 @@ Inspect the report next to `preview.yaml`. For API preview, choose a writable wo
 
 ```bash
 SMART_PARKING_CONFIG="$TMPDIR_S1/preview.yaml" SMART_PARKING_API_PUBLISH=0 \
-  python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+  python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000
 ```
 
 See [API reference](API_SWAGGER.md) and [reproduction commands](../TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md) for HTTP, coverage and bundled S2 tests.

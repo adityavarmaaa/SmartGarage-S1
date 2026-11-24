@@ -2,9 +2,9 @@
 
 ## Service boundaries
 
-The **Vehicle Intelligence Service** (`s1`) decodes video, detects and tracks vehicles, and evaluates camera-side occupancy and lifecycle against calibrated geometry. OCR and cross-camera ReID are optional. It produces reports and annotated video and offers a processing API. Its publishing path uses the existing SQLite outbox and S2 mapper.
+The **Vehicle Intelligence Service** (`vehicle_intelligence`) decodes video, detects and tracks vehicles, and evaluates camera-side occupancy and lifecycle against calibrated geometry. OCR and cross-camera ReID are optional. It produces reports and annotated video and offers a processing API. Its publishing path uses the existing SQLite outbox and S2 mapper.
 
-The **Parking Management Service** (`s2`) receives authenticated HTTP messages at `POST /internal/events/vehicle`. It persists events, current occupancy, vehicle records, and parking sessions in PostgreSQL. It serves occupancy, analytics, vehicle lookup, and snapshot metadata. The API also exposes a parking WebSocket. Keep both development listeners on loopback.
+The **Parking & Bay Management Service** (`parking_management`) receives authenticated HTTP messages at `POST /internal/events/vehicle`. It persists events, current occupancy, vehicle records, and parking sessions in PostgreSQL. It serves occupancy, analytics, vehicle lookup, and snapshot metadata. The API also exposes a parking WebSocket. Keep both development listeners on loopback.
 
 ## Prerequisites and environment
 
@@ -59,10 +59,12 @@ Existing databases with managed-table names and no migration ledger are refused.
 
 ## Start and connect the services
 
-Start Parking Management first from the root of the clone:
+Run the commands from the clone root. Update external launch configurations to use the package paths below. The S1 and S2 labels, environment variables, HTTP routes and event payloads keep their existing meanings.
+
+Start Parking & Bay Management Service first from the root of the clone:
 
 ```bash
-python -m uvicorn --app-dir s2 app.main:app --host 127.0.0.1 --port 8001
+python -m uvicorn parking_management.app.main:app --host 127.0.0.1 --port 8001
 ```
 
 Check `http://127.0.0.1:8001/health/database` for `database: connected`. Swagger is at `/docs` and the schema at `/openapi.json`.
@@ -70,13 +72,13 @@ Check `http://127.0.0.1:8001/health/database` for `database: connected`. Swagger
 For Vehicle Intelligence HTTP preview, set `SMART_PARKING_CONFIG` to the development YAML path and `SMART_PARKING_API_PUBLISH=0`, then run:
 
 ```bash
-python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000
 ```
 
 Check `/health` and `/docs` on port 8000. See the [S1 HTTP reference](API_SWAGGER.md). For a terminal video run with local previews:
 
 ```bash
-python main.py --config /path/to/dev.yaml --no-publisher
+python -m vehicle_intelligence.main --config /path/to/dev.yaml --no-publisher
 ```
 
 For a connected site replay, explicitly set `publisher.s2_url` in the **development YAML** to `http://127.0.0.1:8001/internal/events/vehicle`, with fresh local outbox, snapshot and report paths. Confirm the destination is the local development instance before running `python main.py --config /path/to/dev.yaml` with publishing enabled. The mapper uses `PARK_START` for S2 ENTRY and `PARK_END` for S2 EXIT. Detection alone does not imply either event. The restored EXIT-only workflow requires local preview mode. Use a recording that establishes its own parking session for a publishing-enabled replay.
@@ -88,12 +90,12 @@ Stop both servers with Ctrl+C. Inspect S1's `logs/` and the configured report an
 ```bash
 python scripts/smoke_database.py
 python -m pytest tests -q
-(cd s2 && DATABASE_URL=sqlite:///isolated-test.db python -m pytest tests -q)
+DATABASE_URL=sqlite:///isolated-test.db python -m pytest parking_management/tests -q
 ```
 
-On PowerShell run the S2 command from `s2` with a separate `DATABASE_URL`, then restore your development environment variable. The bundled S2 suite uses mocked persistence. The PostgreSQL smoke separately starts a real loopback S2 listener and exercises S1 mapping, encrypted outbox delivery, API auth, database events, session closure and slot release. It uses generated credentials and its own uniquely named disposable database on the localhost PostgreSQL server. Use a local development login with `CREATEDB`. The database is retained for inspection. The smoke injects lifecycle input and does not exercise camera inference.
+On PowerShell, use a separate test terminal at the clone root. Set `$env:DATABASE_URL = "sqlite:///isolated-test.db"` before running `python -m pytest parking_management/tests -q`. The bundled S2 suite uses mocked persistence. The PostgreSQL smoke separately starts a real loopback Parking & Bay Management listener and exercises S1 mapping, encrypted outbox delivery, API auth, database events, session closure and slot release. It uses generated credentials and its own uniquely named disposable database on the localhost PostgreSQL server. Use a local development login with `CREATEDB`. The database is retained for inspection. The smoke injects lifecycle input and does not exercise camera inference.
 
-Use the [recorded-video preview](INSTALLATION_GUIDE.md) to check decoding and model startup, then provide a calibrated recording containing a real parking transition for a complete media-to-database acceptance run. Preserved mapper behavior carries parking-start `captured_at` on both mapped messages. The smoke observes the resulting zero-duration session. Do not use that field to infer real dwell time without a separate contract review.
+Use the [recorded-video preview](INSTALLATION_GUIDE.md) to check decoding and model startup, then provide a calibrated recording containing a real parking transition for a complete media-to-database acceptance run. Preserved mapper behavior carries parking-start `captured_at` on both mapped messages. S2 uses `captured_at` as the effective event time and records a zero-duration session in this case. The mapper puts departure time in the existing `received_at` field on mapped EXIT. Other producers can use that field for receipt time, so treating it as departure globally could shift their event times. Do not use this duration for dwell-time acceptance until the producer contract and a backward-compatible timestamp change have been validated.
 
 ## Future commits
 

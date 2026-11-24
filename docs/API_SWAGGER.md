@@ -1,6 +1,6 @@
 # Smart Parking S1 HTTP API
 
-Run from the project root using `python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000`. Swagger UI is at `/docs`, ReDoc at `/redoc` and the live contract at `/openapi.json`. The version 1.2.0 [schema snapshot](openapi.json) includes the new job states and streaming responses.
+Run from the project root using `python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000`. Swagger UI is at `/docs`, ReDoc at `/redoc` and the live contract at `/openapi.json`. The version 1.2.0 [schema snapshot](openapi.json) includes the new job states and streaming responses.
 
 | Method and path | Inputs | Success | Other responses |
 | --- | --- | --- | --- |

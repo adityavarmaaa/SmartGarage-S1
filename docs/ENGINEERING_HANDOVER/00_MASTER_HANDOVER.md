@@ -18,7 +18,7 @@ The handover includes configuration-driven camera and slot state, optional model
 
 ```mermaid
 flowchart LR
-    A["CLI or S1 HTTP job"] --> B["s1.main.run and resolved configuration"]
+    A["CLI or S1 HTTP job"] --> B["vehicle_intelligence.main.run and resolved configuration"]
     B --> C["Single-source or multicamera capture"]
     C --> D["YOLO inference; shared in multicamera"]
     D --> E["Camera-local Pipeline, tracker and registry"]
@@ -61,46 +61,46 @@ This describes the normal eligible trajectory. A single observed vehicle can pro
 
 | Implementation path | Responsibility |
 |---|---|
-| [main.py](../../main.py), [s1/main.py](../../s1/main.py), [run_local.py](../../run_local.py), [preflight.py](../../preflight.py) | Entrypoints, input preparation, runtime selection and readiness checks. |
-| [s1/common](../../s1/common) | YAML merge/validation, frame model, diagnostics, logging and evidence protection. |
-| [s1/video/grabber.py](../../s1/video/grabber.py), [s1/multicam/multicam.py](../../s1/multicam/multicam.py) | Sequential or realtime sources, event evidence buffering, camera runtimes and shared scheduling. |
-| [s1/vehicle_front](../../s1/vehicle_front) | YOLO/YOLOX adapters, ByteTracker, vehicle records, plate processing, color, embeddings and global identity. The verified runner uses `YoloDetector`. |
-| [s1/parking](../../s1/parking) | Geometry, tripwire, slot assignment, occupancy, motion handling, restore and lifecycle projection. `Tripwire` and `SlotManager` are implemented in `logic.py`. |
-| [s1/integration](../../s1/integration), [s1/events/event_manager.py](../../s1/events/event_manager.py) | `Pipeline` in the vehicle-parking bridge owns frame-to-event orchestration. Flow controls motion gating, auxiliary inference and handoff. The event manager builds and validates envelopes. |
-| [s1/publishing](../../s1/publishing) | `S2Mapper`, durable `Outbox` and optional snapshot upload. |
-| [s1/reporting/report.py](../../s1/reporting/report.py), [s1/video/demo_video.py](../../s1/video/demo_video.py) | Report assembly and safe replacement, composed overlays, preview and validated file finalization. |
-| [s1/api.py](../../s1/api.py) | FastAPI endpoints, schemas, structured request errors, job thread, GET/HEAD video and lifespan shutdown. |
-| [s2/app](../../s2/app) | FastAPI routers, ingestion, database sessions, auth, cryptography, data queries and WebSocket notifications. |
+| [main.py](../../main.py), [vehicle_intelligence/main.py](../../vehicle_intelligence/main.py), [run_local.py](../../run_local.py), [preflight.py](../../preflight.py) | Entrypoints, input preparation, runtime selection and readiness checks. |
+| [vehicle_intelligence/common](../../vehicle_intelligence/common) | YAML merge/validation, frame model, diagnostics, logging and evidence protection. |
+| [vehicle_intelligence/video/grabber.py](../../vehicle_intelligence/video/grabber.py), [vehicle_intelligence/multicam/multicam.py](../../vehicle_intelligence/multicam/multicam.py) | Sequential or realtime sources, event evidence buffering, camera runtimes and shared scheduling. |
+| [vehicle_intelligence/vehicle_front](../../vehicle_intelligence/vehicle_front) | YOLO/YOLOX adapters, ByteTracker, vehicle records, plate processing, color, embeddings and global identity. The verified runner uses `YoloDetector`. |
+| [vehicle_intelligence/parking](../../vehicle_intelligence/parking) | Geometry, tripwire, slot assignment, occupancy, motion handling, restore and lifecycle projection. `Tripwire` and `SlotManager` are implemented in `logic.py`. |
+| [vehicle_intelligence/integration](../../vehicle_intelligence/integration), [vehicle_intelligence/events/event_manager.py](../../vehicle_intelligence/events/event_manager.py) | `Pipeline` in the vehicle-parking bridge owns frame-to-event orchestration. Flow controls motion gating, auxiliary inference and handoff. The event manager builds and validates envelopes. |
+| [vehicle_intelligence/publishing](../../vehicle_intelligence/publishing) | `S2Mapper`, durable `Outbox` and optional snapshot upload. |
+| [vehicle_intelligence/reporting/report.py](../../vehicle_intelligence/reporting/report.py), [vehicle_intelligence/video/demo_video.py](../../vehicle_intelligence/video/demo_video.py) | Report assembly and safe replacement, composed overlays, preview and validated file finalization. |
+| [vehicle_intelligence/api.py](../../vehicle_intelligence/api.py) | FastAPI endpoints, schemas, structured request errors, job thread, GET/HEAD video and lifespan shutdown. |
+| [parking_management/app](../../parking_management/app) | FastAPI routers, ingestion, database sessions, auth, cryptography, data queries and WebSocket notifications. |
 
-Several top-level S1 modules and submodule names re-export existing implementations through [s1/_compat.py](../../s1/_compat.py). Modify the implementation owner when extending a component; identity and parking state belong to the camera pipeline, while remote delivery belongs to the mapper and outbox. See the local module reference and the [published boundary map](../MODULE_BOUNDARIES.md).
+Several top-level S1 modules and submodule names re-export existing implementations through [vehicle_intelligence/_compat.py](../../vehicle_intelligence/_compat.py). Modify the implementation owner when extending a component; identity and parking state belong to the camera pipeline, while remote delivery belongs to the mapper and outbox. See the local module reference and the [published boundary map](../MODULE_BOUNDARIES.md).
 
 ## E. Parking logic and lifecycle
 
-“Slot discovery” is loading calibrated slots from geometry. The normal runtime does not infer new parking bays from images. [Geometry](../../s1/parking/slot_geometry.py) loads slot IDs, polygons, tripwire and interior point; calibration dimensions allow scaling to actual frame size. Each configured source must use the appropriate geometry.
+“Slot discovery” is loading calibrated slots from geometry. The normal runtime does not infer new parking bays from images. [Geometry](../../vehicle_intelligence/parking/slot_geometry.py) loads slot IDs, polygons, tripwire and interior point; calibration dimensions allow scaling to actual frame size. Each configured source must use the appropriate geometry.
 
-A track supplies ground-contact and footprint evidence. [SlotManager](../../s1/parking/logic.py) arbitrates overlap, reservations and candidate stability. Boundary, movement, dwell and loss windows reduce transitions caused by brief gaps. A consistent stationary opening observation can produce a baseline occupant tagged `INITIAL_SCAN` without inventing an arrival. A later eligible parked vehicle and a qualifying departure follow different paths. Confirmed occupied, observed free and UNKNOWN carry distinct meaning; an unprocessed camera must not be interpreted as free. Clear or reassign a bay only when its transition rules support doing so.
+A track supplies ground-contact and footprint evidence. [SlotManager](../../vehicle_intelligence/parking/logic.py) arbitrates overlap, reservations and candidate stability. Boundary, movement, dwell and loss windows reduce transitions caused by brief gaps. A consistent stationary opening observation can produce a baseline occupant tagged `INITIAL_SCAN` without inventing an arrival. A later eligible parked vehicle and a qualifying departure follow different paths. Confirmed occupied, observed free and UNKNOWN carry distinct meaning; an unprocessed camera must not be interpreted as free. Clear or reassign a bay only when its transition rules support doing so.
 
-Gate ENTRY and EXIT are raw evidence about crossing the area boundary. PARK_START and PARK_END concern a bay session and drive the mapped S2 boundary. The bridge tracks camera, UID, slot and time; the mapper can reject stale or conflicting associations. The [lifecycle projection](../../s1/parking/parking_lifecycle.py) summarizes the available sequence. Identical inputs and controlled replay improve repeatability. Contact ambiguity, occlusion and identity remain heuristic and need site acceptance. [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md)
+Gate ENTRY and EXIT are raw evidence about crossing the area boundary. PARK_START and PARK_END concern a bay session and drive the mapped S2 boundary. The bridge tracks camera, UID, slot and time; the mapper can reject stale or conflicting associations. The [lifecycle projection](../../vehicle_intelligence/parking/parking_lifecycle.py) summarizes the available sequence. Identical inputs and controlled replay improve repeatability. Contact ambiguity, occlusion and identity remain heuristic and need site acceptance. [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md)
 
 ## F. Vehicle intelligence
 
-[Detection](../../s1/vehicle_front/detection.py) supplies vehicle boxes, classes and confidence. [Tracking](../../s1/vehicle_front/tracking.py) uses two score bands, IoU and track age. [VehicleRegistry](../../s1/vehicle_front/vehicle_service.py) maps local tracks to observed vehicle records; a track number is scoped to its camera/tracker lifetime.
+[Detection](../../vehicle_intelligence/vehicle_front/detection.py) supplies vehicle boxes, classes and confidence. [Tracking](../../vehicle_intelligence/vehicle_front/tracking.py) uses two score bands, IoU and track age. [VehicleRegistry](../../vehicle_intelligence/vehicle_front/vehicle_service.py) maps local tracks to observed vehicle records; a track number is scoped to its camera/tracker lifetime.
 
-[PlateReader, PlateWorker and PlateVoter](../../s1/vehicle_front/plate_recognition.py) gate crops by quality, run the configured plate and OCR models, and use repeated reads and confidence for consensus. The live worker uses a bounded input queue and returns keyed results. The pipeline correlates results to vehicle evidence before confirmation. A missing or unconfirmed plate remains distinguishable from a confirmed read. Vehicle type is aggregated from detector classes; color is estimated from crop pixels by [vehicle attributes](../../s1/vehicle_front/vehicle_attributes.py). Missing attributes remain unavailable.
+[PlateReader, PlateWorker and PlateVoter](../../vehicle_intelligence/vehicle_front/plate_recognition.py) gate crops by quality, run the configured plate and OCR models, and use repeated reads and confidence for consensus. The live worker uses a bounded input queue and returns keyed results. The pipeline correlates results to vehicle evidence before confirmation. A missing or unconfirmed plate remains distinguishable from a confirmed read. Vehicle type is aggregated from detector classes; color is estimated from crop pixels by [vehicle attributes](../../vehicle_intelligence/vehicle_front/vehicle_attributes.py). Missing attributes remain unavailable.
 
-[ReID and handoff](../../s1/integration/flow.py) can associate optional OSNet or histogram evidence across views. Appearance, clock and geometry ambiguity limit association reliability. Keyed async work and bounded waits keep local processing independent of late evidence. Real OSNet and live plate accuracy are unverified. The [historical B-03 audit](../../TEST_REPORTS/B03_PLATE_ASSOCIATION_AUDIT.md) remains inconclusive.
+[ReID and handoff](../../vehicle_intelligence/integration/flow.py) can associate optional OSNet or histogram evidence across views. Appearance, clock and geometry ambiguity limit association reliability. Keyed async work and bounded waits keep local processing independent of late evidence. Real OSNet and live plate accuracy are unverified. The [historical B-03 audit](../../TEST_REPORTS/B03_PLATE_ASSOCIATION_AUDIT.md) remains inconclusive.
 
 ## G. S1–S2 integration
 
-[build_event and validate_event](../../s1/events/event_manager.py) produce the raw S1 v1 envelope and check required identity/time/slot fields. [S2Mapper](../../s1/publishing/s2_mapper.py) translates eligible PARK_START to S2 ENTRY and PARK_END to S2 EXIT. Gate EXIT does not independently create a second mapped exit. Mapped `timestamp`, `captured_at` and `received_at` represent first-seen, parked and applicable leave time. Preserve source-event timing when auditing a journey.
+[build_event and validate_event](../../vehicle_intelligence/events/event_manager.py) produce the raw S1 v1 envelope and check required identity/time/slot fields. [S2Mapper](../../vehicle_intelligence/publishing/s2_mapper.py) translates eligible PARK_START to S2 ENTRY and PARK_END to S2 EXIT. Gate EXIT does not independently create a second mapped exit. Mapped `timestamp`, `captured_at` and `received_at` represent first-seen, parked and applicable leave time. Preserve source-event timing when auditing a journey.
 
-[S2 VehicleEvent](../../s2/app/schemas/vehicle_event.py) carries event type, camera, area, timestamp, vehicle attributes and optional identity, parking and snapshots. The receiver also requires a usable identity and slot for ENTRY/EXIT and resolves registered lookup data. [Ingest](../../s2/app/routes/events.py) checks duplicates and session consistency, commits event/session/occupancy updates, then broadcasts. Authenticated protected routes require the configured API key. Plate storage uses encrypted values and keyed lookup.
+[S2 VehicleEvent](../../parking_management/app/schemas/vehicle_event.py) carries event type, camera, area, timestamp, vehicle attributes and optional identity, parking and snapshots. The receiver also requires a usable identity and slot for ENTRY/EXIT and resolves registered lookup data. [Ingest](../../parking_management/app/routes/events.py) checks duplicates and session consistency, commits event/session/occupancy updates, then broadcasts. Authenticated protected routes require the configured API key. Plate storage uses encrypted values and keyed lookup.
 
-[Outbox](../../s1/publishing/outbox.py) encrypts SQLite payloads and retries eligible failures with exponential backoff capped at 60 seconds. The sender treats HTTP 409 as acknowledged; the receiver can return 409 for a rolled-back conflict. Confirm target DB state during recovery. The system has no general exactly-once guarantee. [Mapper regression](../../tests/regression/test_s2_mapper_exit.py), [S2 deduplication fixtures](../../s2/tests/test_event_dedup_security.py) and isolated sender tests support the verified behavior. Production DB, authentication, network partitions and external snapshot acceptance remain site work.
+[Outbox](../../vehicle_intelligence/publishing/outbox.py) encrypts SQLite payloads and retries eligible failures with exponential backoff capped at 60 seconds. The sender treats HTTP 409 as acknowledged; the receiver can return 409 for a rolled-back conflict. Confirm target DB state during recovery. The system has no general exactly-once guarantee. [Mapper regression](../../tests/regression/test_s2_mapper_exit.py), [S2 deduplication fixtures](../../parking_management/tests/test_event_dedup_security.py) and isolated sender tests support the verified behavior. Production DB, authentication, network partitions and external snapshot acceptance remain site work.
 
 ## H. API and operational interface
 
-[S1 FastAPI](../../s1/api.py) declares the following application operations. Consult the [published HTTP guide](../API_SWAGGER.md) and [OpenAPI snapshot](../openapi.json) for field-level contracts and curl examples.
+[S1 FastAPI](../../vehicle_intelligence/api.py) declares the following application operations. Consult the [published HTTP guide](../API_SWAGGER.md) and [OpenAPI snapshot](../openapi.json) for field-level contracts and curl examples.
 
 | Method and path | Input and result |
 |---|---|
@@ -116,7 +116,7 @@ Gate ENTRY and EXIT are raw evidence about crossing the area boundary. PARK_STAR
 
 A 202 means acceptance, while a later worker failure appears in status with HTTP 200. States include idle, starting, running, cancelling, cancelled, completed and error. Wait for a terminal state and `worker_alive: false`. Finalized MP4 supports byte ranges; HEAD has no body and returns representation headers. Live HEAD omits length and byte-range headers. Unsatisfiable MP4 range returns an empty response and `Content-Range: bytes */<size>`. Live preview is latest-frame MJPEG and can skip frames; it closes when the job ends. One worker slot and the latest output pointer live in memory, per process. The app uses the first configured calibrated camera for a multi-entry YAML. Swagger, ReDoc and live schema are at `/docs`, `/redoc` and `/openapi.json`. S1 needs upstream authentication and access controls for deployment.
 
-[S2 routes](../../s2/app/main.py) are separate from the S1 schema. S2 exposes GET `/health`, GET `/health/database`, POST `/internal/events/vehicle`, POST `/internal/geometry/slots`, GET `/api/occupancy`, GET `/api/analytics/summary`, GET `/api/vehicles/{plate_number}`, GET `/api/snapshots/vehicle/{plate_number}`, and WebSocket `/ws/parking`. Ingest, geometry, vehicle lookup and snapshot lookup require `X-API-Key`. The socket uses the configured `WS_TOKEN` through the token query parameter. The database probe reports health in its body; use it with platform DB monitoring.
+[S2 routes](../../parking_management/app/main.py) are separate from the S1 schema. S2 exposes GET `/health`, GET `/health/database`, POST `/internal/events/vehicle`, POST `/internal/geometry/slots`, GET `/api/occupancy`, GET `/api/analytics/summary`, GET `/api/vehicles/{plate_number}`, GET `/api/snapshots/vehicle/{plate_number}`, and WebSocket `/ws/parking`. Ingest, geometry, vehicle lookup and snapshot lookup require `X-API-Key`. The socket uses the configured `WS_TOKEN` through the token query parameter. The database probe reports health in its body; use it with platform DB monitoring.
 
 ## I. Installation and deployment
 
@@ -124,7 +124,7 @@ The exercised baseline was Linux x86-64, Python 3.12.14, CPU PyTorch, OpenCV and
 
 From the repository root, provision a virtual environment and use [the installation guide](../INSTALLATION_GUIDE.md) for CPU PyTorch and [development requirements](../../requirements-dev.txt). Use [Windows instructions](../../INSTALL_WINDOWS.md) or an approved CUDA/PyTorch combination with [GPU requirements](../../requirements-gpu.txt) as reference workflows. Fresh installation, Windows and GPU were outside the latest audit. The bundled detector weights are selected by the local YAML. Supply separately approved ALPR/OSNet models, source media and camera calibration as needed. Avoid mixed ONNX Runtime providers.
 
-Run preflight per camera. Start S1 preview without external publishing. For S2 provision its own dependencies, a compatible DB schema and lookup rows, `DATABASE_URL`, auth and key material. Its SQLite tests do not bootstrap a production database. See the [configuration reference](../CONFIGURATION_REFERENCE.md) and [S2 dependencies](../../s2/requirements.txt).
+Run preflight per camera. Start S1 preview without external publishing. For S2 provision its own dependencies, a compatible DB schema and lookup rows, `DATABASE_URL`, auth and key material. Its SQLite tests do not bootstrap a production database. See the [configuration reference](../CONFIGURATION_REFERENCE.md) and [S2 dependencies](../../parking_management/requirements.txt).
 
 ## J. Reliability and error handling
 
@@ -137,7 +137,7 @@ Run preflight per camera. Start S1 preview without external publishing. For S2 p
 | Delivery | Encrypted queue, timeout and retry delay keep network sends separate from inference. Investigate remote conflicts and reconcile queue and receiver state. |
 | HTTP and shutdown | Structured errors omit internal payloads. Job stop is cooperative. Lifespan signals cancellation and waits up to 30 seconds, then can log `API_SHUTDOWN_TIMEOUT`. Native operations can delay cleanup. |
 
-[Diagnostic](../../s1/common/errors.py) includes component, code, operation, severity, context and recovery information. CLI rotating logs and error ledger expose warnings/errors by component. Trace failures from the first bad camera/frame or job diagnostic to the last valid state. The [published reliability guide](../ERROR_HANDLING.md), [code registry](../ERROR_CODE_REGISTRY.md) and [fault-injection report](../../TEST_REPORTS/ERROR_HANDLING_AND_FAULT_INJECTION_REPORT.md) describe specific recovery evidence.
+[Diagnostic](../../vehicle_intelligence/common/errors.py) includes component, code, operation, severity, context and recovery information. CLI rotating logs and error ledger expose warnings/errors by component. Trace failures from the first bad camera/frame or job diagnostic to the last valid state. The [published reliability guide](../ERROR_HANDLING.md), [code registry](../ERROR_CODE_REGISTRY.md) and [fault-injection report](../../TEST_REPORTS/ERROR_HANDLING_AND_FAULT_INJECTION_REPORT.md) describe specific recovery evidence.
 
 ## K. Testing and validation
 
@@ -157,7 +157,7 @@ S1 unit tests exercise geometry, baseline and overlap rules. Integration, produc
 
 ## L. Repository, packaging and recovery
 
-`s1/` and `s2/` are runtime sources. `config/` contains templates, `data/` sample calibrated geometry, `models/` placement notes, and `videos/` local input placement. `tests/` and `s2/tests/` hold distinct suites. `scripts/` and `tools/` support calibration and validation. `docs/` contains operating guides and OpenAPI, while `TEST_REPORTS/` holds current and historical evidence. The root detector weights are bundled; site footage, model variants, credentials and the production DB are provisioned separately.
+`vehicle_intelligence/` and `parking_management/` are runtime sources. `config/` contains templates, `data/` sample calibrated geometry, `models/` placement notes, and `videos/` local input placement. `tests/` and `parking_management/tests/` hold distinct suites. `scripts/` and `tools/` support calibration and validation. `docs/` contains operating guides and OpenAPI, while `TEST_REPORTS/` holds current and historical evidence. The root detector weights are bundled; site footage, model variants, credentials and the production DB are provisioned separately.
 
 The [existing archive checksum](../../TEST_REPORTS/raw/SMART_PARKING_S1_PRODUCTION_HANDOVER_FINAL.zip.sha256) and [member inventory](../../TEST_REPORTS/raw/original_zip_member_sha256.json) belong to the earlier verified handover ZIP. That archive predates the byte-range and API audit commits. Verify it against its own checksum. Use commit identity for the current repository. Full repository distributions carry S2, configs and evidence; the wheel configuration selects S1 Python packages. Back up matching release, YAML/calibration, state DBs and managed key IDs together. [Historical packaging verification](../../TEST_REPORTS/PACKAGING_VERIFICATION.md)
 
@@ -198,30 +198,30 @@ Configuration-driven geometry makes one codebase usable across calibrated views.
 
 ## P. Developer continuation
 
-Start in `s1.main.run`, then follow camera scheduling and `Pipeline.process`. To trace a vehicle, correlate camera, frame, track ID, UID, plate evidence and slot. To trace delivery, follow source event time and ID into mapper session, queued ID, HTTP acknowledgement and receiver transaction. To trace a job, follow `/api/status`, worker logs and media/report finalization.
+Start in `vehicle_intelligence.main.run`, then follow camera scheduling and `Pipeline.process`. To trace a vehicle, correlate camera, frame, track ID, UID, plate evidence and slot. To trace delivery, follow source event time and ID into mapper session, queued ID, HTTP acknowledgement and receiver transaction. To trace a job, follow `/api/status`, worker logs and media/report finalization.
 
 Extend the implementation owner and keep existing compatibility imports. Configuration additions need explicit defaults or documented required values and validation. Add isolated focused tests at the changed boundary, including recovery behavior, then run affected regressions and refresh the relevant contract evidence. Keep site IDs and geometry out of application logic. Preserve the baseline, sanitized evidence, reproducible commands and matching configuration/data provenance. First priorities are an owned S2 bootstrap, per-camera site acceptance, measured load and explicit retry/recovery exercises.
 
 ## Q. Documentation navigation
 
-The workspace companions below resolve in the full local handover suite. This publication includes the master alone. Use the published references column when reading on GitHub.
+The table maps handover topics to the guides and evidence available in this repository.
 
-| Workspace companion | Published reference |
+| Topic | Repository reference |
 |---|---|
-| [Role-based index](README.md) | [Project README](../../README.md) |
-| [01 System architecture](01_SYSTEM_ARCHITECTURE.md) | [Architecture handover](../ARCHITECTURE_HANDOVER.md) |
-| [02 Module reference](02_MODULE_REFERENCE.md) | [Module boundaries](../MODULE_BOUNDARIES.md) |
-| [03 End-to-end workflow](03_END_TO_END_WORKFLOW.md) | [End-to-end technical guide](../END_TO_END.md) |
-| [04 Parking and lifecycle](04_PARKING_AND_LIFECYCLE.md) | [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md) |
-| [05 Vehicle intelligence](05_VEHICLE_INTELLIGENCE.md) | [Detection/tracking evidence](../../TEST_REPORTS/DETECTION_TRACKING_VALIDATION_REPORT.md) |
-| [06 Multicamera and video](06_MULTICAMERA_AND_VIDEO.md) | [Architecture handover](../ARCHITECTURE_HANDOVER.md) |
-| [07 S1/S2 integration](07_S1_S2_INTEGRATION.md) | [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md) |
-| [08 API and HTTP](08_API_AND_HTTP.md) | [API and Swagger](../API_SWAGGER.md) |
-| [09 Configuration reference](09_CONFIGURATION_REFERENCE.md) | [Configuration reference](../CONFIGURATION_REFERENCE.md) |
-| [10 Installation and setup](10_INSTALLATION_AND_SETUP.md) | [Installation guide](../INSTALLATION_GUIDE.md) |
-| [11 Error handling and reliability](11_ERROR_HANDLING_AND_RELIABILITY.md) | [Error handling](../ERROR_HANDLING.md) |
-| [12 Testing and validation](12_TESTING_AND_VALIDATION.md) | [Latest verification](../../TEST_REPORTS/API_AUDIT_REPORT.md) |
-| [13 Packaging and repository](13_PACKAGING_AND_REPOSITORY.md) | [Packaging verification](../../TEST_REPORTS/PACKAGING_VERIFICATION.md) |
-| [14 Operations and troubleshooting](14_OPERATIONS_AND_TROUBLESHOOTING.md) | [Operations](../PRODUCTION_OPERATIONS_GUIDE.md) |
-| [15 Engineering decisions and limitations](15_ENGINEERING_DECISIONS_AND_LIMITATIONS.md) | [Readiness report](../../TEST_REPORTS/PRODUCTION_HANDOVER_READINESS_REPORT.md) |
-| [16 Developer continuation](16_DEVELOPER_CONTINUATION.md) | [Module boundaries](../MODULE_BOUNDARIES.md) |
+| Role-based index | [Project README](../../README.md) |
+| 01 System architecture | [Architecture handover](../ARCHITECTURE_HANDOVER.md) |
+| 02 Module reference | [Module boundaries](../MODULE_BOUNDARIES.md) |
+| 03 End-to-end workflow | [End-to-end technical guide](../END_TO_END.md) |
+| 04 Parking and lifecycle | [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md) |
+| 05 Vehicle intelligence | [Detection/tracking evidence](../../TEST_REPORTS/DETECTION_TRACKING_VALIDATION_REPORT.md) |
+| 06 Multicamera and video | [Architecture handover](../ARCHITECTURE_HANDOVER.md) |
+| 07 S1/S2 integration | [Lifecycle audit](../../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md) |
+| 08 API and HTTP | [API and Swagger](../API_SWAGGER.md) |
+| 09 Configuration reference | [Configuration reference](../CONFIGURATION_REFERENCE.md) |
+| 10 Installation and setup | [Installation guide](../INSTALLATION_GUIDE.md) |
+| 11 Error handling and reliability | [Error handling](../ERROR_HANDLING.md) |
+| 12 Testing and validation | [Latest verification](../../TEST_REPORTS/API_AUDIT_REPORT.md) |
+| 13 Packaging and repository | [Packaging verification](../../TEST_REPORTS/PACKAGING_VERIFICATION.md) |
+| 14 Operations and troubleshooting | [Operations](../PRODUCTION_OPERATIONS_GUIDE.md) |
+| 15 Engineering decisions and limitations | [Readiness report](../../TEST_REPORTS/PRODUCTION_HANDOVER_READINESS_REPORT.md) |
+| 16 Developer continuation | [Module boundaries](../MODULE_BOUNDARIES.md) |

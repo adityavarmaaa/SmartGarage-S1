@@ -1,6 +1,6 @@
 # Configuration reference
 
-`s1.common.config.load_config` merges YAML mappings with code defaults. Relative source, model, report and DB paths are resolved from the process working directory. Run from the project root or use absolute paths in deployment. See [field inventory](CONFIGURATION_FIELDS.csv) for actual defaults and the shipped examples. The original `config/config.local.yaml` is a historical template and needs operator inputs. Other YAMLs under `config/` are scenario variants. Some restore variants refer to historical source artifacts kept with the previous authorized release.
+`vehicle_intelligence.common.config.load_config` merges YAML mappings with code defaults. Relative source, model, report and DB paths are resolved from the process working directory. Run from the project root or use absolute paths in deployment. See [field inventory](CONFIGURATION_FIELDS.csv) for actual defaults and the shipped examples. The original `config/config.local.yaml` is a historical template and needs operator inputs. Other YAMLs under `config/` are scenario variants. Some restore variants refer to historical source artifacts kept with the previous authorized release.
 
 | Field | Type / requirement | Validation and meaning |
 | --- | --- | --- |

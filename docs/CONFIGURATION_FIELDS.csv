@@ -1,115 +1,115 @@
 Field,Observed type,Code default,Example in template or schema,Meaning,Validation or use,Related module
-camera_id,str,"""gate-cam-01""","""multicamera""",camera id,Optional override; see configuration reference,s1.common.config
-camera_motion.diagnostics_path,str,No shared default recorded,"""data/camera_motion_diagnostics.csv""",diagnostics path,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.max_dimension,int,No shared default recorded,800,max dimension,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.max_rotation_deg,float,No shared default recorded,20.0,max rotation deg,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.max_scale,float,No shared default recorded,1.5,max scale,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.max_translation_fraction,float,No shared default recorded,0.35,max translation fraction,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.min_inliers,int,No shared default recorded,8,min inliers,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.min_scale,float,No shared default recorded,0.65,min scale,Optional override; see configuration reference,s1.parking.camera_motion
-camera_motion.smoothing,float,No shared default recorded,0.9,smoothing,Optional override; see configuration reference,s1.parking.camera_motion
-cameras[].camera_id,str,No shared default recorded,"""configured-camera""",camera id,Required per-camera,s1.common.config
-cameras[].geometry_file,str,No shared default recorded,"""site-geometry.json""",geometry file,Required per-camera,s1.common.config
-cameras[].parking_area_id,str,No shared default recorded,"""site-area""",parking area id,Optional override; see configuration reference,s1.common.config
-cameras[].source,str,No shared default recorded,"""authorized-file.mp4""",source,Required per-camera,s1.common.config
-color.interval_s,float,1.0,1.0,interval s,Optional override; see configuration reference,s1.common.config
-color.max_samples,int,8,8,max samples,Optional override; see configuration reference,s1.common.config
-color.min_box_h,int,60,60,min box h,Optional override; see configuration reference,s1.common.config
-demo_video.enabled,bool,false,true,enabled,Optional override; see configuration reference,s1.video.demo_video
-demo_video.fps,int,10,12,fps,Optional override; see configuration reference,s1.video.demo_video
-demo_video.path,str,"""data/demo_multicam.mp4""","""data/demo_multicam.mp4""",path,Optional override; see configuration reference,s1.video.demo_video
-demo_video.tile_height,int,720,960,tile height,Optional override; see configuration reference,s1.video.demo_video
-detector.classes.2,str,"""car""","""car""",2,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.classes.3,str,"""motorcycle""","""motorcycle""",3,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.classes.5,str,"""bus""","""bus""",5,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.classes.7,str,"""truck""","""truck""",7,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.device,str,No shared default recorded,"""cpu""",device,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.input_size,int,416,640,input size,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.max_fps,int,5,5,max fps,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.model_path,str,"""models/yolox_nano.onnx""","""yolo11n.pt""",model path,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.nms_thr,float,0.45,0.45,nms thr,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.score_thr,float,0.15,0.15,score thr,Optional override; see configuration reference,s1.vehicle_front.detection
-detector.threads,int,2,2,threads,Optional override; see configuration reference,s1.vehicle_front.detection
-gate.margin_px,int,12,12,margin px,Optional override; see configuration reference,s1.common.config
-gate.min_size_change,float,0.15,0.15,min size change,Optional override; see configuration reference,s1.common.config
-gate.size_samples,int,3,3,size samples,Optional override; see configuration reference,s1.common.config
-geometry_file,str,"""config/geometry.json""","""config/geometry.json""",geometry file,Optional override; see configuration reference,s1.common.config
-global_reid.async,bool,No shared default recorded,true,async,Optional override; see configuration reference,s1.common.config
-global_reid.embedding_interval_s,float,No shared default recorded,0.5,embedding interval s,Optional override; see configuration reference,s1.common.config
-global_reid.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,s1.common.config
-global_reid.fallback_similarity_threshold,float,No shared default recorded,0.93,fallback similarity threshold,Optional override; see configuration reference,s1.common.config
-global_reid.similarity_threshold,float,No shared default recorded,0.75,similarity threshold,Optional override; see configuration reference,s1.common.config
-gpu.aux_device,str,"""auto""","""auto""",aux device,Optional override; see configuration reference,s1.common.config
-handoff.enabled,bool,true,true,enabled,Optional override; see configuration reference,s1.integration.flow
-handoff.entry_wait_s,float,4.0,4.0,entry wait s,Optional override; see configuration reference,s1.integration.flow
-handoff.exit_wait_s,float,8.0,8.0,exit wait s,Optional override; see configuration reference,s1.integration.flow
-handoff.transfer_window_s,float,30.0,30.0,transfer window s,Optional override; see configuration reference,s1.integration.flow
-inference.activity_threshold,float,0.025,0.025,activity threshold,Optional override; see configuration reference,s1.multicam.multicam
-inference.batch_size,int,No shared default recorded,20,batch size,Optional override; see configuration reference,s1.multicam.multicam
-inference.camera_startup_wait_s,int,10,10,camera startup wait s,Optional override; see configuration reference,s1.multicam.multicam
-inference.frame_buffer_capacity,int,3,3,frame buffer capacity,Optional override; see configuration reference,s1.multicam.multicam
-inference.max_camera_wait_ms,int,750,750,max camera wait ms,Optional override; see configuration reference,s1.multicam.multicam
-inference.max_frame_age_ms,int,1500,1500,max frame age ms,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.enabled,bool,true,true,enabled,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.hold_s,float,3.0,3.0,hold s,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.idle_empty_heartbeat_s,float,3.0,3.0,idle empty heartbeat s,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.idle_track_heartbeat_s,float,0.5,0.5,idle track heartbeat s,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.off_ratio,float,0.5,0.5,off ratio,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.on_threshold,float,0.025,0.025,on threshold,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_gate.wake_frames,int,1,1,wake frames,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_roi.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_roi.margin_frac,float,No shared default recorded,0.06,margin frac,Optional override; see configuration reference,s1.multicam.multicam
-inference.motion_roi.min_blob_px,int,No shared default recorded,6,min blob px,Optional override; see configuration reference,s1.multicam.multicam
-inference.scheduler_poll_ms,int,5,5,scheduler poll ms,Optional override; see configuration reference,s1.multicam.multicam
-parking.baseline_confirm_frames,int,No shared default recorded,3,baseline confirm frames,Optional override; see configuration reference,s1.parking.logic
-parking.baseline_window_s,float,2.0,15.0,baseline window s,Optional override; see configuration reference,s1.parking.logic
-parking.candidate_gap_grace_s,float,0.6,1.0,candidate gap grace s,Optional override; see configuration reference,s1.parking.logic
-parking.candidate_switch_confirm_s,float,0.6,1.0,candidate switch confirm s,Optional override; see configuration reference,s1.parking.logic
-parking.footprint_frac,float,0.25,0.25,footprint frac,Optional override; see configuration reference,s1.parking.logic
-parking.gone_frac,float,1.0,1.0,gone frac,Optional override; see configuration reference,s1.parking.logic
-parking.leave_dwell_s,float,3.0,3.0,leave dwell s,Optional override; see configuration reference,s1.parking.logic
-parking.leave_overlap,float,0.3,0.3,leave overlap,Optional override; see configuration reference,s1.parking.logic
-parking.lost_grace_s,float,30.0,30.0,lost grace s,Optional override; see configuration reference,s1.parking.logic
-parking.min_overlap,float,0.18,0.18,min overlap,Optional override; see configuration reference,s1.parking.logic
-parking.moved_frac,float,0.35,0.35,moved frac,Optional override; see configuration reference,s1.parking.logic
-parking.park_dwell_s,float,4.0,4.0,park dwell s,Optional override; see configuration reference,s1.parking.logic
-parking.publish_exit,bool,false,false,publish exit,Optional override; see configuration reference,s1.parking.logic
-parking.slot_boundary_margin_px,float,No shared default recorded,6.0,slot boundary margin px,Optional override; see configuration reference,s1.parking.logic
-parking.slot_boundary_switch_fraction,float,No shared default recorded,0.55,slot boundary switch fraction,Optional override; see configuration reference,s1.parking.logic
-parking.slot_overlap_fallback_margin,float,No shared default recorded,0.15,slot overlap fallback margin,Optional override; see configuration reference,s1.parking.logic
-parking.slot_overlap_fallback_min,float,No shared default recorded,0.35,slot overlap fallback min,Optional override; see configuration reference,s1.parking.logic
-parking.still_frac,float,0.12,0.12,still frac,Optional override; see configuration reference,s1.parking.logic
-parking_area_id,str,No shared default recorded,"""MULTI-AREA""",parking area id,Optional override; see configuration reference,s1.common.config
-plate.confirm_conf,float,0.75,0.8,confirm conf,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.confirm_reads,int,3,3,confirm reads,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.detector_model,str,"""yolo-v9-t-384-license-plate-end2end""","""yolo-v9-t-384-license-plate-end2end""",detector model,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.emit_deadline_s,float,3.0,10.0,emit deadline s,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.enabled,bool,true,true,enabled,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.interval_s,float,0.3,0.1,interval s,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.max_attempts,int,40,40,max attempts,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.max_crop_brightness,float,247.0,247.0,max crop brightness,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.max_plate_aspect_ratio,float,7.0,7.0,max plate aspect ratio,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_crop_brightness,float,8.0,8.0,min crop brightness,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_crop_contrast,float,5.0,5.0,min crop contrast,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_crop_laplacian_var,float,2.0,2.0,min crop laplacian var,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_ocr_conf,float,0.5,0.75,min ocr conf,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_plate_aspect_ratio,float,1.5,1.5,min plate aspect ratio,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_plate_detector_conf,float,0.3,0.5,min plate detector conf,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_plate_height_px,int,8,14,min plate height px,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_plate_width_px,int,24,40,min plate width px,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.min_vehicle_height_px,int,100,70,min vehicle height px,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-plate.ocr_model,str,"""cct-xs-v2-global-model""","""cct-xs-v2-global-model""",ocr model,Optional override; see configuration reference,s1.vehicle_front.plate_recognition
-publisher.outbox_db,str,"""data/outbox.db""","""data/outbox_live.db""",outbox db,Optional override; see configuration reference,s1.publishing
-publisher.s2_url,str,Deployment endpoint in source defaults,"""http://127.0.0.1:1/isolated""",s2 url,Optional override; see configuration reference,s1.publishing
-publisher.snapshot_dir,str,"""data/snapshots""","""data/snapshots""",snapshot dir,Optional override; see configuration reference,s1.publishing
-replay,str,"""realtime""","""realtime""",replay,Optional override; see configuration reference,s1.common.config
-replay_start_time,NoneType,null,null,replay start time,Optional override; see configuration reference,s1.common.config
-report.path,str,No shared default recorded,"""smart_parking_final_report.json""",path,Optional override; see configuration reference,s1.reporting.report
-source,str,"""sample.mp4""","""sample.mp4""",source,Optional override; see configuration reference,s1.common.config
-tracker.high_thr,float,0.45,0.45,high thr,Optional override; see configuration reference,s1.vehicle_front.tracking
-tracker.low_match_iou,float,0.15,0.15,low match iou,Optional override; see configuration reference,s1.vehicle_front.tracking
-tracker.low_thr,float,0.15,0.15,low thr,Optional override; see configuration reference,s1.vehicle_front.tracking
-tracker.match_iou,float,0.25,0.25,match iou,Optional override; see configuration reference,s1.vehicle_front.tracking
-tracker.max_age_s,float,2.0,2.0,max age s,Optional override; see configuration reference,s1.vehicle_front.tracking
-tracker.min_hits,int,3,3,min hits,Optional override; see configuration reference,s1.vehicle_front.tracking
+camera_id,str,"""gate-cam-01""","""multicamera""",camera id,Optional override; see configuration reference,vehicle_intelligence.common.config
+camera_motion.diagnostics_path,str,No shared default recorded,"""data/camera_motion_diagnostics.csv""",diagnostics path,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.max_dimension,int,No shared default recorded,800,max dimension,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.max_rotation_deg,float,No shared default recorded,20.0,max rotation deg,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.max_scale,float,No shared default recorded,1.5,max scale,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.max_translation_fraction,float,No shared default recorded,0.35,max translation fraction,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.min_inliers,int,No shared default recorded,8,min inliers,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.min_scale,float,No shared default recorded,0.65,min scale,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+camera_motion.smoothing,float,No shared default recorded,0.9,smoothing,Optional override; see configuration reference,vehicle_intelligence.parking.camera_motion
+cameras[].camera_id,str,No shared default recorded,"""configured-camera""",camera id,Required per-camera,vehicle_intelligence.common.config
+cameras[].geometry_file,str,No shared default recorded,"""site-geometry.json""",geometry file,Required per-camera,vehicle_intelligence.common.config
+cameras[].parking_area_id,str,No shared default recorded,"""site-area""",parking area id,Optional override; see configuration reference,vehicle_intelligence.common.config
+cameras[].source,str,No shared default recorded,"""authorized-file.mp4""",source,Required per-camera,vehicle_intelligence.common.config
+color.interval_s,float,1.0,1.0,interval s,Optional override; see configuration reference,vehicle_intelligence.common.config
+color.max_samples,int,8,8,max samples,Optional override; see configuration reference,vehicle_intelligence.common.config
+color.min_box_h,int,60,60,min box h,Optional override; see configuration reference,vehicle_intelligence.common.config
+demo_video.enabled,bool,false,true,enabled,Optional override; see configuration reference,vehicle_intelligence.video.demo_video
+demo_video.fps,int,10,12,fps,Optional override; see configuration reference,vehicle_intelligence.video.demo_video
+demo_video.path,str,"""data/demo_multicam.mp4""","""data/demo_multicam.mp4""",path,Optional override; see configuration reference,vehicle_intelligence.video.demo_video
+demo_video.tile_height,int,720,960,tile height,Optional override; see configuration reference,vehicle_intelligence.video.demo_video
+detector.classes.2,str,"""car""","""car""",2,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.classes.3,str,"""motorcycle""","""motorcycle""",3,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.classes.5,str,"""bus""","""bus""",5,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.classes.7,str,"""truck""","""truck""",7,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.device,str,No shared default recorded,"""cpu""",device,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.input_size,int,416,640,input size,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.max_fps,int,5,5,max fps,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.model_path,str,"""models/yolox_nano.onnx""","""yolo11n.pt""",model path,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.nms_thr,float,0.45,0.45,nms thr,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.score_thr,float,0.15,0.15,score thr,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+detector.threads,int,2,2,threads,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.detection
+gate.margin_px,int,12,12,margin px,Optional override; see configuration reference,vehicle_intelligence.common.config
+gate.min_size_change,float,0.15,0.15,min size change,Optional override; see configuration reference,vehicle_intelligence.common.config
+gate.size_samples,int,3,3,size samples,Optional override; see configuration reference,vehicle_intelligence.common.config
+geometry_file,str,"""config/geometry.json""","""config/geometry.json""",geometry file,Optional override; see configuration reference,vehicle_intelligence.common.config
+global_reid.async,bool,No shared default recorded,true,async,Optional override; see configuration reference,vehicle_intelligence.common.config
+global_reid.embedding_interval_s,float,No shared default recorded,0.5,embedding interval s,Optional override; see configuration reference,vehicle_intelligence.common.config
+global_reid.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,vehicle_intelligence.common.config
+global_reid.fallback_similarity_threshold,float,No shared default recorded,0.93,fallback similarity threshold,Optional override; see configuration reference,vehicle_intelligence.common.config
+global_reid.similarity_threshold,float,No shared default recorded,0.75,similarity threshold,Optional override; see configuration reference,vehicle_intelligence.common.config
+gpu.aux_device,str,"""auto""","""auto""",aux device,Optional override; see configuration reference,vehicle_intelligence.common.config
+handoff.enabled,bool,true,true,enabled,Optional override; see configuration reference,vehicle_intelligence.integration.flow
+handoff.entry_wait_s,float,4.0,4.0,entry wait s,Optional override; see configuration reference,vehicle_intelligence.integration.flow
+handoff.exit_wait_s,float,8.0,8.0,exit wait s,Optional override; see configuration reference,vehicle_intelligence.integration.flow
+handoff.transfer_window_s,float,30.0,30.0,transfer window s,Optional override; see configuration reference,vehicle_intelligence.integration.flow
+inference.activity_threshold,float,0.025,0.025,activity threshold,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.batch_size,int,No shared default recorded,20,batch size,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.camera_startup_wait_s,int,10,10,camera startup wait s,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.frame_buffer_capacity,int,3,3,frame buffer capacity,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.max_camera_wait_ms,int,750,750,max camera wait ms,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.max_frame_age_ms,int,1500,1500,max frame age ms,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.enabled,bool,true,true,enabled,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.hold_s,float,3.0,3.0,hold s,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.idle_empty_heartbeat_s,float,3.0,3.0,idle empty heartbeat s,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.idle_track_heartbeat_s,float,0.5,0.5,idle track heartbeat s,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.off_ratio,float,0.5,0.5,off ratio,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.on_threshold,float,0.025,0.025,on threshold,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_gate.wake_frames,int,1,1,wake frames,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_roi.enabled,bool,No shared default recorded,true,enabled,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_roi.margin_frac,float,No shared default recorded,0.06,margin frac,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.motion_roi.min_blob_px,int,No shared default recorded,6,min blob px,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+inference.scheduler_poll_ms,int,5,5,scheduler poll ms,Optional override; see configuration reference,vehicle_intelligence.multicam.multicam
+parking.baseline_confirm_frames,int,No shared default recorded,3,baseline confirm frames,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.baseline_window_s,float,2.0,15.0,baseline window s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.candidate_gap_grace_s,float,0.6,1.0,candidate gap grace s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.candidate_switch_confirm_s,float,0.6,1.0,candidate switch confirm s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.footprint_frac,float,0.25,0.25,footprint frac,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.gone_frac,float,1.0,1.0,gone frac,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.leave_dwell_s,float,3.0,3.0,leave dwell s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.leave_overlap,float,0.3,0.3,leave overlap,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.lost_grace_s,float,30.0,30.0,lost grace s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.min_overlap,float,0.18,0.18,min overlap,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.moved_frac,float,0.35,0.35,moved frac,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.park_dwell_s,float,4.0,4.0,park dwell s,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.publish_exit,bool,false,false,publish exit,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.slot_boundary_margin_px,float,No shared default recorded,6.0,slot boundary margin px,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.slot_boundary_switch_fraction,float,No shared default recorded,0.55,slot boundary switch fraction,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.slot_overlap_fallback_margin,float,No shared default recorded,0.15,slot overlap fallback margin,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.slot_overlap_fallback_min,float,No shared default recorded,0.35,slot overlap fallback min,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking.still_frac,float,0.12,0.12,still frac,Optional override; see configuration reference,vehicle_intelligence.parking.logic
+parking_area_id,str,No shared default recorded,"""MULTI-AREA""",parking area id,Optional override; see configuration reference,vehicle_intelligence.common.config
+plate.confirm_conf,float,0.75,0.8,confirm conf,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.confirm_reads,int,3,3,confirm reads,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.detector_model,str,"""yolo-v9-t-384-license-plate-end2end""","""yolo-v9-t-384-license-plate-end2end""",detector model,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.emit_deadline_s,float,3.0,10.0,emit deadline s,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.enabled,bool,true,true,enabled,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.interval_s,float,0.3,0.1,interval s,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.max_attempts,int,40,40,max attempts,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.max_crop_brightness,float,247.0,247.0,max crop brightness,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.max_plate_aspect_ratio,float,7.0,7.0,max plate aspect ratio,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_crop_brightness,float,8.0,8.0,min crop brightness,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_crop_contrast,float,5.0,5.0,min crop contrast,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_crop_laplacian_var,float,2.0,2.0,min crop laplacian var,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_ocr_conf,float,0.5,0.75,min ocr conf,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_plate_aspect_ratio,float,1.5,1.5,min plate aspect ratio,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_plate_detector_conf,float,0.3,0.5,min plate detector conf,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_plate_height_px,int,8,14,min plate height px,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_plate_width_px,int,24,40,min plate width px,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.min_vehicle_height_px,int,100,70,min vehicle height px,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+plate.ocr_model,str,"""cct-xs-v2-global-model""","""cct-xs-v2-global-model""",ocr model,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.plate_recognition
+publisher.outbox_db,str,"""data/outbox.db""","""data/outbox_live.db""",outbox db,Optional override; see configuration reference,vehicle_intelligence.publishing
+publisher.s2_url,str,Deployment endpoint in source defaults,"""http://127.0.0.1:1/isolated""",s2 url,Optional override; see configuration reference,vehicle_intelligence.publishing
+publisher.snapshot_dir,str,"""data/snapshots""","""data/snapshots""",snapshot dir,Optional override; see configuration reference,vehicle_intelligence.publishing
+replay,str,"""realtime""","""realtime""",replay,Optional override; see configuration reference,vehicle_intelligence.common.config
+replay_start_time,NoneType,null,null,replay start time,Optional override; see configuration reference,vehicle_intelligence.common.config
+report.path,str,No shared default recorded,"""smart_parking_final_report.json""",path,Optional override; see configuration reference,vehicle_intelligence.reporting.report
+source,str,"""sample.mp4""","""sample.mp4""",source,Optional override; see configuration reference,vehicle_intelligence.common.config
+tracker.high_thr,float,0.45,0.45,high thr,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking
+tracker.low_match_iou,float,0.15,0.15,low match iou,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking
+tracker.low_thr,float,0.15,0.15,low thr,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking
+tracker.match_iou,float,0.25,0.25,match iou,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking
+tracker.max_age_s,float,2.0,2.0,max age s,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking
+tracker.min_hits,int,3,3,min hits,Optional override; see configuration reference,vehicle_intelligence.vehicle_front.tracking

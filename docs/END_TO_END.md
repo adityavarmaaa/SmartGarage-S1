@@ -30,7 +30,7 @@ Use [installation and portable preview](INSTALLATION_GUIDE.md) for recorded vide
 - Config and geometry JSON files
 - Complete JSON report for ENTRY and EXIT
 - Annotated multicamera MP4
-- `logs/s1.log`
+- `logs/vehicle_intelligence.log`
 - Test output and test environment versions
 - ReID backend and plate engine status
 - Validation flags, including any `NOT_DEMONSTRATED` items

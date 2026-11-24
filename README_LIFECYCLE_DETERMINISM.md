@@ -6,16 +6,16 @@ logic, ReID matching, Service-2 mapping (PARK_START -> S2 ENTRY, PARK_END -> S2 
 ## What changed
 | File | Change |
 |---|---|
-| `s1/determinism.py` (new) | Decides deterministic mode (`auto` = only when EVERY source is a file), seeds RNG/cuDNN |
-| `s1/multicam.py` | In deterministic mode: every frame read in order, scheduler + motion gate + 5 fps cap on the VIDEO clock, fixed batch order, laptop-clock IST base shared by all cameras |
-| `s1/plates.py` | `PlateWorker(deterministic=True)`: no dropped OCR jobs, `wait_idle()` so results land on the same frame every run |
-| `s1/flow.py` | `AsyncGlobalReID(deterministic=True)`: same idea for ReID |
-| `s1/pipeline.py` | Plate-wait deadlines on the video clock; **inferred EXIT** (see below) |
-| `s1/lifecycle_timeline.py` (new) | One row per park cycle: entry / park_start / park_end / exit (IST) |
-| `s1/plate_evidence.py` (new) | Best plate crop per car + CLAHE copy, PNG |
-| `s1/report.py` | Adds `lifecycle_timeline`, `plate_evidence`, `run_info`, error ledger, lifecycle validation flags |
-| `s1/obs.py` (new), `run_kaggle.py`, `s1/main.py` | Logging with run id, rotating `logs/s1.log` (10 MB x 5), error/warning counts in the report |
-| `tools/determinism_check.py`, `s1/test_lifecycle_determinism.py` | Proof tools (below) |
+| `vehicle_intelligence/determinism.py` (new) | Decides deterministic mode (`auto` = only when EVERY source is a file), seeds RNG/cuDNN |
+| `vehicle_intelligence/multicam.py` | In deterministic mode: every frame read in order, scheduler + motion gate + 5 fps cap on the VIDEO clock, fixed batch order, laptop-clock IST base shared by all cameras |
+| `vehicle_intelligence/plates.py` | `PlateWorker(deterministic=True)`: no dropped OCR jobs, `wait_idle()` so results land on the same frame every run |
+| `vehicle_intelligence/flow.py` | `AsyncGlobalReID(deterministic=True)`: same idea for ReID |
+| `vehicle_intelligence/pipeline.py` | Plate-wait deadlines on the video clock; **inferred EXIT** (see below) |
+| `vehicle_intelligence/lifecycle_timeline.py` (new) | One row per park cycle: entry / park_start / park_end / exit (IST) |
+| `vehicle_intelligence/plate_evidence.py` (new) | Best plate crop per car + CLAHE copy, PNG |
+| `vehicle_intelligence/report.py` | Adds `lifecycle_timeline`, `plate_evidence`, `run_info`, error ledger, lifecycle validation flags |
+| `vehicle_intelligence/obs.py` (new), `run_kaggle.py`, `vehicle_intelligence/main.py` | Logging with run id, rotating `logs/vehicle_intelligence.log` (10 MB x 5), error/warning counts in the report |
+| `tools/determinism_check.py`, `vehicle_intelligence/test_lifecycle_determinism.py` | Proof tools (below) |
 
 Originals of every edited file: `backup_before_lifecycle_determinism/`.
 

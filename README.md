@@ -1,13 +1,13 @@
 # SmartGarage-S1
 
-SmartGarage processes camera or recorded parking footage and maintains parking state. **Vehicle Intelligence Service (S1)** handles detection, tracking, optional ANPR, calibrated slot assignment and camera-side lifecycle. **Parking Management Service (S2)** receives and persists parking events and serves occupancy, session history and analytics.
+SmartGarage processes camera or recorded parking footage and maintains parking state. **Vehicle Intelligence Service** (internal package: `vehicle_intelligence`) handles detection, tracking, optional ANPR, calibrated slot assignment and camera-side lifecycle. **Parking & Bay Management Service** (internal package: `parking_management`) receives and persists parking events and serves occupancy, session history and analytics.
 
 ```mermaid
 flowchart LR
     Input[Calibrated recording or camera] --> S1[Vehicle Intelligence Service]
     S1 --> Reports[Reports and annotated video]
     S1 --> Outbox[SQLite outbox and event mapper]
-    Outbox -->|Authenticated HTTP| S2[Parking Management Service]
+    Outbox -->|Authenticated HTTP| S2[Parking & Bay Management Service]
     S2 --> DB[(PostgreSQL)]
 ```
 
@@ -15,14 +15,14 @@ Both services use Python and FastAPI. S1 uses OpenCV and Ultralytics. S2 uses SQ
 
 | Directory | Responsibility |
 | --- | --- |
-| `s1/vehicle_front` | Vehicle detection, tracking, identity, ANPR and attributes |
-| `s1/parking` | Geometry, tripwire, slot assignment, occupancy and lifecycle |
-| `s1/integration`, `s1/events` | Vehicle-to-parking bridge, event construction and validation |
-| `s1/multicam`, `s1/video` | Shared inference, independent camera state, capture and demo video |
-| `s1/publishing`, `s1/reporting` | SQLite outbox, Service 2 mapping and reports |
-| `s1/common`, `s1/api.py` | Configuration, logs, structured diagnostics and HTTP |
+| `vehicle_intelligence/vehicle_front` | Vehicle detection, tracking, identity, ANPR and attributes |
+| `vehicle_intelligence/parking` | Geometry, tripwire, slot assignment, occupancy and lifecycle |
+| `vehicle_intelligence/integration`, `vehicle_intelligence/events` | Vehicle-to-parking bridge, event construction and validation |
+| `vehicle_intelligence/multicam`, `vehicle_intelligence/video` | Shared inference, independent camera state, capture and demo video |
+| `vehicle_intelligence/publishing`, `vehicle_intelligence/reporting` | SQLite outbox, Service 2 mapping and reports |
+| `vehicle_intelligence/common`, `vehicle_intelligence/api.py` | Configuration, logs, structured diagnostics and HTTP |
 | `config`, `data`, `models`, `tests` | Configuration, geometry and local assets, model placement, regression suite |
-| `s2` | Bundled Service 2 code and independently runnable tests |
+| `parking_management` | Bundled Service 2 code and independently runnable tests |
 
 ## Fresh developer setup
 
@@ -62,7 +62,7 @@ Remove `--no-plates` for ANPR. The reader models must be provisioned or availabl
 ## Run the API
 
 ```bash
-python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000
 ```
 
 The API defaults to preview mode. Use `/docs` for Swagger, `/openapi.json` for the live contract, and `/health` for liveness. Poll `/api/status` after an upload or camera start. One worker processes one source at a time. See the [API guide](docs/API_SWAGGER.md) for inputs, HTTP statuses and environment variables. See the [API audit and final test counts](TEST_REPORTS/API_AUDIT_REPORT.md).
