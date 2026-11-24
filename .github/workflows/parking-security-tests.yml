@@ -1,12 +1,12 @@
-﻿name: S2 Security Tests
+﻿name: Parking Management Security Tests
 
 on:
   push:
     branches:
-      - plate-encryption-migration
+      - main
   pull_request:
     branches:
-      - plate-encryption-migration
+      - main
 
 permissions:
   contents: read
@@ -16,7 +16,7 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      DATABASE_URL: postgresql+psycopg://ci:ci@127.0.0.1:5432/ci
+      DATABASE_URL: sqlite:///ci-test.db
       S2_API_KEY: ci-test-only-key
 
     steps:
@@ -28,12 +28,13 @@ jobs:
         with:
           python-version: "3.12"
           cache: pip
+          cache-dependency-path: parking_management/requirements.txt
 
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install -r requirements.txt
+          pip install -r parking_management/requirements.txt
           pip install pytest httpx
 
       - name: Run security regression tests
-        run: python -m pytest tests -q
+        run: python -m pytest parking_management/tests -q
