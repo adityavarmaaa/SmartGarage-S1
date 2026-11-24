@@ -2,11 +2,11 @@
 import os
 import sys
 
-PROJECT_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-sys.path.insert(0, PROJECT_ROOT)
+SERVICE_ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.dirname(SERVICE_ROOT))
 
 from dotenv import load_dotenv
-load_dotenv(os.path.join(PROJECT_ROOT, ".env"), override=True)
+load_dotenv(os.path.join(SERVICE_ROOT, ".env"), override=True)
 
 from sqlalchemy import text
 from parking_management.app.database.connection import engine
