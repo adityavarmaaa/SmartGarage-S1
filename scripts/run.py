@@ -195,10 +195,7 @@ def main():
         parser.error("Run with the project's virtual environment Python after setup.")
 
     sys.path.insert(0, str(ROOT))
-    import httpx
-    import psycopg
     import yaml
-    from sqlalchemy.exc import ArgumentError
     from vehicle_intelligence.common.config import camera_configs, load_config, validate_geometry_for_camera
     from vehicle_intelligence.geometry import Geometry
 
@@ -207,6 +204,7 @@ def main():
     directory.mkdir(mode=0o700, parents=True)
     print(f"Run directory: {directory}", flush=True)
     summary = {"mode": args.mode, "publishing": full, "status": "failed"}
+    run_errors = (OSError, ValueError, KeyError, subprocess.CalledProcessError)
     try:
         if args.source:
             config_path = directory / "source.yaml"
@@ -242,7 +240,14 @@ def main():
             env.update(SMART_PARKING_API_PUBLISH="0", SMART_PARKING_OUTPUT_DIR=str(directory / "api"),
                        SMART_PARKING_UPLOAD_DIR=str(directory / "uploads"))
             if full:
-                from sqlalchemy.engine import make_url
+                try:
+                    import httpx
+                    import psycopg
+                    from sqlalchemy.engine import make_url
+                    from sqlalchemy.exc import ArgumentError
+                except ImportError:
+                    raise ValueError("Full mode requires the service dependencies. Run scripts/setup.py --mode full --install.") from None
+                run_errors += (psycopg.Error, httpx.HTTPError)
 
                 for name in ("DATABASE_URL", "S2_API_KEY", "SP_ENCRYPTION_KEYS",
                              "SP_ACTIVE_ENCRYPTION_KEY", "SP_HMAC_KEY"):
@@ -283,8 +288,7 @@ def main():
             if full:
                 summary["postgresql"] = verify_database(url, directory, endpoint, expected_slots)
         summary["status"] = "passed"
-    except (OSError, ValueError, KeyError, subprocess.CalledProcessError,
-            psycopg.Error, httpx.HTTPError) as exc:
+    except run_errors as exc:
         # Subprocesses write their own diagnostics. Never echo a connection string or credential.
         summary["error"] = (f"Command failed with exit status {exc.returncode}; see run logs."
                             if isinstance(exc, subprocess.CalledProcessError) else
