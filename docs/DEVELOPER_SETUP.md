@@ -40,6 +40,8 @@ python scripts/setup.py --cpu-torch --config .venv/dev-preview.yaml --preview-so
 
 Run the same command from PowerShell. For an existing authorized, calibrated development YAML, omit `--preview-source` and pass its path to `--config`. On repeat setup, reuse the generated YAML without `--preview-source`. The checked-in site config contains workstation-specific sources and a remote publisher destination. The script creates or reuses `.venv`, installs both services, runs the S1 resource preflight and initializes PostgreSQL. `--cpu-torch` selects CPU wheels on Linux or Windows. On macOS, or with a supported GPU environment, omit that option and provision the compatible PyTorch build. Existing virtual environments can have their dependencies updated by this command.
 
+If installation reports `No space left on device`, check both the clone volume and the operating system’s temporary directory. CPU PyTorch must fit alongside its unpacked files and the rest of the dependencies. On Linux, use `df -h . "${TMPDIR:-/tmp}"`. On PowerShell, use `Get-PSDrive -PSProvider FileSystem` and check the drive containing `$env:TEMP`. Move to a larger writable development volume or set `TMPDIR` on Linux or `TEMP` and `TMP` on Windows to an existing writable directory on a larger volume. Retry in a fresh clone if the failed install left a partial environment. Setup reports the failed stage and available space when installation or environment creation fails.
+
 `--create-database` uses the PostgreSQL `postgres` maintenance database and needs `CREATEDB` if the target is absent. If permissions prevent creation, have the administrator create a fresh UTF-8 database owned by the development login, then omit the flag. The target needs permission to create objects in `public`. The application and initializer should use the normal `public` schema search path.
 
 Activate the environment with `source .venv/bin/activate` on Bash or `.\.venv\Scripts\Activate.ps1` on PowerShell. Run setup commands from the repository root so relative model and geometry paths resolve consistently.
@@ -67,7 +69,7 @@ Start Parking & Bay Management Service first from the root of the clone:
 python -m uvicorn parking_management.app.main:app --host 127.0.0.1 --port 8001
 ```
 
-Check `http://127.0.0.1:8001/health/database` for `database: connected`. Swagger is at `/docs` and the schema at `/openapi.json`.
+Check `http://127.0.0.1:8001/health/database` for `database: connected`. Check the JSON body because the existing endpoint also returns HTTP 200 when it reports `database: disconnected`. Swagger is at `/docs` and the schema at `/openapi.json`.
 
 For Vehicle Intelligence HTTP preview, set `SMART_PARKING_CONFIG` to the development YAML path and `SMART_PARKING_API_PUBLISH=0`, then run:
 

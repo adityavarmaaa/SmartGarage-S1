@@ -2,7 +2,7 @@
 
 The reference verification ran on Linux x86_64, Python 3.12.14, CPU PyTorch, OpenCV and FFmpeg. The pinned observations are in [the reference environment](../TEST_REPORTS/final_verification/raw/environment.json). The test environment already had its CPU packages provisioned. A wheel build and runtime preflight validate the delivered source and model. Dependency installation on another host is environment-specific. Windows, CUDA/GPU and live ANPR installation were outside this verification.
 
-The following environment setup is a reference procedure. A fresh dependency install was outside the final API audit. Run from the project root:
+The [shared developer setup command](DEVELOPER_SETUP.md#install-and-initialize) was verified in a clean Linux CPU environment with Python 3.12 and disposable PostgreSQL. The manual alternatives below are reference procedures. Run from the project root:
 
 ```bash
 python3.12 -m venv .venv

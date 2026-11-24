@@ -36,7 +36,7 @@ The [developer guide](docs/DEVELOPER_SETUP.md) covers Windows and Linux setup, s
 
 ## Install and validate
 
-The package requires Python 3.10 or later. Use 3.10–3.12 for the documented ML dependency setup. This release was verified with Python 3.12 on Linux. Run from the project root. The environment setup commands are reference commands; fresh dependency installation and Windows/CUDA were not verified in the final audit.
+The package requires Python 3.10 or later. Use 3.10–3.12 for the documented ML dependency setup. This release was verified with Python 3.12 on Linux. Run from the project root. The shared setup command in the [developer guide](docs/DEVELOPER_SETUP.md) completed in a clean Linux CPU environment with Python 3.12. Windows and CUDA setup remain reference procedures.
 
 ```bash
 python -m venv .venv
