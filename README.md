@@ -83,7 +83,7 @@ Start with the [readiness assessment](TEST_REPORTS/PRODUCTION_HANDOVER_READINESS
 - [Diagnostics and troubleshooting](docs/TROUBLESHOOTING.md)
 - [All evidence and release reports](TEST_REPORTS/FINAL_EVIDENCE_INDEX.md)
 
-ReDoc is at `/redoc`. Request cooperative API shutdown of a job with `POST /api/live/stop`, then wait for `/api/status` to show a terminal state and `worker_alive: false` before stopping the server. CLI examples, all coverage figures and safe reproduction commands are included in the evidence bundle.
+ReDoc is at `/redoc`. Request cooperative API shutdown of a job with `POST /api/live/stop`, then wait for `/api/status` to show a terminal state and `worker_alive: false` before stopping the server. Use the [developer setup guide](docs/DEVELOPER_SETUP.md#verify-on-isolated-resources) to run current checks. The evidence bundle records historical CLI examples and coverage.
 
 The published source comes from the verified handover ZIP. Its original
 checksum, member hashes, and fresh-extraction logs are in

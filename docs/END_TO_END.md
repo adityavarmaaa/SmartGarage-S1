@@ -22,7 +22,7 @@
 
 ## Execution and verification
 
-Use [installation and portable preview](INSTALLATION_GUIDE.md) for recorded video, the [API reference](API_SWAGGER.md) for the one-source HTTP workflow, and [reproduction commands](../TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md) for regression. The [Kaggle guide](../README_KAGGLE.md) covers notebook execution, which was outside the final API audit.
+Use [installation and portable preview](INSTALLATION_GUIDE.md) for recorded video, the [API reference](API_SWAGGER.md) for the one-source HTTP workflow, and [developer verification commands](DEVELOPER_SETUP.md#verify-on-isolated-resources) for regression. The [Kaggle guide](../README_KAGGLE.md) covers notebook execution, which was outside the final API audit.
 
 ## Evidence to retain for each release
 

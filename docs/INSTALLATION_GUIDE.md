@@ -32,4 +32,4 @@ SMART_PARKING_CONFIG="$TMPDIR_S1/preview.yaml" SMART_PARKING_API_PUBLISH=0 \
   python -m uvicorn vehicle_intelligence.api:app --host 127.0.0.1 --port 8000
 ```
 
-See [API reference](API_SWAGGER.md) and [reproduction commands](../TEST_REPORTS/FINAL_REPRODUCTION_COMMANDS.md) for HTTP, coverage and bundled S2 tests.
+See [API reference](API_SWAGGER.md) and [developer verification commands](DEVELOPER_SETUP.md#verify-on-isolated-resources) for HTTP, coverage and bundled S2 tests.
