@@ -1,6 +1,17 @@
-# Smart Parking Service 1
+# SmartGarage-S1
 
-S1 decodes camera or recorded video, detects and tracks vehicles, collects plate and attribute evidence, assigns vehicles to calibrated parking slots, and produces lifecycle events and reports. Service 2 receives the existing mapped event contract when publishing is enabled.
+SmartGarage processes camera or recorded parking footage and maintains parking state. **Vehicle Intelligence Service (S1)** handles detection, tracking, optional ANPR, calibrated slot assignment and camera-side lifecycle. **Parking Management Service (S2)** receives and persists parking events and serves occupancy, session history and analytics.
+
+```mermaid
+flowchart LR
+    Input[Calibrated recording or camera] --> S1[Vehicle Intelligence Service]
+    S1 --> Reports[Reports and annotated video]
+    S1 --> Outbox[SQLite outbox and event mapper]
+    Outbox -->|Authenticated HTTP| S2[Parking Management Service]
+    S2 --> DB[(PostgreSQL)]
+```
+
+Both services use Python and FastAPI. S1 uses OpenCV and Ultralytics. S2 uses SQLAlchemy and PostgreSQL.
 
 | Directory | Responsibility |
 | --- | --- |
@@ -12,6 +23,16 @@ S1 decodes camera or recorded video, detects and tracks vehicles, collects plate
 | `s1/common`, `s1/api.py` | Configuration, logs, structured diagnostics and HTTP |
 | `config`, `data`, `models`, `tests` | Configuration, geometry and local assets, model placement, regression suite |
 | `s2` | Bundled Service 2 code and independently runnable tests |
+
+## Fresh developer setup
+
+Provision a local UTF-8 PostgreSQL login and export the values in [.env.example](.env.example). From the clone root, run this CPU setup with the bundled preview recording:
+
+```bash
+python scripts/setup.py --cpu-torch --config .venv/dev-preview.yaml --preview-source TEST_REPORTS/raw/http/cancelled-output.mp4 --create-database
+```
+
+The [developer guide](docs/DEVELOPER_SETUP.md) covers Windows and Linux setup, schema checks, credentials, both startup commands, Swagger, and the real PostgreSQL HTTP smoke test. The [AI agent guide](docs/AI_AGENT_SETUP.md) provides a sequential workflow without assuming site resources.
 
 ## Install and validate
 

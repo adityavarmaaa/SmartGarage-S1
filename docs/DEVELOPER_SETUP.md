@@ -1,0 +1,100 @@
+# SmartGarage developer setup
+
+## Service boundaries
+
+The **Vehicle Intelligence Service** (`s1`) decodes video, detects and tracks vehicles, and evaluates camera-side occupancy and lifecycle against calibrated geometry. OCR and cross-camera ReID are optional. It produces reports and annotated video and offers a processing API. Its publishing path uses the existing SQLite outbox and S2 mapper.
+
+The **Parking Management Service** (`s2`) receives authenticated HTTP messages at `POST /internal/events/vehicle`. It persists events, current occupancy, vehicle records, and parking sessions in PostgreSQL. It serves occupancy, analytics, vehicle lookup, and snapshot metadata. The API also exposes a parking WebSocket. Keep both development listeners on loopback.
+
+## Prerequisites and environment
+
+Use Python 3.10 or newer. Python 3.12 is the reference environment for the CPU workflow. Install PostgreSQL with UTF-8 encoding and provision a development login. Install FFmpeg for metadata and H.264 output where supported. A fresh deployment needs authorized recordings or camera access and matching calibration. The repository provides the default detector weight. Configure the actual detector path if that weight is unavailable. ANPR requires its detector and OCR assets, and OSNet requires the configured ReID model. For GPU provisioning, use the platform-specific instructions in the [installation guide](INSTALLATION_GUIDE.md).
+
+Export the variables in [the template](../.env.example) into the process environment in each service terminal. Use `export NAME='value'` in Bash or `$env:NAME = 'value'` in PowerShell. The setup script reads process variables. Keep credentials outside Git and share the same development encryption and HMAC settings between both services.
+
+| Variable | Purpose |
+|---|---|
+| `DATABASE_URL` | PostgreSQL SQLAlchemy URL of the form `postgresql+psycopg://USER@HOST:PORT/DATABASE`. Use a password or platform authentication as required. URL-encode special characters in credentials. |
+| `S2_API_KEY` | Local shared API credential. The outbox sends it as `X-API-Key`. |
+| `SP_ENCRYPTION_KEYS`, `SP_ACTIVE_ENCRYPTION_KEY` | JSON map of key IDs to base64-encoded 32-byte keys and the ID of the active key. |
+| `SP_HMAC_KEY` | Base64-encoded 32-byte fingerprinting key. S1 requires this variable. S2 also supports its own rotating `SP_HMAC_KEYS` and `SP_ACTIVE_HMAC_KEY`. |
+
+For a disposable local environment, generate credentials once and reuse the same values in both terminals. For example, run the following in Bash, then start each service from that environment. Supply your actual development database URL separately.
+
+```bash
+export S2_API_KEY="$(python -c 'import secrets; print(secrets.token_urlsafe(32))')"
+export SP_ACTIVE_ENCRYPTION_KEY=dev
+export SP_ENCRYPTION_KEYS="$(python -c 'import base64,json,secrets; print(json.dumps(dict(dev=base64.b64encode(secrets.token_bytes(32)).decode())))')"
+export SP_HMAC_KEY="$(python -c 'import base64,secrets; print(base64.b64encode(secrets.token_bytes(32)).decode())')"
+```
+
+On PowerShell, assign each command's output with `$env:NAME = python -c '...'`. Keep the keys stable when restarting an environment with existing encrypted records.
+
+## Install and initialize
+
+From the clone root, use a fresh development database and a new output directory. For a first run, this command installs dependencies before generating a separate preview YAML from the bundled short clip:
+
+```bash
+python scripts/setup.py --cpu-torch --config .venv/dev-preview.yaml --preview-source TEST_REPORTS/raw/http/cancelled-output.mp4 --create-database
+```
+
+Run the same command from PowerShell. For an existing authorized, calibrated development YAML, omit `--preview-source` and pass its path to `--config`. On repeat setup, reuse the generated YAML without `--preview-source`. The checked-in site config contains workstation-specific sources and a remote publisher destination. The script creates or reuses `.venv`, installs both services, runs the S1 resource preflight and initializes PostgreSQL. `--cpu-torch` selects CPU wheels on Linux or Windows. On macOS, or with a supported GPU environment, omit that option and provision the compatible PyTorch build. Existing virtual environments can have their dependencies updated by this command.
+
+`--create-database` uses the PostgreSQL `postgres` maintenance database and needs `CREATEDB` if the target is absent. If permissions prevent creation, have the administrator create a fresh UTF-8 database owned by the development login, then omit the flag. The target needs permission to create objects in `public`. The application and initializer should use the normal `public` schema search path.
+
+Activate the environment with `source .venv/bin/activate` on Bash or `.\.venv\Scripts\Activate.ps1` on PowerShell. Run setup commands from the repository root so relative model and geometry paths resolve consistently.
+
+```bash
+python scripts/init_database.py --config /path/to/dev.yaml
+python scripts/init_database.py --check
+```
+
+The initializer applies versioned SQL transactionally, records migration checksums, and verifies the managed tables, primary and foreign keys, active-session uniqueness index and event types. Supplying a YAML provisions its area codes, detector labels, cameras and slots using the existing configuration and geometry validators. Initial slots are marked available pending observations. Existing rows, geometry and occupancy are preserved. Prefer the authenticated geometry API for updating existing polygons. The CLI also accepts `--area`, `--vehicle-type`, and `--color` for explicit reference codes.
+
+### Schema and compatibility
+
+The baseline declares area, vehicle type, color and event type reference tables, camera and slot definitions, vehicles, slot state, sessions and events. Slot identity uses camera plus slot ID. Vehicles may be unresolved for unconfirmed plates, so nullable vehicle foreign keys coexist with the event UID. Legacy text and observed snapshot fields retain the values the current API reads or writes. The occupancy table is a mutable projection, while events and sessions describe history. This avoids a cross-service contract rewrite to remove compatibility fields.
+
+Existing databases with managed-table names and no migration ledger are refused. No adoption or in-place conversion is implied. Back up the database and review its actual schema before designing a migration for it. On failure, inspect the database name, encoding, reachability, permissions and migration ledger. Applied SQL is checksum-protected, so add a new migration and extend verification for any future schema change.
+
+## Start and connect the services
+
+Start Parking Management first from the root of the clone:
+
+```bash
+python -m uvicorn --app-dir s2 app.main:app --host 127.0.0.1 --port 8001
+```
+
+Check `http://127.0.0.1:8001/health/database` for `database: connected`. Swagger is at `/docs` and the schema at `/openapi.json`.
+
+For Vehicle Intelligence HTTP preview, set `SMART_PARKING_CONFIG` to the development YAML path and `SMART_PARKING_API_PUBLISH=0`, then run:
+
+```bash
+python -m uvicorn s1.api:app --host 127.0.0.1 --port 8000
+```
+
+Check `/health` and `/docs` on port 8000. See the [S1 HTTP reference](API_SWAGGER.md). For a terminal video run with local previews:
+
+```bash
+python main.py --config /path/to/dev.yaml --no-publisher
+```
+
+For a connected site replay, explicitly set `publisher.s2_url` in the **development YAML** to `http://127.0.0.1:8001/internal/events/vehicle`, with fresh local outbox, snapshot and report paths. Confirm the destination is the local development instance before running `python main.py --config /path/to/dev.yaml` with publishing enabled. The mapper uses `PARK_START` for S2 ENTRY and `PARK_END` for S2 EXIT. Detection alone does not imply either event. The restored EXIT-only workflow requires local preview mode. Use a recording that establishes its own parking session for a publishing-enabled replay.
+
+Stop both servers with Ctrl+C. Inspect S1's `logs/` and the configured report and video paths. After failure, verify the configuration and database with preflight and `--check`; preserve the outbox and database when diagnosing startup.
+
+## Verify on isolated resources
+
+```bash
+python scripts/smoke_database.py
+python -m pytest tests -q
+(cd s2 && DATABASE_URL=sqlite:///isolated-test.db python -m pytest tests -q)
+```
+
+On PowerShell run the S2 command from `s2` with a separate `DATABASE_URL`, then restore your development environment variable. The bundled S2 suite uses mocked persistence. The PostgreSQL smoke separately starts a real loopback S2 listener and exercises S1 mapping, encrypted outbox delivery, API auth, database events, session closure and slot release. It uses generated credentials and its own uniquely named disposable database on the localhost PostgreSQL server. Use a local development login with `CREATEDB`. The database is retained for inspection. The smoke injects lifecycle input and does not exercise camera inference.
+
+Use the [recorded-video preview](INSTALLATION_GUIDE.md) to check decoding and model startup, then provide a calibrated recording containing a real parking transition for a complete media-to-database acceptance run. Preserved mapper behavior carries parking-start `captured_at` on both mapped messages. The smoke observes the resulting zero-duration session. Do not use that field to infer real dwell time without a separate contract review.
+
+## Future commits
+
+Use descriptive `type(scope): subject` messages, such as `test(integration): verify PostgreSQL slot release`. Preserve existing history and review the exact diff before committing. Keep credentials, recordings, models, databases and generated reports out of new commits.

@@ -10,10 +10,13 @@ flowchart LR
     D --> F[S1 lifecycle events]
     F --> G[Report and preview evidence]
     F --> H[S2 mapper and SQLite outbox]
-    H --> I[Configured Service 2 destination]
+    H --> I[Parking Management Service S2]
+    I --> P[(PostgreSQL)]
     C --> J[Annotated recorder]
     J --> K[MJPEG and finalized MP4]
 ```
+
+Vehicle Intelligence Service (S1) owns the camera-side pipeline. Parking Management Service (S2) persists the mapped events and provides backend occupancy and history. See the [developer setup](DEVELOPER_SETUP.md) for the database boundary and startup sequence.
 
 Capture and camera-local pipelines hold their own geometry, slot state, tracks and plate jobs. The multicamera scheduler batches compatible inference and isolates per-camera faults. The detector returns boxes, confidence and class. ByteTracker associates detections within one camera. Shared ReID and handoff are optional. Geometry can be scaled from calibration dimensions; the slot manager arbitrates overlap and reservations and updates parking state independently of OCR.
 

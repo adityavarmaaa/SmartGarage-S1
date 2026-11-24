@@ -20,8 +20,8 @@ from app.realtime import parking_websocket
 # =========================================================
 
 app = FastAPI(
-    title="Smart Parking - Data Management Service",
-    description="Service 2: Data Management Service",
+    title="SmartGarage - Parking Management Service",
+    description="Service 2 persists parking events, sessions, and slot occupancy.",
     version="1.0.0",
 )
 
