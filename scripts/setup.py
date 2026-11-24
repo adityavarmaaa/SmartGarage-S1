@@ -1,9 +1,11 @@
 """Set up the shared Vehicle Intelligence and Parking & Bay Management development environment."""
 import argparse
 import os
+import shutil
 from pathlib import Path
 import subprocess
 import sys
+import tempfile
 import venv
 
 
@@ -33,31 +35,57 @@ def main():
         parser.error("Configuration file not found.")
     env = root / ".venv"
     python = env / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
-    if not python.exists():
-        if env.exists():
-            parser.error("Existing .venv has no Python executable. Repair it or use a fresh clone.")
-        venv.create(env, with_pip=True)
+    step = "virtual environment creation"
     try:
+        if not python.exists():
+            if env.exists():
+                parser.error("Existing .venv has no Python executable. Repair it or use a fresh clone.")
+            venv.create(env, with_pip=True)
+        step = "virtual environment Python version check"
         subprocess.run([str(python), "-c", "import sys; sys.exit(sys.version_info < (3, 10))"], check=True)
         if args.cpu_torch:
+            step = "CPU PyTorch dependency installation"
             subprocess.run([str(python), "-m", "pip", "install", "torch", "torchvision",
                             "--index-url", "https://download.pytorch.org/whl/cpu"], check=True)
+        step = "project dependency installation"
         colors = [value for color in args.color for value in ("--color", color)]
         subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements-dev.txt",
                         "-r", "parking_management/requirements.txt"], cwd=root, check=True)
         if args.preview_source:
+            step = "preview configuration generation"
             subprocess.run([str(python), "scripts/make_handover_config.py", "--source", str(source),
                             "--output", str(config)], cwd=root, check=True)
-        for command in (
-            ["-c", "from vehicle_intelligence.security import encrypt_text, plate_hmac; "
-             "encrypt_text('setup-check'); plate_hmac('setup-check')"],
-            ["preflight.py", str(config)],
-            ["scripts/init_database.py", "--config", str(config), *colors,
-             *(["--create-database"] if args.create_database else [])],
+        for step, command in (
+            ("security configuration check", [
+                "-c", "from vehicle_intelligence.security import encrypt_text, plate_hmac; "
+                "encrypt_text('setup-check'); plate_hmac('setup-check')",
+            ]),
+            ("model and camera preflight", ["preflight.py", str(config)]),
+            ("PostgreSQL initialization", [
+                "scripts/init_database.py", "--config", str(config), *colors,
+                *(["--create-database"] if args.create_database else []),
+            ]),
         ):
             subprocess.run([str(python), *command], cwd=root, check=True)
-    except subprocess.CalledProcessError as exc:
-        parser.exit(1, f"Setup step failed with exit status {exc.returncode}. See the output above.\n")
+    except (OSError, subprocess.CalledProcessError) as exc:
+        detail = (
+            f"exit status {exc.returncode}" if isinstance(exc, subprocess.CalledProcessError)
+            else f"{type(exc).__name__}, errno {exc.errno}"
+        )
+        if step in {"virtual environment creation", "CPU PyTorch dependency installation",
+                    "project dependency installation"}:
+            volumes = [("project", root)]
+            try:
+                volumes.append(("temporary", tempfile.gettempdir()))
+            except OSError:
+                print("No writable temporary directory found.", file=sys.stderr)
+            for label, path in volumes:
+                try:
+                    free_mib = shutil.disk_usage(path).free // (1024 * 1024)
+                except OSError:
+                    continue
+                print(f"Free space on {label} volume: {free_mib} MiB", file=sys.stderr)
+        parser.exit(1, f"Setup failed during {step} ({detail}). See the output above.\n")
     print("Development environment and database ready. See docs/DEVELOPER_SETUP.md for startup and site resources.")
 
 
