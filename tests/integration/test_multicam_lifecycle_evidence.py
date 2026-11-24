@@ -1,7 +1,7 @@
 
 from types import SimpleNamespace
 
-from s1.pipeline import Pipeline
+from vehicle_intelligence.pipeline import Pipeline
 
 
 def make_pipeline(callback, saved, ready=False):

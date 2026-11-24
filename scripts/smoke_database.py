@@ -55,10 +55,9 @@ def main():
     subprocess.run([*command, "--check"], check=True)
 
     sys.path.insert(0, str(ROOT))
-    sys.path.insert(0, str(ROOT / "s2"))
-    from app.main import app
-    from s1.publishing.outbox import Outbox
-    from s1.publishing.s2_mapper import S2Mapper
+    from parking_management.app.main import app
+    from vehicle_intelligence.publishing.outbox import Outbox
+    from vehicle_intelligence.publishing.s2_mapper import S2Mapper
 
     with socket.socket() as listener, TemporaryDirectory() as directory:
         listener.bind(("127.0.0.1", 0))

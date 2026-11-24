@@ -1,5 +1,5 @@
 from fastapi.testclient import TestClient
-import s1.api as api
+import vehicle_intelligence.api as api
 
 
 client = TestClient(api.app)

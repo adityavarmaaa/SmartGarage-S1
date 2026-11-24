@@ -28,12 +28,12 @@ def main():
     ap.add_argument("--quiet", action="store_true")
     a = ap.parse_args()
 
-    from s1.obs import setup_logging
+    from vehicle_intelligence.obs import setup_logging
     run_id = setup_logging(level="INFO", log_dir="logs", quiet=a.quiet)
     log = logging.getLogger("run_local")
     print(f"[run] run_id={run_id}  log: {os.path.abspath('logs/s1.log')}")
 
-    from s1.config import load_config
+    from vehicle_intelligence.config import load_config
     cfg = load_config(a.config, {"plate": {"enabled": False}} if a.no_plates else {})
 
     problems = []
@@ -69,7 +69,7 @@ def main():
             log.warning("torch import failed (%s) -> YOLO on CPU", exc)
             cfg["detector"]["device"] = "cpu"
 
-    from s1.main import run
+    from vehicle_intelligence.main import run
     run(cfg, show=False, no_publisher=not a.publish)
     rep = (cfg.get("report", {}) or {}).get("path", "smart_parking_final_report.json")
     print(f"\nDone. Report: {os.path.abspath(rep)}")

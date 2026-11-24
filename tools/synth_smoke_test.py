@@ -151,7 +151,7 @@ def run_transfer():
     render_cam(va, script_cam_a, duration=40)
     render_cam(vb, script_cam_b, duration=40)
     json.dump(GEOM_A, open(ga, "w")); json.dump(GEOM_B, open(gb, "w"))
-    from s1.config import load_config
+    from vehicle_intelligence.config import load_config
     cfg = load_config(os.path.join(ROOT, "config", "config.kaggle_flow.yaml"))
     cfg["cameras"] = [
         {"camera_id": "synth-cam-a", "source": va, "geometry_file": ga},
@@ -165,7 +165,7 @@ def run_transfer():
     cfg["report"] = {"path": os.path.join(OUT, "report_transfer.json")}
     cfg["camera_motion"]["enabled"] = False
     cfg["publisher"]["outbox_db"] = os.path.join(OUT, "outbox_t.db")
-    from s1.multicam import run_multi_camera
+    from vehicle_intelligence.multicam import run_multi_camera
     run_multi_camera(cfg, ColourBlobDetector(), show=False, no_publisher=True)
     rep = json.load(open(cfg["report"]["path"]))
     print("\nS2 events :", [(e["event_type"], e["camera_id"], e["parking"]["slot_id"]) for e in rep["service2_events"]])
@@ -185,7 +185,7 @@ def main():
     render_cam(vid, script_cam_a, baseline_slot_center=(460, 135))
     json.dump(GEOM_A, open(geo, "w"), indent=2)
 
-    from s1.config import load_config
+    from vehicle_intelligence.config import load_config
     cfg = load_config(os.path.join(ROOT, "config", "config.kaggle_flow.yaml"))
     cfg["cameras"] = [{"camera_id": "synth-cam-a", "source": vid, "geometry_file": geo}]
     cfg["detector"]["device"] = "cpu"
@@ -197,9 +197,9 @@ def main():
     cfg["camera_motion"]["enabled"] = False
     cfg["publisher"]["outbox_db"] = os.path.join(OUT, "outbox.db")
 
-    from s1.multicam import run_multi_camera, _activity_score
-    from s1.motion_roi import build_motion_mask
-    from s1.geometry import Geometry
+    from vehicle_intelligence.multicam import run_multi_camera, _activity_score
+    from vehicle_intelligence.motion_roi import build_motion_mask
+    from vehicle_intelligence.geometry import Geometry
 
     # ---- ROI check: leaves/bird alone must not look like motion, a car must ----
     g = Geometry(GEOM_A)

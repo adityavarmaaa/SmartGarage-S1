@@ -2,9 +2,9 @@
 import argparse
 from pathlib import Path
 
-from s1.common.config import camera_configs, load_config, validate_geometry_for_camera
-from s1.common.errors import ConfigurationError
-from s1.geometry import Geometry
+from vehicle_intelligence.common.config import camera_configs, load_config, validate_geometry_for_camera
+from vehicle_intelligence.common.errors import ConfigurationError
+from vehicle_intelligence.geometry import Geometry
 
 
 def main():

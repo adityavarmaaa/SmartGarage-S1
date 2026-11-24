@@ -8,8 +8,8 @@ from uuid import uuid4
 
 import pytest
 
-from s1.parking.parking_lifecycle import build_timeline
-from s1.publishing.s2_mapper import S2Mapper
+from vehicle_intelligence.parking.parking_lifecycle import build_timeline
+from vehicle_intelligence.publishing.s2_mapper import S2Mapper
 
 
 @pytest.fixture

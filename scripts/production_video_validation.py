@@ -11,8 +11,8 @@ import cv2
 import numpy as np
 import yaml
 
-from s1.vehicle_front.detection import YoloDetector
-from s1.vehicle_front.tracking import ByteTracker
+from vehicle_intelligence.vehicle_front.detection import YoloDetector
+from vehicle_intelligence.vehicle_front.tracking import ByteTracker
 
 
 def annotate_frame(image, tracks, frame_idx, detection_count, injected=False):

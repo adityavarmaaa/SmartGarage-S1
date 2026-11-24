@@ -7,12 +7,12 @@ from types import SimpleNamespace
 import cv2
 import numpy as np
 
-from s1.geometry import Geometry
-from s1.motion_roi import build_motion_mask, masked_diff_score
-from s1.multicam import _activity_score
-from s1.reid import HistogramEmbedder
-from s1.global_identity import GlobalIdentityRegistry
-from s1 import report as rpt
+from vehicle_intelligence.geometry import Geometry
+from vehicle_intelligence.motion_roi import build_motion_mask, masked_diff_score
+from vehicle_intelligence.multicam import _activity_score
+from vehicle_intelligence.reid import HistogramEmbedder
+from vehicle_intelligence.global_identity import GlobalIdentityRegistry
+from vehicle_intelligence import report as rpt
 
 
 def _geom():

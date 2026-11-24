@@ -79,7 +79,7 @@ def script_b_after_transfer(t):
 
 
 def build_cfg(videos, geoms, out_dir):
-    from s1.config import load_config
+    from vehicle_intelligence.config import load_config
     cfg = load_config(os.path.join(ROOT, "config", "config.kaggle_flow.yaml"))
     cfg["cameras"] = [{"camera_id": f"synth-cam-{chr(97 + i)}", "source": v, "geometry_file": g}
                       for i, (v, g) in enumerate(zip(videos, geoms))]
@@ -95,7 +95,7 @@ def build_cfg(videos, geoms, out_dir):
 
 
 def run_once(cfg, label):
-    from s1.multicam import run_multi_camera
+    from vehicle_intelligence.multicam import run_multi_camera
     run_multi_camera(cfg, synth.ColourBlobDetector(), show=False, no_publisher=True)
     rep = json.load(open(cfg["report"]["path"]))
     keep = {
@@ -145,8 +145,8 @@ def scenario(name, scripts, baseline, duration, out_dir, runs):
 def real_config_check(path, runs):
     """Same proof on YOUR videos with the real YOLO/plate/ReID stack (run on Kaggle)."""
     from run_kaggle import resolve_sources
-    from s1.config import load_config
-    from s1.main import run
+    from vehicle_intelligence.config import load_config
+    from vehicle_intelligence.main import run
     out_dir = os.path.join(ROOT, "data", "determinism_check", "real")
     os.makedirs(out_dir, exist_ok=True)
     results = []

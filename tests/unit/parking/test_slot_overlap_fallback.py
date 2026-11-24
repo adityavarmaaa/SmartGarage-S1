@@ -1,6 +1,6 @@
 import numpy as np
 
-from s1.logic import SlotManager
+from vehicle_intelligence.logic import SlotManager
 
 
 def _slot(slot_id, x1, x2):
@@ -46,8 +46,8 @@ def test_overlap_fallback_respects_existing_slot_reservations():
     assert manager.contact_slot((0, 0, 50, 100), track_id=1) is None
 
 def _entry_gate_fixture(entry_crossing_ts=None, baseline=False):
-    from s1.tracker import Track
-    from s1.vehicles import VehicleRegistry
+    from vehicle_intelligence.tracker import Track
+    from vehicle_intelligence.vehicles import VehicleRegistry
 
     cfg = {
         "min_overlap": 0.20,
@@ -97,7 +97,7 @@ def test_spatially_confirmed_occupancy_does_not_invent_a_gate_event():
 def test_observed_occupancy_is_reflected_in_report_and_ends_on_departure():
     from types import SimpleNamespace
 
-    from s1.reporting.report import slot_records_for
+    from vehicle_intelligence.reporting.report import slot_records_for
 
     manager, track, registry, vehicle = _entry_gate_fixture()
     other_camera, _, _, _ = _entry_gate_fixture()
@@ -161,7 +161,7 @@ def test_startup_baseline_occupant_does_not_emit_park_start():
 
 
 def test_baseline_survives_temporary_track_loss_then_expires():
-    from s1.tracker import Track
+    from vehicle_intelligence.tracker import Track
 
     manager, track, registry, vehicle = _entry_gate_fixture(baseline=True)
     for ts in (10.0, 10.5, 11.1):
@@ -184,7 +184,7 @@ def test_baseline_survives_temporary_track_loss_then_expires():
 
 
 def test_fresh_parking_cannot_rebind_an_expired_reservation():
-    from s1.tracker import Track
+    from vehicle_intelligence.tracker import Track
 
     manager, track, registry, original = _entry_gate_fixture(baseline=True)
     for ts in (10.0, 10.5, 11.1):

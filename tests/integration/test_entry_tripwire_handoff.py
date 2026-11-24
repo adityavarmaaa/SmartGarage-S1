@@ -1,7 +1,7 @@
 from types import SimpleNamespace
 
-from s1.pipeline import Pipeline
-from s1.logic import Tripwire
+from vehicle_intelligence.pipeline import Pipeline
+from vehicle_intelligence.logic import Tripwire
 
 
 def make_pipeline():

@@ -50,7 +50,7 @@ def main():
     a = ap.parse_args()
 
     try:
-        from s1.obs import setup_logging
+        from vehicle_intelligence.obs import setup_logging
         run_id = setup_logging(level="INFO", log_dir="logs", quiet=a.quiet)
         print(f"[run] run_id={run_id}  log file: {os.path.abspath('logs/s1.log')}")
     except Exception as exc:  # never let logging setup block a run
@@ -58,7 +58,7 @@ def main():
                             format="%(asctime)s %(levelname)s %(name)s: %(message)s")
         logging.getLogger("run_kaggle").error("production logging setup failed (%s); using basic logging", exc)
 
-    from s1.config import load_config
+    from vehicle_intelligence.config import load_config
     over = {}
     if a.no_plates:
         over["plate"] = {"enabled": False}
@@ -89,7 +89,7 @@ def main():
             "model_name", "osnet_ain_x1_0_vehicle_reid.onnx"))):
         print("[warn] OSNet .onnx not in models/ -> weak colour-histogram ReID fallback will be used")
 
-    from s1.main import run
+    from vehicle_intelligence.main import run
     run(cfg, show=False, no_publisher=not a.publish)
 
     rep = cfg.get("report", {}).get("path", "smart_parking_final_report.json")

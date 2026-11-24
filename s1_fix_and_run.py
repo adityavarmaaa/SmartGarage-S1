@@ -5,14 +5,14 @@ import sys
 import shutil
 
 ROOT = Path.cwd()
-PIPELINE = ROOT / "s1" / "pipeline.py"
+PIPELINE = ROOT / "vehicle_intelligence" / "pipeline.py"
 CONFIG = ROOT / "config" / "config_img2138_runtime.yaml"
 LOG = ROOT / "b02_fixed_test.log"
 
 if not PIPELINE.is_file() or not CONFIG.is_file():
     raise SystemExit(
         "ERROR: Open PowerShell in smart_parking_s1_complete project root. "
-        "Expected s1\\pipeline.py and config\\config_img2138_runtime.yaml."
+        "Expected vehicle_intelligence\\pipeline.py and config\\config_img2138_runtime.yaml."
     )
 
 source = PIPELINE.read_text(encoding="utf-8-sig")
@@ -121,7 +121,7 @@ print(f"Full log: {LOG}")
 with LOG.open("w", encoding="utf-8") as log_file:
     process = subprocess.Popen(
         [
-            sys.executable, "-m", "s1.main",
+            sys.executable, "-m", "vehicle_intelligence.main",
             "--config", str(CONFIG),
             "--replay", "sync",
             "--no-publisher",

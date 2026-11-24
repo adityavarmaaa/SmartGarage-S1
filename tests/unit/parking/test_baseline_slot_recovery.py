@@ -1,4 +1,4 @@
-from s1.logic import SlotManager, Occupant
+from vehicle_intelligence.logic import SlotManager, Occupant
 
 
 def _manager():

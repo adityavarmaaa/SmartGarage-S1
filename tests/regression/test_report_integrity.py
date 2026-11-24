@@ -1,6 +1,6 @@
 from types import SimpleNamespace
 
-from s1.report import build_vehicles
+from vehicle_intelligence.report import build_vehicles
 
 
 def _runtime(camera_id, observations):
@@ -96,8 +96,8 @@ def test_async_reid_shutdown_drains_accepted_jobs():
     import time
     import numpy as np
     from types import SimpleNamespace
-    from s1.flow import AsyncGlobalReID
-    from s1.global_identity import GlobalIdentityRegistry
+    from vehicle_intelligence.flow import AsyncGlobalReID
+    from vehicle_intelligence.global_identity import GlobalIdentityRegistry
 
     class Embedder:
         def encode(self, crop):

@@ -16,7 +16,7 @@ import httpx
 import numpy as np
 import yaml
 
-from s1.api import app
+from vehicle_intelligence.api import app
 
 METHODS = {"get", "head", "post", "put", "delete", "patch", "options", "trace"}
 
@@ -107,7 +107,7 @@ def collect(dest, scratch):
     save(dest / "http-environment.json", {"base": base, "weights": weights.name, "input": "synthetic moving rectangle", "publishing": "disabled"})
     with (dest / "uvicorn.log").open("w") as log:
         server = subprocess.Popen(
-            [sys.executable, "-m", "uvicorn", "s1.api:app", "--fd", str(listener.fileno()),
+            [sys.executable, "-m", "uvicorn", "vehicle_intelligence.api:app", "--fd", str(listener.fileno()),
              "--timeout-graceful-shutdown", "8"], pass_fds=(listener.fileno(),),
             env=env, stdout=log, stderr=log,
         )

@@ -10,18 +10,18 @@ import cv2
 import numpy as np
 import pytest
 
-from s1.common import Frame
-from s1.config import load_config, validate_geometry_for_camera
-from s1.common.errors import ProcessingError
-from s1.events.event_validation import validate_event
-from s1.geometry import Geometry
-from s1.main import MemoryPublisher
-from s1.multicam.multicam import run_multi_camera
-from s1.pipeline import Pipeline
-from s1.plates import PlateWorker
-from s1.reporting import report
-from s1.video import demo_video, grabber
-from s1.vehicle_front.detection import YoloDetector
+from vehicle_intelligence.common import Frame
+from vehicle_intelligence.config import load_config, validate_geometry_for_camera
+from vehicle_intelligence.common.errors import ProcessingError
+from vehicle_intelligence.events.event_validation import validate_event
+from vehicle_intelligence.geometry import Geometry
+from vehicle_intelligence.main import MemoryPublisher
+from vehicle_intelligence.multicam.multicam import run_multi_camera
+from vehicle_intelligence.pipeline import Pipeline
+from vehicle_intelligence.plates import PlateWorker
+from vehicle_intelligence.reporting import report
+from vehicle_intelligence.video import demo_video, grabber
+from vehicle_intelligence.vehicle_front.detection import YoloDetector
 
 
 def key():
@@ -176,7 +176,7 @@ def test_ocr_pins_result_keys_and_recovers_after_failure(fixture, caplog):
 
 def test_disappeared_vehicle_ocr_does_not_update_another(fixture, caplog):
     f = fixture
-    from s1.vehicle_front.vehicle_service import Vehicle
+    from vehicle_intelligence.vehicle_front.vehicle_service import Vehicle
     vehicle = Vehicle(key(), 1, 100)
     f.pipe.registry.by_uid[vehicle.uid] = vehicle
     f.pipe.plates = SimpleNamespace(poll=lambda: [(key(), [], f.image)])
@@ -186,7 +186,7 @@ def test_disappeared_vehicle_ocr_does_not_update_another(fixture, caplog):
 
 
 def test_attribute_inference_fault_preserves_vehicle(fixture, monkeypatch, caplog):
-    from s1.integration import vehicle_parking_bridge as bridge
+    from vehicle_intelligence.integration import vehicle_parking_bridge as bridge
     f = fixture
     f.cfg["color"].update(min_box_h=1, interval_s=0)
     monkeypatch.setattr(bridge, "dominant_color_details", Mock(side_effect=RuntimeError("colour failed")))
@@ -258,7 +258,7 @@ def test_video_writer_open_and_write_faults(fixture, tmp_path, monkeypatch, capl
 @pytest.mark.parametrize("method", ["decode", "startup", "geometry", "malformed-frame", "tracker"],
                          ids=["M01", "M02", "M03", "M04", "M05"])
 def test_camera_failure_leaves_other_camera_processing(fixture, monkeypatch, caplog, method):
-    from s1.multicam import multicam
+    from vehicle_intelligence.multicam import multicam
     f = fixture
     write_clip(f)
     bad = key()
@@ -334,8 +334,8 @@ def test_non_cancelled_job_cannot_succeed_after_report_failure(fixture):
 
 
 def test_conflicting_reads_never_confirm_a_plate():
-    from s1.plates import PlateVoter
-    from s1.vehicle_front.plate_recognition import STATE_CODES
+    from vehicle_intelligence.plates import PlateVoter
+    from vehicle_intelligence.vehicle_front.plate_recognition import STATE_CODES
     voter = PlateVoter()
     first, second = sorted(STATE_CODES)[:2]
     suffix = int(key()[:8], 16) % 9000 + 1000
@@ -350,7 +350,7 @@ def test_outbox_write_failure_can_retry_without_duplicate_rows(tmp_path, monkeyp
     import base64
     import secrets
     import sqlite3
-    from s1.publishing.outbox import Outbox
+    from vehicle_intelligence.publishing.outbox import Outbox
 
     material = base64.b64encode(secrets.token_bytes(32)).decode()
     monkeypatch.setenv("SP_ENCRYPTION_KEYS", json.dumps({"fixture": material}))
@@ -388,8 +388,8 @@ def test_outbox_write_failure_can_retry_without_duplicate_rows(tmp_path, monkeyp
 @pytest.mark.parametrize("fault", ["ocr", "slot", "timeout", "frame-size", "detector", "tracker-init"],
                          ids=["M06", "M07", "M08", "M09", "M10", "M11"])
 def test_camera_specific_component_faults(fixture, monkeypatch, caplog, fault):
-    from s1.multicam import multicam
-    from s1.integration import vehicle_parking_bridge
+    from vehicle_intelligence.multicam import multicam
+    from vehicle_intelligence.integration import vehicle_parking_bridge
     f = fixture
     write_clip(f)
     bad = key()

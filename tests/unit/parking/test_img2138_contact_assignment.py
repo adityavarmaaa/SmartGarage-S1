@@ -1,7 +1,7 @@
 import json
 from pathlib import Path
 
-from s1.logic import SlotManager
+from vehicle_intelligence.logic import SlotManager
 
 
 def test_img2138_lower_body_contact_assigns_middle_bay_from_calibrated_geometry():

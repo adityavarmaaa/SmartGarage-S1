@@ -12,13 +12,13 @@ from fastapi.testclient import TestClient
 import numpy as np
 import pytest
 
-from s1 import api
-from s1.config import load_config
-from s1.main import run
-from s1.publishing.outbox import Outbox
-from s1.video.demo_video import DemoRecorder
-from s1.video.grabber import LatestFrameGrabber
-from s1.pipeline import Pipeline
+from vehicle_intelligence import api
+from vehicle_intelligence.config import load_config
+from vehicle_intelligence.main import run
+from vehicle_intelligence.publishing.outbox import Outbox
+from vehicle_intelligence.video.demo_video import DemoRecorder
+from vehicle_intelligence.video.grabber import LatestFrameGrabber
+from vehicle_intelligence.pipeline import Pipeline
 
 
 @pytest.fixture
@@ -229,7 +229,7 @@ def test_outbox_uses_isolated_authenticated_destination(tmp_path, monkeypatch):
 
 def test_cancel_during_camera_startup_leaves_no_false_free_observation(
         local_job, monkeypatch, tmp_path):
-    from s1.multicam import multicam
+    from vehicle_intelligence.multicam import multicam
 
     cfg, _, report = local_job
     cancel = Event()
@@ -254,8 +254,8 @@ def test_cancel_during_camera_startup_leaves_no_false_free_observation(
 
 def test_cancelled_run_surfaces_report_failure_and_preserves_previous_file(
         local_job, monkeypatch):
-    from s1.common.errors import ProcessingError
-    from s1.reporting import report as reporting
+    from vehicle_intelligence.common.errors import ProcessingError
+    from vehicle_intelligence.reporting import report as reporting
 
     cfg, _, report = local_job
     cfg["demo_video"]["enabled"] = False

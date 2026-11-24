@@ -7,16 +7,16 @@ from fastapi.testclient import TestClient
 import numpy as np
 import pytest
 
-from s1 import api
-from s1.common import Frame
-from s1.common.config import load_config
-from s1.common.errors import ConfigurationError, ProcessingError
-from s1.main import MemoryPublisher
-from s1.multicam.multicam import run_multi_camera
-from s1.pipeline import Pipeline
-from s1.geometry import Geometry
-from s1.plates import PlateWorker
-from s1.video.grabber import SequentialFileSource
+from vehicle_intelligence import api
+from vehicle_intelligence.common import Frame
+from vehicle_intelligence.common.config import load_config
+from vehicle_intelligence.common.errors import ConfigurationError, ProcessingError
+from vehicle_intelligence.main import MemoryPublisher
+from vehicle_intelligence.multicam.multicam import run_multi_camera
+from vehicle_intelligence.pipeline import Pipeline
+from vehicle_intelligence.geometry import Geometry
+from vehicle_intelligence.plates import PlateWorker
+from vehicle_intelligence.video.grabber import SequentialFileSource
 
 
 def geometry():
@@ -186,7 +186,7 @@ def test_invalid_ocr_crop_does_not_call_reader(caplog):
 
 
 def test_report_failure_preserves_previous_report(tmp_path, monkeypatch):
-    from s1.reporting import report
+    from vehicle_intelligence.reporting import report
 
     path = tmp_path / "report.json"
     path.write_text('{"previous": true}')
@@ -245,7 +245,7 @@ def test_invalid_lifecycle_event_is_not_published(tmp_path, caplog):
 
 
 def test_unavailable_occupancy_is_reported_as_unknown(tmp_path):
-    from s1.reporting.report import slot_records_for
+    from vehicle_intelligence.reporting.report import slot_records_for
 
     cfg = config(tmp_path)
     pipeline = Pipeline(cfg, Geometry(geometry()), (64, 48), None,
@@ -259,8 +259,8 @@ def test_unavailable_occupancy_is_reported_as_unknown(tmp_path):
     ("", 0.0), ("DL01AB1234", 0.2), ("DL01AB1234", 0.93), ("INVALID", 0.93),
 ])
 def test_unconfirmed_ocr_preserves_entry_contract(tmp_path, text, confidence):
-    from s1.plates import PlateRead
-    from s1.vehicle_front.vehicle_service import Vehicle
+    from vehicle_intelligence.plates import PlateRead
+    from vehicle_intelligence.vehicle_front.vehicle_service import Vehicle
 
     crop = np.full((48, 64, 3), 95, dtype=np.uint8)
     vehicle = Vehicle("test-vehicle", 12, 100.0)

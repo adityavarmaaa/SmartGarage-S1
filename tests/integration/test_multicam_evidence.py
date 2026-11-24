@@ -1,8 +1,8 @@
 import cv2
 import numpy as np
 
-from s1.common import Frame
-from s1.grabber import LatestFrameGrabber
+from vehicle_intelligence.common import Frame
+from vehicle_intelligence.grabber import LatestFrameGrabber
 
 
 def make_grabber(history=2.0, interval=0.5, capacity=1):

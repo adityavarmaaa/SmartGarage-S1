@@ -1,4 +1,4 @@
-"""Set up the shared Vehicle Intelligence and Parking Management development environment."""
+"""Set up the shared Vehicle Intelligence and Parking & Bay Management development environment."""
 import argparse
 import os
 from pathlib import Path
@@ -44,12 +44,12 @@ def main():
                             "--index-url", "https://download.pytorch.org/whl/cpu"], check=True)
         colors = [value for color in args.color for value in ("--color", color)]
         subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements-dev.txt",
-                        "-r", "s2/requirements.txt"], cwd=root, check=True)
+                        "-r", "parking_management/requirements.txt"], cwd=root, check=True)
         if args.preview_source:
             subprocess.run([str(python), "scripts/make_handover_config.py", "--source", str(source),
                             "--output", str(config)], cwd=root, check=True)
         for command in (
-            ["-c", "from s1.security import encrypt_text, plate_hmac; "
+            ["-c", "from vehicle_intelligence.security import encrypt_text, plate_hmac; "
              "encrypt_text('setup-check'); plate_hmac('setup-check')"],
             ["preflight.py", str(config)],
             ["scripts/init_database.py", "--config", str(config), *colors,

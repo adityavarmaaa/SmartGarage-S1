@@ -1,8 +1,8 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Smart Parking \u2014 Service 1 API",
-    "description": "Video upload and live-camera processing API. Interactive Swagger UI is at /docs; OpenAPI schema is at /openapi.json. Processing is asynchronous and one job is allowed at a time. Jobs support cooperative cancellation and finalized MP4 delivery.",
+    "title": "SmartGarage \u2014 Vehicle Intelligence Service",
+    "description": "Video upload, live-camera processing, vehicle detection, tracking and optional ANPR. Interactive Swagger UI is at /docs; OpenAPI schema is at /openapi.json. Processing is asynchronous and one job is allowed at a time. Jobs support cooperative cancellation and finalized MP4 delivery.",
     "contact": {
       "name": "Smart Parking Engineering"
     },

@@ -1,4 +1,4 @@
-"""Initialize or check the PostgreSQL schema used by Parking Management (S2)."""
+"""Initialize or check the PostgreSQL schema used by Parking & Bay Management (S2)."""
 import argparse
 import hashlib
 import os
@@ -11,7 +11,7 @@ from psycopg.types.json import Jsonb
 from sqlalchemy.engine import make_url
 from sqlalchemy.exc import ArgumentError
 
-MIGRATIONS = Path(__file__).resolve().parents[1] / "s2" / "migrations"
+MIGRATIONS = Path(__file__).resolve().parents[1] / "parking_management" / "migrations"
 TABLES = ("parking_areas", "event_types", "vehicle_types", "vehicle_colors", "cameras",
           "parking_slots", "vehicles", "parking_slot_state", "parking_events", "parking_sessions")
 
@@ -82,9 +82,9 @@ def main():
         cameras = []
         if args.config:
             sys.path.insert(0, str(MIGRATIONS.parents[1]))
-            from s1.common.config import camera_configs, load_config, validate_geometry_for_camera
-            from s1.common.errors import ConfigurationError
-            from s1.geometry import Geometry
+            from vehicle_intelligence.common.config import camera_configs, load_config, validate_geometry_for_camera
+            from vehicle_intelligence.common.errors import ConfigurationError
+            from vehicle_intelligence.geometry import Geometry
 
             try:
                 config = load_config(args.config)
@@ -166,7 +166,7 @@ def main():
                         VALUES (%s, %s, %s) ON CONFLICT DO NOTHING""", (camera, sid, Jsonb(slot["polygon"])))
                     db.execute("""INSERT INTO parking_slot_state (camera_id, slot_id, parking_area_id, status)
                         VALUES (%s, %s, %s, 'available') ON CONFLICT DO NOTHING""", (camera, sid, area))
-        print("Parking Management database schema verified.")
+        print("Parking & Bay Management database schema verified.")
     except ValueError as exc:
         parser.exit(1, f"Database setup failed. {exc}\n")
     except psycopg.Error as exc:

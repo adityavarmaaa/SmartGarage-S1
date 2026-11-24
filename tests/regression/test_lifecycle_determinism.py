@@ -3,9 +3,9 @@ import time
 
 import numpy as np
 
-from s1.determinism import is_file_source, resolve_deterministic
-from s1.lifecycle_timeline import build_timeline
-from s1.plates import PlateWorker
+from vehicle_intelligence.determinism import is_file_source, resolve_deterministic
+from vehicle_intelligence.lifecycle_timeline import build_timeline
+from vehicle_intelligence.plates import PlateWorker
 
 
 def test_file_vs_live_sources():

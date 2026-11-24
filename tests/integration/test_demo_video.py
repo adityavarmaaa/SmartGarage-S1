@@ -6,8 +6,8 @@ from types import SimpleNamespace as NS
 import cv2
 import numpy as np
 
-from s1.demo_video import DemoRecorder
-from s1.flow import HandoffCoordinator
+from vehicle_intelligence.demo_video import DemoRecorder
+from vehicle_intelligence.flow import HandoffCoordinator
 
 
 def _rt(cam, w, h):

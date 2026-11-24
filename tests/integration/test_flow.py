@@ -2,9 +2,9 @@
 import time
 import numpy as np
 
-from s1.flow import (AsyncGlobalReID, GpuArbiter, HandoffCoordinator, MotionGate,
+from vehicle_intelligence.flow import (AsyncGlobalReID, GpuArbiter, HandoffCoordinator, MotionGate,
                      resolve_aux_device)
-from s1.global_identity import GlobalIdentityRegistry
+from vehicle_intelligence.global_identity import GlobalIdentityRegistry
 
 
 # ---------------- MotionGate ----------------
@@ -200,7 +200,7 @@ def test_gpu_arbiter_blocks_background_while_yolo_runs():
 
 # ---------------- Pipeline integration (stubbed) ----------------
 def test_pipeline_holds_entry_and_reemits_only_real_ones():
-    from s1.pipeline import Pipeline
+    from vehicle_intelligence.pipeline import Pipeline
 
     class V:  # minimal vehicle
         track_id = 3

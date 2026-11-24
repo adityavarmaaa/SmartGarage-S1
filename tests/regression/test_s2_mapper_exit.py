@@ -2,7 +2,7 @@
 
 import pytest
 
-from s1.s2_mapper import S2Mapper
+from vehicle_intelligence.s2_mapper import S2Mapper
 
 
 class RecordingPublisher:

@@ -1,9 +1,9 @@
 from uuid import uuid4
 
-from s1.config import load_config
-from s1.logic import SlotManager
-from s1.tracker import Track
-from s1.vehicles import VehicleRegistry
+from vehicle_intelligence.config import load_config
+from vehicle_intelligence.logic import SlotManager
+from vehicle_intelligence.tracker import Track
+from vehicle_intelligence.vehicles import VehicleRegistry
 
 
 def test_full_lot_does_not_assign_an_already_occupied_slot():

@@ -2,7 +2,7 @@
 import cv2
 import numpy as np
 
-from s1.multicam import _activity_score, _lucas_kanade_score
+from vehicle_intelligence.multicam import _activity_score, _lucas_kanade_score
 
 
 def _textured_frame():
