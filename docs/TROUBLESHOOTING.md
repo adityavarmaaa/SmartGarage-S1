@@ -14,3 +14,9 @@
 | API 409 and streaming unavailable | Poll status. One worker processes a job at a time. Active MJPEG and final MP4 depend on the enabled recorder. |
 | API cancellation still pending | Poll terminal state. Capture and model calls must return before cooperative teardown. Review runtime logs. |
 | `OUTBOX_PERSIST_FAILED` or outgoing HTTP errors | Check SQLite and storage, configured URL, key/permissions and network. Keep queue and lifecycle DB aligned. Reconcile accepted destination events before retrying. |
+
+## Automated setup and recorded runs
+
+Read the [developer guide](DEVELOPER_SETUP.md#automated-execution) first. A PostgreSQL connection error at the configured endpoint calls for checking the actual host, port and service. If the server rejected credentials or privileges, resolve that before rerunning migrations. Use database-free preview while the development server is being provisioned.
+
+Each run prints its output directory. Read `execution-summary.json`, then the stage-specific log named in the summary or the pipeline log. Full mode with zero matched lifecycle rows means the recording did not establish and close a verifiable session. A readable MP4 can still be available. Review `database-verification.json` and confirm the footage and calibration before trying again.

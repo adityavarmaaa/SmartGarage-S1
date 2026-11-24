@@ -55,6 +55,7 @@ def main():
     subprocess.run([*command, "--check"], check=True)
 
     sys.path.insert(0, str(ROOT))
+    from scripts.run import verify_database
     from parking_management.app.main import app
     from vehicle_intelligence.publishing.outbox import Outbox
     from vehicle_intelligence.publishing.s2_mapper import S2Mapper
@@ -100,17 +101,20 @@ def main():
                     send("PARK_END", 2)
                     wait_for(lambda: occupancy() == ("available", None))
                     with psycopg.connect(**url.translate_connect_args(username="user", database="dbname")) as db:
-                        # The existing mapper preserves PARK_START as captured_at on both payloads.
-                        assert db.execute("SELECT status, duration_seconds FROM parking_sessions WHERE vehicle_uid=%s",
-                                          (suffix,)).fetchall() == [("exited", 0)]
+                        assert db.execute("SELECT status, duration_seconds, entry_time, exit_time FROM parking_sessions WHERE vehicle_uid=%s",
+                                          (suffix,)).fetchall() == [("exited", 1, captured + timedelta(seconds=1), captured + timedelta(seconds=2))]
                         assert db.execute("SELECT event_type FROM parking_events WHERE vehicle_uid=%s ORDER BY id",
                                           (suffix,)).fetchall() == [("ENTRY",), ("EXIT",)]
                 finally:
                     mapper.stop()
+                verified = verify_database(url, Path(directory), base + "/internal/events/vehicle",
+                                           {(camera, slot)})
+                assert verified["closed_session_seconds"] == [1]
+                print("Verified controlled-event PostgreSQL rows:", json.dumps(verified))
         finally:
             server.should_exit = True
             thread.join()
-    print("PASS: schema, API auth, S1 mapping, HTTP delivery, PostgreSQL session and slot release.")
+    print("PASS: schema, API auth, mapping, HTTP delivery, PostgreSQL session, 1-second duration and slot release.")
 
 
 if __name__ == "__main__":

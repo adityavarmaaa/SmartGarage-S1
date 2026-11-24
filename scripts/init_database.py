@@ -2,6 +2,7 @@
 import argparse
 import hashlib
 import os
+import shutil
 import sys
 from pathlib import Path
 
@@ -105,6 +106,7 @@ def main():
         if set(params) & set(url.query):
             raise ValueError("Do not repeat connection fields in DATABASE_URL query parameters.")
         params.update(url.query)
+        params.setdefault("connect_timeout", 5)
         if args.create_database:
             if url.database in {"postgres", "template0", "template1"} or "dbname" in url.query:
                 raise ValueError("Select a distinct application database.")
@@ -170,8 +172,22 @@ def main():
     except ValueError as exc:
         parser.exit(1, f"Database setup failed. {exc}\n")
     except psycopg.Error as exc:
-        parser.exit(1, f"Database setup failed ({type(exc).__name__}, SQLSTATE {exc.sqlstate or 'unavailable'}). "
-                    "Check DATABASE_URL, server reachability, permissions and migration prerequisites.\n")
+        message = str(exc).lower()
+        if exc.sqlstate in {"28P01", "28000"} or "password authentication failed" in message:
+            action = "PostgreSQL rejected the login. Check the role, password and host authentication."
+        elif exc.sqlstate == "42501":
+            action = "Grant the development login database/schema privileges or have an administrator provision it."
+        elif exc.sqlstate == "3D000" or ("database" in message and "does not exist" in message):
+            action = "The target database is missing. Provision it or rerun with --create-database."
+        elif isinstance(exc, psycopg.OperationalError):
+            tools = "found on PATH" if shutil.which("psql") or shutil.which("pg_ctl") else "not found on PATH"
+            action = (f"PostgreSQL connection failed at the configured endpoint. Client/server tools are {tools}. "
+                      "Check the selected service, configured host and port, and network access. "
+                      "A failed connection cannot establish whether a server is installed elsewhere.")
+        else:
+            action = "Check schema privileges, migration prerequisites and the migration ledger."
+        parser.exit(1, f"Database setup failed ({type(exc).__name__}, SQLSTATE "
+                    f"{exc.sqlstate or 'unavailable'}). {action}\n")
 
 
 if __name__ == "__main__":

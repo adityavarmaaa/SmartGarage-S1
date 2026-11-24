@@ -1,5 +1,33 @@
 # SmartGarage developer setup
 
+See the [Windows runbook](WINDOWS_RUNBOOK.md) for database-free preview, PostgreSQL provisioning, and connected replay.
+
+## Automated execution
+
+Run from the repository root. The following commands require Python 3.12 and sufficient storage for CPU packages. On Linux, use `.venv/bin/python` in place of `.\.venv\Scripts\python.exe`.
+
+### Quick preview
+
+```powershell
+python scripts/setup.py --mode preview --cpu-torch --config .venv/dev-preview.yaml --preview-source TEST_REPORTS/raw/http/cancelled-output.mp4
+.\.venv\Scripts\python.exe scripts/run.py --mode preview --config .venv/dev-preview.yaml
+```
+
+Use your calibrated multicamera YAML for meaningful site results. The fixture checks decoding, inference startup and output generation. PostgreSQL is optional in preview. Use the configured ANPR assets and provide development encryption and HMAC settings for plate-linked evidence or restored sessions. The runner prints a unique output directory and checks every slot in the JSON and decodes the MP4.
+
+### Full system
+
+Start a local PostgreSQL instance and export the development credentials below. Provide a calibrated YAML with a `cameras` list and local video files. Footage must show parking and departure from the same session. Relative paths resolve from the repository root. The runner copies the effective config into the output directory and launches services on kernel-assigned loopback ports. Use a dedicated database. An existing database must already use the managed schema.
+
+```powershell
+python scripts/setup.py --mode full --cpu-torch --config dev.yaml --create-database --smoke
+.\.venv\Scripts\python.exe scripts/run.py --mode full --config dev.yaml
+```
+
+The runner creates or validates the PostgreSQL database, starts both APIs, publishes through the real mapper/outbox, then reads PostgreSQL directly. A pass requires matching mapped ENTRY and EXIT rows, a closed session of positive duration, and consistent final occupancy for the affected slots. Zero matched lifecycle events is a failed integration run even if video outputs are valid. The optional setup smoke uses **controlled events** in a separate disposable database. Its pass never substitutes for the recording check.
+
+Setup installs packages only with `--install` or `--cpu-torch`. For a read-only schema/preflight check, use `python scripts/setup.py --mode full --check --config dev.yaml`. Repeat preview setup with the existing YAML and omit `--preview-source`. Setup does not install or start the PostgreSQL server. See the [Windows runbook](WINDOWS_RUNBOOK.md#full-integration-prerequisites) for discovery, service startup and dedicated role creation. If a configured endpoint is unreachable, verify the actual instance and port. Client tools missing from PATH do not prove PostgreSQL is absent.
+
 ## Service boundaries
 
 The **Vehicle Intelligence Service** (`vehicle_intelligence`) decodes video, detects and tracks vehicles, and evaluates camera-side occupancy and lifecycle against calibrated geometry. OCR and cross-camera ReID are optional. It produces reports and annotated video and offers a processing API. Its publishing path uses the existing SQLite outbox and S2 mapper.
@@ -97,7 +125,8 @@ DATABASE_URL=sqlite:///isolated-test.db python -m pytest parking_management/test
 
 On PowerShell, use a separate test terminal at the clone root. Set `$env:DATABASE_URL = "sqlite:///isolated-test.db"` before running `python -m pytest parking_management/tests -q`. The bundled S2 suite uses mocked persistence. The PostgreSQL smoke separately starts a real loopback Parking & Bay Management listener and exercises S1 mapping, encrypted outbox delivery, API auth, database events, session closure and slot release. It uses generated credentials and its own uniquely named disposable database on the localhost PostgreSQL server. Use a local development login with `CREATEDB`. The database is retained for inspection. The smoke injects lifecycle input and does not exercise camera inference.
 
-Use the [recorded-video preview](INSTALLATION_GUIDE.md) to check decoding and model startup, then provide a calibrated recording containing a real parking transition for a complete media-to-database acceptance run. Preserved mapper behavior carries parking-start `captured_at` on both mapped messages. S2 uses `captured_at` as the effective event time and records a zero-duration session in this case. The mapper puts departure time in the existing `received_at` field on mapped EXIT. Other producers can use that field for receipt time, so treating it as departure globally could shift their event times. Do not use this duration for dwell-time acceptance until the producer contract and a backward-compatible timestamp change have been validated.
+Mapped EXIT now includes optional, timezone-aware `departure_at` from the original PARK_END observation. Existing `timestamp`, `captured_at`, and `received_at` fields are preserved for consumers. Parking Management uses departure time for newly mapped EXIT events. Older producers without `departure_at` retain the original fallback. Existing history is left intact. For video replay, timestamps depend on the source clock and replay anchor. Use a calibrated continuous recording and avoid interpreting a restored preview session as a measured connected dwell time. See [end-to-end processing](END_TO_END.md) and the [API reference](API_SWAGGER.md).
+
 
 ## Future commits
 

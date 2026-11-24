@@ -12,6 +12,11 @@ import venv
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--config", type=Path, default=Path("config/config.local.yaml"))
+    parser.add_argument("--mode", choices=("preview", "full"), default="full",
+                        help="Preview skips PostgreSQL initialization; full requires it")
+    parser.add_argument("--check", action="store_true", help="Check an existing environment without changes")
+    parser.add_argument("--install", action="store_true", help="Install project dependencies")
+    parser.add_argument("--smoke", action="store_true", help="Run the controlled-event PostgreSQL smoke test")
     parser.add_argument("--create-database", action="store_true")
     parser.add_argument("--preview-source", type=Path, help="Generate a new --config from a local recording after install")
     parser.add_argument("--cpu-torch", action="store_true", help="Install CPU PyTorch wheels on Linux or Windows")
@@ -19,12 +24,16 @@ def main():
     args = parser.parse_args()
     if sys.version_info < (3, 10):
         parser.error("Python 3.10 or newer is required.")
-    if not os.environ.get("DATABASE_URL"):
-        parser.error("Export DATABASE_URL for a development PostgreSQL database first.")
-    for group in (("S2_API_KEY",), ("SP_ENCRYPTION_KEYS",), ("SP_ACTIVE_ENCRYPTION_KEY",),
-                  ("SP_HMAC_KEY",)):
-        if not any(os.environ.get(key) for key in group):
-            parser.error("Export " + " or ".join(group) + " for the local services.")
+    if args.check and (args.install or args.cpu_torch or args.create_database
+                       or args.preview_source or args.color or args.smoke):
+        parser.error("--check cannot be combined with install, creation or smoke options.")
+    if args.mode == "preview" and (args.create_database or args.color or args.smoke):
+        parser.error("--create-database, --color and --smoke require --mode full.")
+    if args.mode == "full":
+        for name in ("DATABASE_URL", "S2_API_KEY", "SP_ENCRYPTION_KEYS",
+                     "SP_ACTIVE_ENCRYPTION_KEY", "SP_HMAC_KEY"):
+            if not os.environ.get(name):
+                parser.error(f"Export {name} for full setup, or use --mode preview for local video.")
     root = Path(__file__).resolve().parents[1]
     config = args.config.resolve()
     if args.preview_source:
@@ -35,9 +44,13 @@ def main():
         parser.error("Configuration file not found.")
     env = root / ".venv"
     python = env / ("Scripts/python.exe" if os.name == "nt" else "bin/python")
+    install = args.install or args.cpu_torch
+    print(f"Setup mode={args.mode}, platform={sys.platform}, Python={sys.version.split()[0]}")
     step = "virtual environment creation"
     try:
         if not python.exists():
+            if not install:
+                parser.error("No project virtual environment. Rerun with --install or --cpu-torch.")
             if env.exists():
                 parser.error("Existing .venv has no Python executable. Repair it or use a fresh clone.")
             venv.create(env, with_pip=True)
@@ -49,24 +62,38 @@ def main():
                             "--index-url", "https://download.pytorch.org/whl/cpu"], check=True)
         step = "project dependency installation"
         colors = [value for color in args.color for value in ("--color", color)]
-        subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements-dev.txt",
-                        "-r", "parking_management/requirements.txt"], cwd=root, check=True)
+        if install:
+            subprocess.run([str(python), "-m", "pip", "install", "-r", "requirements-dev.txt",
+                            "-r", "parking_management/requirements.txt"], cwd=root, check=True)
+        step = "dependency verification"
+        subprocess.run([str(python), "-m", "pip", "check"], cwd=root, check=True)
+        step = "required imports"
+        modules = "import torch, cv2, ultralytics, yaml, uvicorn, httpx, fastapi"
+        if args.mode == "full":
+            modules += ", psycopg, sqlalchemy, pydantic_settings"
+        subprocess.run([str(python), "-c", modules], cwd=root, check=True)
         if args.preview_source:
             step = "preview configuration generation"
             subprocess.run([str(python), "scripts/make_handover_config.py", "--source", str(source),
                             "--output", str(config)], cwd=root, check=True)
-        for step, command in (
-            ("security configuration check", [
-                "-c", "from vehicle_intelligence.security import encrypt_text, plate_hmac; "
-                "encrypt_text('setup-check'); plate_hmac('setup-check')",
-            ]),
-            ("model and camera preflight", ["preflight.py", str(config)]),
-            ("PostgreSQL initialization", [
-                "scripts/init_database.py", "--config", str(config), *colors,
+        if args.mode == "full":
+            step = "security configuration check"
+            subprocess.run([str(python), "-c",
+                            "from vehicle_intelligence.security import encrypt_text, plate_hmac; "
+                            "encrypt_text('setup-check'); plate_hmac('setup-check')"],
+                           cwd=root, check=True)
+        step = "model and camera preflight"
+        subprocess.run([str(python), "preflight.py", str(config)], cwd=root, check=True)
+        if args.mode == "full":
+            step = "PostgreSQL initialization"
+            options = ["--check"] if args.check else [
+                "--config", str(config), *colors,
                 *(["--create-database"] if args.create_database else []),
-            ]),
-        ):
-            subprocess.run([str(python), *command], cwd=root, check=True)
+            ]
+            subprocess.run([str(python), "scripts/init_database.py", *options], cwd=root, check=True)
+            if args.smoke:
+                step = "controlled-event PostgreSQL smoke test"
+                subprocess.run([str(python), "scripts/smoke_database.py"], cwd=root, check=True)
     except (OSError, subprocess.CalledProcessError) as exc:
         detail = (
             f"exit status {exc.returncode}" if isinstance(exc, subprocess.CalledProcessError)
@@ -86,6 +113,10 @@ def main():
                     continue
                 print(f"Free space on {label} volume: {free_mib} MiB", file=sys.stderr)
         parser.exit(1, f"Setup failed during {step} ({detail}). See the output above.\n")
+    if args.mode == "preview":
+        print("Preview setup complete. PostgreSQL was not initialized. "
+              "Run vehicle_intelligence.main with --no-publisher.")
+        return
     print("Development environment and database ready. See docs/DEVELOPER_SETUP.md for startup and site resources.")
 
 

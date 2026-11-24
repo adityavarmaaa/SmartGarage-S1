@@ -495,6 +495,7 @@ class S2Mapper:
         out["timestamp"] = first_seen
         out["captured_at"] = parked_at
         out["received_at"] = leave_time
+        out["departure_at"] = leave_time
         return out
 
     def _publish_entry(self, event):
@@ -618,7 +619,16 @@ class S2Mapper:
             )
             return
 
-        if self._before(event.get("event_time") or event.get("timestamp"), parked_at):
+        try:
+            departure = datetime.fromisoformat(event.get("event_time") or event.get("timestamp"))
+            parking_start = datetime.fromisoformat(parked_at)
+            if departure.utcoffset() is None or parking_start.utcoffset() is None:
+                raise ValueError("parking times require timezone offsets")
+        except (TypeError, ValueError):
+            log.warning("LIFECYCLE_INVALID_EXIT_TIME event_id=%s", event.get("event_id"))
+            return
+
+        if departure < parking_start:
             log.warning("LIFECYCLE_EXIT_BEFORE_PARK_START event_id=%s vehicle_uid=%s",
                         event.get("event_id"), self._uid(event))
             return

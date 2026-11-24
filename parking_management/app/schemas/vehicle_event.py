@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import AwareDatetime, BaseModel, field_validator, model_validator
 
 
 class VehicleData(BaseModel):
@@ -33,7 +33,29 @@ class VehicleEvent(BaseModel):
     timestamp: datetime
     captured_at: Optional[datetime] = None
     received_at: Optional[datetime] = None
+    departure_at: Optional[AwareDatetime] = None
 
     vehicle: VehicleData
     parking: Optional[ParkingData] = None
     snapshot: Optional[SnapshotData] = None
+
+
+    @field_validator("departure_at", mode="before")
+    @classmethod
+    def require_departure_datetime(cls, value):
+        if value is None or isinstance(value, datetime):
+            return value
+        if isinstance(value, str):
+            return datetime.fromisoformat(value)
+        raise ValueError("departure_at must be an ISO-8601 datetime with a timezone offset")
+
+    @model_validator(mode="after")
+    def validate_departure(self):
+        if self.departure_at is not None:
+            if self.event_type != "EXIT":
+                raise ValueError("departure_at is only valid for EXIT")
+            if self.captured_at is not None and (
+                self.captured_at.utcoffset() is None or self.departure_at < self.captured_at
+            ):
+                raise ValueError("departure_at must be at or after timezone-aware captured_at")
+        return self

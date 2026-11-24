@@ -79,6 +79,7 @@ def test_uid_only_exit_publishes_and_closes_session(tmp_path):
         assert published["timestamp"] == first_seen
         assert published["captured_at"] == parked_at
         assert published["received_at"] == exit_event["event_time"]
+        assert published["departure_at"] == exit_event["event_time"]
 
         session = mapper._uid_session(exit_event)
         assert session is not None

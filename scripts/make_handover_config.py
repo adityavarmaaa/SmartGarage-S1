@@ -34,7 +34,7 @@ def main():
         "publisher": {"s2_url": "http://127.0.0.1:1/isolated", "outbox_db": str(directory / "outbox.db"),
                       "snapshot_dir": str(directory / "snapshots")},
         "report": {"path": str(directory / "report.json"), "plate_evidence_dir": str(directory / "evidence")},
-        "demo_video": {"enabled": False},
+        "demo_video": {"enabled": True, "path": str(directory / "annotated.mp4")},
     })
     with args.output.open("x") as stream:
         yaml.safe_dump(config, stream, sort_keys=False)

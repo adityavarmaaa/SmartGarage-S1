@@ -139,7 +139,7 @@ async def receive_vehicle_event(
         # 0. IDENTITY AND PLATE SECURITY
         # =================================================
 
-        event_time = event.captured_at or event.timestamp
+        event_time = event.departure_at or event.captured_at or event.timestamp
 
         vehicle_uid = (
             event.vehicle_uid.strip()
@@ -898,6 +898,8 @@ async def receive_vehicle_event(
                     ),
                 )
 
+            if event.departure_at is not None and event_time < session["entry_time"]:
+                raise HTTPException(status_code=422, detail="Departure precedes the open session.")
             duration_seconds = max(
                 0,
                 int(

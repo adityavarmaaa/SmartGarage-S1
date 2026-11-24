@@ -58,3 +58,8 @@ Application errors include a human-readable `detail` and a structured `error` ob
 | `SMART_PARKING_API_PUBLISH` | `0` for local preview. Set to `1` only for intentional publishing. |
 
 During server shutdown the lifespan handler signals cancellation and gives the worker up to 30 seconds to join. A native backend stall can exceed that window and logs `API_SHUTDOWN_TIMEOUT`. Run one server process because the job state and stream are held in memory. The API is intended for trusted access. Control access to processed video, which can include vehicle and plate evidence.
+
+
+## Parking Management departure timestamp
+
+On the Parking Management event API, producers may send an optional timezone-aware `departure_at` on EXIT. The mapper supplies it from the actual PARK_END observation. EXIT event time and session closure use that value when present. Legacy producers can omit it and continue to use the existing `captured_at` or `timestamp` fallback. A naive or backwards explicit departure is rejected. Historical records are preserved.

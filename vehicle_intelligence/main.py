@@ -555,6 +555,8 @@ def cli():
         help="disable Service 2 publishing for local video testing",
     )
 
+    ap.add_argument("--log-dir", default="logs", help="Directory for processing logs")
+
     a = ap.parse_args()
 
     over = {}
@@ -570,7 +572,7 @@ def cli():
 
     try:
         from .obs import setup_logging
-        setup_logging(level="DEBUG", log_dir="logs")
+        setup_logging(level="DEBUG", log_dir=a.log_dir)
     except Exception as exc:  # never let logging setup block a run
         logging.basicConfig(
             level=logging.DEBUG,
