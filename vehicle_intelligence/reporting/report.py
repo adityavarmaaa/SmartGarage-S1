@@ -766,7 +766,13 @@ def build_final_report(runtimes, handoff, global_reid, reid_info, cfg,
         "service2_events": s2_events,
         "lifecycle_events": raw_events,
         "generated_lifecycle_counts": {
-            kind: sum(event.get("event_type") == kind for event in raw_events)
+            kind: sum(event.get("event_type") == kind and event.get("observation_origin") != "restored"
+                      for event in raw_events)
+            for kind in ("ENTRY", "PARK_START", "PARK_END", "EXIT")
+        },
+        "restored_lifecycle_counts": {
+            kind: sum(event.get("event_type") == kind and event.get("observation_origin") == "restored"
+                      for event in raw_events)
             for kind in ("ENTRY", "PARK_START", "PARK_END", "EXIT")
         },
         "exit_vehicle_details": _build_exit_vehicle_details(raw_events, plate_evidence),

@@ -698,8 +698,9 @@ class S2Mapper:
 
         if etype in {"ENTRY", "PARK_START", "PARK_END", "EXIT"}:
             self.raw_events.append(self._safe_report_event(event))
-            log.info("LIFECYCLE_GENERATED event_id=%s type=%s camera=%s",
-                     event.get("event_id"), etype, event.get("camera_id"))
+            log.info("LIFECYCLE_OBSERVATION event_id=%s type=%s camera=%s origin=%s",
+                     event.get("event_id"), etype, event.get("camera_id"),
+                     event.get("observation_origin", "generated"))
 
         if etype == "ENTRY":
             self._remember_entry(event)

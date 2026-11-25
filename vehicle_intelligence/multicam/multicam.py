@@ -308,7 +308,7 @@ def _seed_exit_preview_sessions(publisher, restore_cfg):
             or str(event.get("vehicle_uid")) not in live_uids
         ):
             raise RuntimeError("Lifecycle event identity validation failed.")
-        publisher.publish(event)
+        publisher.publish({**event, "observation_origin": "restored"})
 
     return {
         "camera_id": camera_id,
