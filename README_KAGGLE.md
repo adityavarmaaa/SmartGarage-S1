@@ -38,7 +38,7 @@ Open `smart_parking_final_report.json`:
 ```
 or run live: `!python run_kaggle.py --publish`.
 Auth (only if Service 2 requires it): set `S2_API_KEY` (and `S2_API_KEY_HEADER` if the header is not `X-API-Key`).
-Re-sending is safe: HTTP 409 counts as already received.
+Set `S2_URL` and `S2_API_KEY` before using `--send`. A retry is confirmed only when Parking Management returns a stored event ID with an accepted or duplicate acknowledgement. HTTP 409 remains a delivery failure.
 
 ## 5. No GPU / no videos? Prove the plumbing first (~1 min)
 ```
