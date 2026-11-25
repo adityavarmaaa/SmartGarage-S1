@@ -199,6 +199,8 @@ def test_outbox_uses_isolated_authenticated_destination(tmp_path, monkeypatch):
             data.append((self.path, self.headers.get("X-API-Key"), json.loads(payload)))
             self.send_response(202 if self.headers.get("X-API-Key") == key else 401)
             self.end_headers()
+            if self.headers.get("X-API-Key") == key:
+                self.wfile.write(b'{"status":"accepted","event_id":1,"event_type":"ENTRY"}')
             delivered.set()
 
     database = str(tmp_path / "outbox.db")

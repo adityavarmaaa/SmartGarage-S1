@@ -92,6 +92,7 @@ def verify_database(url, directory, endpoint, expected_slots):
     from vehicle_intelligence.publishing.outbox import Outbox
 
     events = []
+    delivery = dict(queued=0, acknowledged=0, pending=0, failed=0, retry_failures=0)
     for path in sorted(directory.glob("outbox*.db")):
         with closing(sqlite3.connect(path)) as queue:
             outbox_table = queue.execute(
@@ -99,7 +100,7 @@ def verify_database(url, directory, endpoint, expected_slots):
             ).fetchone()
             if not outbox_table:
                 continue
-            pending = queue.execute("SELECT 1 FROM outbox WHERE sent=0 LIMIT 1").fetchone()
+            pending = queue.execute("SELECT 1 FROM outbox WHERE sent=0 AND failed_at IS NULL LIMIT 1").fetchone()
             if pending:
                 outbox = Outbox(str(path), endpoint)
                 try:
@@ -108,12 +109,22 @@ def verify_database(url, directory, endpoint, expected_slots):
                         time.sleep(0.25)
                 finally:
                     outbox.stop()
-            for encrypted, sent in queue.execute("SELECT payload, sent FROM outbox ORDER BY id"):
-                if not sent:
-                    raise ValueError("An outgoing event remained pending. Inspect the run outbox and service log.")
+            for encrypted, sent, acknowledgement, failed_at, attempts in queue.execute(
+                "SELECT payload, sent, acknowledgement, failed_at, attempts FROM outbox ORDER BY id"
+            ):
+                delivery["queued"] += 1
+                delivery["retry_failures"] += attempts
+                if not sent or not acknowledgement:
+                    delivery["failed" if failed_at is not None else "pending"] += 1
+                    continue
+                delivery["acknowledged"] += 1
                 payload = json.loads(decrypt_text(encrypted))
                 if payload.get("event_type") in {"ENTRY", "EXIT"}:
-                    events.append(payload)
+                    events.append((payload, json.loads(acknowledgement)["event_id"]))
+
+    (directory / "outbox-verification.json").write_text(json.dumps(delivery, indent=2), encoding="utf-8")
+    if delivery["pending"] or delivery["failed"]:
+        raise ValueError("Outgoing events remained pending or failed. Inspect outbox-verification.json and the service log.")
 
     entries = {}
     departures = {}
@@ -124,7 +135,7 @@ def verify_database(url, directory, endpoint, expected_slots):
         stored_slots = set(db.execute("SELECT camera_id, slot_id FROM parking_slot_state"))
         if expected_slots - stored_slots:
             raise ValueError("Expected calibrated slots are missing in PostgreSQL.")
-        for event in events:
+        for event, persisted_id in events:
             kind = event["event_type"]
             uid = event.get("vehicle_uid")
             slot = (event.get("parking") or {}).get("slot_id")
@@ -136,8 +147,8 @@ def verify_database(url, directory, endpoint, expected_slots):
                 raise ValueError("Mapped event has no verifiable identity or configured slot.")
             count = db.execute(
                 """SELECT count(*) FROM parking_events WHERE event_type=%s AND parking_area_id=%s
-                AND camera_id=%s AND slot_id=%s AND vehicle_uid=%s AND captured_at=%s""",
-                (kind, area, camera, slot, uid, event_time),
+                AND camera_id=%s AND slot_id=%s AND vehicle_uid=%s AND captured_at=%s AND id=%s""",
+                (kind, area, camera, slot, uid, event_time, persisted_id),
             ).fetchone()[0]
             if count != 1:
                 raise ValueError(f"Expected exactly one persisted {kind} event for a mapped observation.")

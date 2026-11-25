@@ -360,7 +360,7 @@ def test_outbox_write_failure_can_retry_without_duplicate_rows(tmp_path, monkeyp
     def send(self, payload):
         attempts.append(json.loads(payload))
         received.set()
-        return True
+        return {"status": "accepted", "event_id": 1}, None, False
     monkeypatch.setattr(Outbox, "_post", send)
     database = tmp_path / f"{key()}.db"
     queue = Outbox(str(database), "http://127.0.0.1:1/isolated")

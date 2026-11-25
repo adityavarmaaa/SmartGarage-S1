@@ -76,5 +76,5 @@ class UploadingOutbox(Outbox):
                 payload = json.dumps(ev)
             except Exception:
                 log.exception("Snapshot upload failed; will retry")
-                return None
+                return None, "SNAPSHOT_UPLOAD_FAILED", True
         return super()._post(payload)

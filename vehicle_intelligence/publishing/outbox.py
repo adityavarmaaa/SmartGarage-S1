@@ -1,4 +1,5 @@
 
+from http.client import HTTPException
 import json
 import logging
 import os
@@ -8,6 +9,9 @@ import threading
 import time
 import urllib.error
 import urllib.request
+from urllib.parse import urlsplit
+
+from cryptography.exceptions import InvalidTag
 
 from vehicle_intelligence.security import encrypt_text, decrypt_text
 
@@ -27,15 +31,25 @@ def _s2_headers():
     return headers
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
 class Outbox:
     """Durable encrypted event queue and pending parking event storage."""
 
-    def __init__(self, db_path, url, batch=20, timeout=3.0):
+    def __init__(self, db_path, url, batch=20, timeout=3.0, max_attempts=8):
+        endpoint = urlsplit(url)
+        if endpoint.scheme not in {"http", "https"} or not endpoint.hostname or endpoint.username is not None:
+            raise ValueError("Configure an HTTP(S) Service 2 endpoint without embedded credentials.")
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
 
         self.url = url
+        self._http = urllib.request.build_opener(_NoRedirect())
         self.batch = batch
         self.timeout = timeout
+        self.max_attempts = max_attempts
 
         self.db = sqlite3.connect(
             db_path,
@@ -54,6 +68,15 @@ class Outbox:
                 next_try REAL DEFAULT 0
             )
         """)
+
+        with self.db:
+            self.db.execute("BEGIN IMMEDIATE")
+            columns = {row[1] for row in self.db.execute("PRAGMA table_info(outbox)")}
+            for name, field_type in (
+                ("acknowledgement", "TEXT"), ("failed_at", "REAL"), ("last_error", "TEXT"),
+            ):
+                if name not in columns:
+                    self.db.execute(f"ALTER TABLE outbox ADD COLUMN {name} {field_type}")
 
         self.db.execute("""
             CREATE TABLE IF NOT EXISTS pending_parking_events(
@@ -146,6 +169,7 @@ class Outbox:
                     INSERT OR IGNORE INTO outbox(event_id, payload)
                     VALUES (?, ?)
                 """, (event["event_id"], protected))
+            log.info("OUTBOX_QUEUED event_id=%s", event["event_id"])
         except (sqlite3.Error, TypeError, ValueError, KeyError, RuntimeError) as exc:
             raise ProcessingError(Diagnostic(
                 "OUTBOX_PERSIST_FAILED", "PUBLISHING", "outbox", "persist",
@@ -158,7 +182,7 @@ class Outbox:
         """Count unsent outgoing events."""
         with self.lock:
             return self.db.execute(
-                "SELECT COUNT(*) FROM outbox WHERE sent=0"
+                "SELECT COUNT(*) FROM outbox WHERE sent=0 AND failed_at IS NULL"
             ).fetchone()[0]
 
     def save_pending_event(self, event_key, payload):
@@ -232,38 +256,28 @@ class Outbox:
             ).fetchone()[0]
 
     def _post(self, payload):
-        """Send a decrypted JSON payload to Service 2."""
-        req = urllib.request.Request(
-            self.url,
-            data=payload.encode("utf-8"),
-            headers=_s2_headers(),
-            method="POST",
+        """Return a persistence acknowledgement or a sanitized failure and retry policy."""
+        request = urllib.request.Request(
+            self.url, data=payload.encode("utf-8"), headers=_s2_headers(), method="POST",
         )
-
         try:
-            with urllib.request.urlopen(
-                req,
-                timeout=self.timeout,
-            ) as response:
-
-                log.info(
-                    "Service 2 HTTP status: %s",
-                    response.status,
-                )
-
-                return 200 <= response.status < 300
-
+            with self._http.open(request, timeout=self.timeout) as response:
+                if not 200 <= response.status < 300:
+                    return None, f"HTTP_{response.status}", True
+                ack = json.loads(response.read(65537))
         except urllib.error.HTTPError as exc:
-            log.warning(
-                "Service 2 returned HTTP status: %s",
-                exc.code,
-            )
+            # A conflict can be out of order, but it never acknowledges persistence.
+            return None, f"HTTP_{exc.code}", exc.code not in {400, 405, 415, 422}
+        except (OSError, UnicodeError, ValueError, HTTPException):
+            return None, "INVALID_RESPONSE_OR_TRANSPORT_FAILURE", True
 
-            return exc.code == 409
-
-        except Exception:
-            log.exception("Service 2 request failed")
-            return None
+        event = json.loads(payload)
+        if (not isinstance(ack, dict) or ack.get("status") not in {"accepted", "duplicate"}
+                or type(ack.get("event_id")) is not int or ack["event_id"] <= 0
+                or ack.get("event_type") != event.get("event_type")
+                or ("sender_event_id" in ack and ack["sender_event_id"] != event.get("event_id"))):
+            return None, "MISSING_PERSISTENCE_ACK", True
+        return {"status": ack["status"], "event_id": ack["event_id"]}, None, False
 
     def _send_until_stopped(self):
         try:
@@ -278,9 +292,9 @@ class Outbox:
 
             with self.lock:
                 rows = self.db.execute("""
-                    SELECT id, payload, attempts
+                    SELECT id, event_id, payload, attempts
                     FROM outbox
-                    WHERE sent=0 AND next_try<=?
+                    WHERE sent=0 AND failed_at IS NULL AND next_try<=?
                     ORDER BY id
                     LIMIT ?
                 """, (
@@ -292,53 +306,39 @@ class Outbox:
                 self._stop.wait(0.2)
                 continue
 
-            for row_id, encrypted_payload, attempts in rows:
-
+            for row_id, event_id, encrypted_payload, attempts in rows:
                 if self._stop.is_set():
                     break
 
+                log.info("OUTBOX_ATTEMPT event_id=%s attempt=%d", event_id, attempts + 1)
                 try:
-                    plaintext_payload = decrypt_text(
-                        encrypted_payload
-                    )
+                    payload = decrypt_text(encrypted_payload)
+                    ack, error, retryable = self._post(payload)
+                except (InvalidTag, RuntimeError, TypeError, ValueError):
+                    ack, error, retryable = None, "UNREADABLE_OUTBOX_PAYLOAD", False
 
-                    result = self._post(plaintext_payload)
-
-                except Exception:
-                    log.exception(
-                        "Outbox event could not be decrypted or sent"
-                    )
-                    result = False
-
-                with self.lock:
-
-                    if result:
+                with self.lock, self.db:
+                    if ack is not None:
                         self.db.execute(
-                            "UPDATE outbox SET sent=1 WHERE id=?",
-                            (row_id,),
+                            "UPDATE outbox SET sent=1, acknowledgement=?, last_error=NULL WHERE id=?",
+                            (json.dumps(ack), row_id),
                         )
-
+                        log.info("OUTBOX_ACK event_id=%s status=%s stored_event_id=%s",
+                                 event_id, ack["status"], ack["event_id"])
+                    elif retryable and attempts + 1 < self.max_attempts:
+                        delay = min(60.0, 2.0 ** min(attempts + 1, 6))
+                        self.db.execute(
+                            "UPDATE outbox SET attempts=attempts+1, next_try=?, last_error=? WHERE id=?",
+                            (time.time() + delay, error, row_id),
+                        )
+                        log.warning("OUTBOX_RETRY event_id=%s reason=%s delay_seconds=%s",
+                                    event_id, error, delay)
                     else:
-                        delay = min(
-                            60.0,
-                            2.0 ** min(attempts + 1, 6),
+                        self.db.execute(
+                            "UPDATE outbox SET attempts=attempts+1, failed_at=?, last_error=? WHERE id=?",
+                            (time.time(), error, row_id),
                         )
-
-                        self.db.execute("""
-                            UPDATE outbox
-                            SET attempts=attempts+1,
-                                next_try=?
-                            WHERE id=?
-                        """, (
-                            time.time() + delay,
-                            row_id,
-                        ))
-
-                    self.db.commit()
-
-                if result is None:
-                    self._stop.wait(1.0)
-                    break
+                        log.error("OUTBOX_DEAD_LETTER event_id=%s reason=%s", event_id, error)
 
     def stop(self, wait=True, timeout=5.0):
         """Request worker shutdown and optionally wait."""

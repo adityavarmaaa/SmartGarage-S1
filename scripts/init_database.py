@@ -50,7 +50,8 @@ def verify(db, migrations):
     indexes = {name for (name,) in db.execute(
         "SELECT indexname FROM pg_indexes WHERE schemaname = 'public'")}
     required = {"parking_sessions_vehicle_history", "parking_events_vehicle_history",
-                "parking_events_type_time", "parking_events_retry_lookup", "parking_slot_state_vehicle"}
+                "parking_events_type_time", "parking_events_retry_lookup", "parking_slot_state_vehicle",
+                "parking_events_sender_event_id", "parking_sessions_active_slot"}
     if not required <= indexes:
         raise ValueError("One or more managed lookup indexes are missing.")
     unique_keys = {row[0] for row in db.execute("""

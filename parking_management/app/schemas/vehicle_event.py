@@ -2,7 +2,7 @@
 from datetime import datetime
 from typing import Optional
 
-from pydantic import AwareDatetime, BaseModel, field_validator, model_validator
+from pydantic import AwareDatetime, BaseModel, Field, field_validator, model_validator
 
 
 class VehicleData(BaseModel):
@@ -25,6 +25,7 @@ class SnapshotData(BaseModel):
 
 
 class VehicleEvent(BaseModel):
+    event_id: Optional[str] = Field(default=None, min_length=1, max_length=128)
     event_type: str
     camera_id: str
     parking_area_id: str

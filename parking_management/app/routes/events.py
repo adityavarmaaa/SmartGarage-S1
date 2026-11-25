@@ -41,6 +41,7 @@ def _find_existing_event(
               AND track_id IS NOT DISTINCT FROM :track_id
               AND slot_id IS NOT DISTINCT FROM :slot_id
               AND timestamp = :timestamp
+              AND (CAST(:effective_time AS timestamptz) IS NULL OR captured_at = CAST(:effective_time AS timestamptz))
               AND (
                   (
                       CAST(:vehicle_uid AS TEXT) IS NOT NULL
@@ -66,6 +67,8 @@ def _find_existing_event(
             "track_id": event.track_id,
             "slot_id": slot_id,
             "timestamp": event.timestamp,
+            "effective_time": (event.departure_at or event.captured_at or event.timestamp)
+                if getattr(event, "event_id", None) else None,
             "vehicle_uid": vehicle_uid,
             "plate_hmacs": plate_fingerprints,
         },
@@ -266,6 +269,32 @@ async def receive_vehicle_event(
         # 5. IDEMPOTENCY
         # =================================================
 
+        sender_ack = {"sender_event_id": event.event_id} if event.event_id else {}
+        if event.event_id:
+            db.execute(text("SELECT pg_advisory_xact_lock(hashtextextended(:sender_id, 0))"),
+                       {"sender_id": event.event_id})
+            stored = db.execute(text("""
+                SELECT id,
+                       event_type = :kind AND camera_id = :camera
+                       AND parking_area_id = :area AND slot_id IS NOT DISTINCT FROM :slot
+                       AND vehicle_uid IS NOT DISTINCT FROM :uid
+                       AND track_id IS NOT DISTINCT FROM :track
+                       AND timestamp = :timestamp AND captured_at = :effective_time
+                       AND (cardinality(CAST(:plates AS TEXT[])) > 0
+                            AND plate_number_hmac = ANY(CAST(:plates AS TEXT[]))
+                            OR cardinality(CAST(:plates AS TEXT[])) = 0 AND plate_number_hmac IS NULL) AS matches
+                FROM parking_events WHERE sender_event_id = :sender_id
+            """), {"sender_id": event.event_id, "kind": event.event_type, "camera": event.camera_id,
+                   "area": event.parking_area_id, "slot": slot_id, "uid": vehicle_uid,
+                   "track": event.track_id, "timestamp": event.timestamp, "effective_time": event_time,
+                   "plates": plate_fingerprints}).mappings().first()
+            if stored:
+                if not stored["matches"]:
+                    raise HTTPException(status_code=409, detail="Sender event ID conflicts with a stored event.")
+                db.rollback()
+                return {"status": "duplicate", "event_id": stored["id"], "event_type": event.event_type,
+                        **sender_ack}
+
         existing_event = _find_existing_event(
             db,
             event,
@@ -281,6 +310,7 @@ async def receive_vehicle_event(
 
             return {
                 "status": "duplicate",
+                **sender_ack,
                 "event_id": existing_event,
                 "event_type": event.event_type,
                 "camera_id": event.camera_id,
@@ -566,6 +596,7 @@ async def receive_vehicle_event(
                     vehicle_uid,
                     track_id,
                     timestamp,
+                    sender_event_id,
                     captured_at,
                     vehicle_type,
                     vehicle_type_confidence,
@@ -594,6 +625,7 @@ async def receive_vehicle_event(
                     :vehicle_uid,
                     :track_id,
                     :timestamp,
+                    :sender_event_id,
                     :captured_at,
                     :vehicle_type,
                     :vehicle_type_confidence,
@@ -624,6 +656,7 @@ async def receive_vehicle_event(
                 "vehicle_uid": vehicle_uid,
                 "track_id": event.track_id,
                 "timestamp": event.timestamp,
+                "sender_event_id": event.event_id,
                 "captured_at": event_time,
                 "vehicle_type": event.vehicle.type,
                 "vehicle_type_confidence": (
@@ -812,6 +845,7 @@ async def receive_vehicle_event(
 
             return {
                 "status": "accepted",
+                **sender_ack,
                 "event_id": event_id,
                 "event_type": "ENTRY",
                 "session_id": session_id,
@@ -1039,6 +1073,7 @@ async def receive_vehicle_event(
 
             return {
                 "status": "accepted",
+                **sender_ack,
                 "event_id": event_id,
                 "event_type": "EXIT",
                 "session_id": session["id"],
@@ -1073,6 +1108,7 @@ async def receive_vehicle_event(
 
         return {
             "status": "accepted",
+            **sender_ack,
             "event_id": event_id,
             "event_type": event.event_type,
             "message": "Event stored",
