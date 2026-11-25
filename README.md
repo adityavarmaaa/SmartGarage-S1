@@ -2,6 +2,8 @@
 
 Start with the [developer guide](docs/DEVELOPER_SETUP.md#automated-execution) for automated preview and full integration. See the [Windows runbook](docs/WINDOWS_RUNBOOK.md#full-integration-prerequisites) for PostgreSQL provisioning.
 
+For a fresh verification run, use the [quick-test guide](docs/TESTING.md). Coding agents should start with [AI agent setup](docs/AI_AGENT_SETUP.md).
+
 Before upgrading a database, read the [delivery integrity and migration notes](docs/DEVELOPER_SETUP.md#delivery-integrity-and-schema-upgrade).
 
 SmartGarage processes camera or recorded parking footage and maintains parking state. **Vehicle Intelligence Service** (internal package: `vehicle_intelligence`) handles detection, tracking, optional ANPR, calibrated slot assignment and camera-side lifecycle. **Parking & Bay Management Service** (internal package: `parking_management`) receives and persists parking events and serves occupancy, session history and analytics.

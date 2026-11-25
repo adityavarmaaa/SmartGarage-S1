@@ -117,6 +117,8 @@ Stop both servers with Ctrl+C. Inspect S1's `logs/` and the configured report an
 
 ## Verify on isolated resources
 
+Use the [quick-test command](TESTING.md) for API, Swagger, controlled PostgreSQL delivery, sample preview and regressions. See [database setup](DATABASE.md) for schema relationships and role requirements.
+
 ```bash
 python scripts/smoke_database.py
 python -m pytest tests -q
