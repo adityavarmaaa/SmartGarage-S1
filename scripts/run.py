@@ -88,7 +88,7 @@ def check_output(directory, expected_slots, publishing):
             "vehicles_seen": report["summary"]["vehicles_seen"]}
 
 
-def verify_database(url, directory, endpoint, expected_slots):
+def verify_database(url, directory, endpoint, expected_slots, *, require_session=True):
     import psycopg
     from vehicle_intelligence.common.security import decrypt_text
     from vehicle_intelligence.publishing.outbox import Outbox
@@ -131,6 +131,8 @@ def verify_database(url, directory, endpoint, expected_slots):
     entries = {}
     departures = {}
     latest = {}
+    persisted = []
+    closed_sessions = []
     with psycopg.connect(**url.translate_connect_args(username="user", database="dbname"),
                          connect_timeout=5) as db:
         db.execute("SET TRANSACTION READ ONLY")
@@ -154,6 +156,9 @@ def verify_database(url, directory, endpoint, expected_slots):
             ).fetchone()[0]
             if count != 1:
                 raise ValueError(f"Expected exactly one persisted {kind} event for a mapped observation.")
+            persisted.append({"sender_event_id": event["event_id"], "database_event_id": persisted_id,
+                              "event_type": kind, "camera_id": camera, "parking_area_id": area,
+                              "slot_id": slot, "vehicle_uid": uid, "event_time": event_time.isoformat()})
             key = (area, camera, slot, uid)
             (entries if kind == "ENTRY" else departures).setdefault(key, []).append(event_time)
             previous = latest.get((camera, slot))
@@ -164,16 +169,23 @@ def verify_database(url, directory, endpoint, expected_slots):
         for key, exit_times in departures.items():
             for exit_time in exit_times:
                 rows = db.execute(
-                    """SELECT entry_time, duration_seconds FROM parking_sessions
+                    """SELECT id, entry_time, duration_seconds FROM parking_sessions
                     WHERE parking_area_id=%s AND camera_id=%s AND slot_id=%s AND vehicle_uid=%s
                     AND exit_time=%s AND status='exited'""", (*key, exit_time),
                 ).fetchall()
                 if len(rows) != 1:
                     raise ValueError("Expected exactly one closed session for a persisted EXIT.")
-                entry_time, seconds = rows[0]
+                session_id, entry_time, seconds = rows[0]
                 if entry_time not in entries.get(key, []) or seconds != int((exit_time-entry_time).total_seconds()) or seconds <= 0:
                     raise ValueError("Persisted departure does not match a positive-duration session opened by this run.")
                 durations.append(seconds)
+                area, camera, slot, uid = key
+                closed_sessions.append({
+                    "database_session_id": session_id, "parking_area_id": area,
+                    "camera_id": camera, "slot_id": slot, "vehicle_uid": uid,
+                    "entry_time": entry_time.isoformat(), "exit_time": exit_time.isoformat(),
+                    "duration_seconds": seconds,
+                })
 
         for (camera, slot), (_, kind, uid) in latest.items():
             row = db.execute(
@@ -186,9 +198,14 @@ def verify_database(url, directory, endpoint, expected_slots):
 
     result = {"entry_events": sum(map(len, entries.values())),
               "exit_events": sum(map(len, departures.values())), "closed_session_seconds": durations,
-              "configured_slots_verified": len(expected_slots)}
+              "configured_slots_verified": len(expected_slots), "persisted_events": persisted,
+              "closed_sessions": closed_sessions,
+              "final_slot_state": [
+                  {"camera_id": camera, "slot_id": slot, "state": "available" if kind == "EXIT" else "occupied"}
+                  for (camera, slot), (_, kind, _) in latest.items()
+              ]}
     (directory / "database-verification.json").write_text(json.dumps(result, indent=2), encoding="utf-8")
-    if not durations:
+    if require_session and not durations:
         raise ValueError("Recording did not establish and close a session. See database-verification.json.")
     return result
 
@@ -303,8 +320,18 @@ def main():
             run_command(command, directory / "pipeline.log", env, cwd=directory)
             summary.update(check_output(directory, expected_slots, full))
             if full:
-                summary["postgresql"] = verify_database(url, directory, endpoint, expected_slots)
-        summary["status"] = "passed"
+                from scripts.acceptance_evidence import verify_recording_lifecycle
+                summary["postgresql"] = verify_database(
+                    url, directory, endpoint, expected_slots, require_session=False,
+                )
+                report = json.loads((directory / "report.json").read_text(encoding="utf-8"))
+                evidence = verify_recording_lifecycle(report, summary["postgresql"])
+                (directory / "footage-suitability.json").write_text(json.dumps(evidence, indent=2), encoding="utf-8")
+                summary["status"] = evidence["status"]
+                if evidence["status"] == "blocked":
+                    summary["error"] = "No independently observed lifecycle matched PostgreSQL. See footage-suitability.json."
+            else:
+                summary["status"] = "passed"
     except run_errors as exc:
         # Subprocesses write their own diagnostics. Never echo a connection string or credential.
         summary["error"] = (f"Command failed with exit status {exc.returncode}; see run logs."
@@ -313,7 +340,7 @@ def main():
     finally:
         (directory / "execution-summary.json").write_text(json.dumps(summary, indent=2), encoding="utf-8")
     print(json.dumps(summary))
-    return int(summary["status"] != "passed")
+    return {"passed": 0, "failed": 1, "blocked": 2}[summary["status"]]
 
 
 if __name__ == "__main__":
