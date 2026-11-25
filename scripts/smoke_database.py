@@ -135,6 +135,13 @@ def main():
                 with psycopg.connect(**url.translate_connect_args(username="user", database="dbname")) as db:
                     assert db.execute("SELECT count(*) FROM parking_events WHERE sender_event_id=%s",
                                       (unrelated_exit["event_id"],)).fetchone() == (0,)
+                prerequisite = {**entry, "event_id": uuid4().hex,
+                                "vehicle_uid": unrelated_exit["vehicle_uid"]}
+                assert client.post(endpoint, json=prerequisite, headers=headers).status_code == 200
+                assert occupancy() == ("occupied", unrelated_exit["vehicle_uid"])
+                replay = client.post(endpoint, json=unrelated_exit, headers=headers)
+                assert replay.status_code == 200 and replay.json()["status"] == "accepted"
+                assert occupancy() == ("available", None)
                 contenders = [{**entry, "event_id": uuid4().hex, "vehicle_uid": uuid4().hex}
                               for _ in range(2)]
                 with ThreadPoolExecutor(max_workers=2) as workers:
@@ -155,7 +162,7 @@ def main():
                 closing = {**exit_event, "event_id": uuid4().hex, "vehicle_uid": winner["vehicle_uid"]}
                 assert client.post(endpoint, json=closing, headers=headers).status_code == 200
                 assert occupancy() == ("available", None)
-                print("Verified concurrent slot claims and duplicate delivery, conflicting ID and out-of-order EXIT rollback.")
+                print("Verified concurrent slot claims and duplicate delivery, conflicting ID and out-of-order EXIT rollback and retry.")
         finally:
             server.should_exit = True
             thread.join()

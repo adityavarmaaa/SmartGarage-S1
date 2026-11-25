@@ -36,17 +36,47 @@ class _NoRedirect(urllib.request.HTTPRedirectHandler):
         return None
 
 
+def open_event_endpoint(url):
+    endpoint = urlsplit(url)
+    if endpoint.scheme not in {"http", "https"} or not endpoint.hostname or endpoint.username is not None:
+        raise ValueError("Configure an HTTP(S) Service 2 endpoint without embedded credentials.")
+    return urllib.request.build_opener(_NoRedirect())
+
+
+def post_event(url, payload, timeout, opener):
+    """Return a persistence acknowledgement or a sanitized failure and retry policy."""
+    request = urllib.request.Request(
+        url, data=payload.encode("utf-8"), headers=_s2_headers(), method="POST",
+    )
+    try:
+        with opener.open(request, timeout=timeout) as response:
+            if not 200 <= response.status < 300:
+                return None, f"HTTP_{response.status}", True
+            ack = json.loads(response.read(65537))
+    except urllib.error.HTTPError as exc:
+        # A conflict can be out of order, but it never acknowledges persistence.
+        return None, f"HTTP_{exc.code}", exc.code not in {400, 405, 415, 422}
+    except (OSError, UnicodeError, ValueError, HTTPException):
+        return None, "INVALID_RESPONSE_OR_TRANSPORT_FAILURE", True
+
+    event = json.loads(payload)
+    if (not isinstance(ack, dict) or ack.get("status") not in {"accepted", "duplicate"}
+            or type(ack.get("event_id")) is not int or ack["event_id"] <= 0
+            or ack.get("event_type") != event.get("event_type")
+            or ("sender_event_id" in ack and ack["sender_event_id"] != event.get("event_id"))):
+        return None, "MISSING_PERSISTENCE_ACK", True
+    return {"status": ack["status"], "event_id": ack["event_id"]}, None, False
+
+
+
 class Outbox:
     """Durable encrypted event queue and pending parking event storage."""
 
     def __init__(self, db_path, url, batch=20, timeout=3.0, max_attempts=8):
-        endpoint = urlsplit(url)
-        if endpoint.scheme not in {"http", "https"} or not endpoint.hostname or endpoint.username is not None:
-            raise ValueError("Configure an HTTP(S) Service 2 endpoint without embedded credentials.")
+        self._http = open_event_endpoint(url)
         os.makedirs(os.path.dirname(db_path) or ".", exist_ok=True)
 
         self.url = url
-        self._http = urllib.request.build_opener(_NoRedirect())
         self.batch = batch
         self.timeout = timeout
         self.max_attempts = max_attempts
@@ -256,28 +286,7 @@ class Outbox:
             ).fetchone()[0]
 
     def _post(self, payload):
-        """Return a persistence acknowledgement or a sanitized failure and retry policy."""
-        request = urllib.request.Request(
-            self.url, data=payload.encode("utf-8"), headers=_s2_headers(), method="POST",
-        )
-        try:
-            with self._http.open(request, timeout=self.timeout) as response:
-                if not 200 <= response.status < 300:
-                    return None, f"HTTP_{response.status}", True
-                ack = json.loads(response.read(65537))
-        except urllib.error.HTTPError as exc:
-            # A conflict can be out of order, but it never acknowledges persistence.
-            return None, f"HTTP_{exc.code}", exc.code not in {400, 405, 415, 422}
-        except (OSError, UnicodeError, ValueError, HTTPException):
-            return None, "INVALID_RESPONSE_OR_TRANSPORT_FAILURE", True
-
-        event = json.loads(payload)
-        if (not isinstance(ack, dict) or ack.get("status") not in {"accepted", "duplicate"}
-                or type(ack.get("event_id")) is not int or ack["event_id"] <= 0
-                or ack.get("event_type") != event.get("event_type")
-                or ("sender_event_id" in ack and ack["sender_event_id"] != event.get("event_id"))):
-            return None, "MISSING_PERSISTENCE_ACK", True
-        return {"status": ack["status"], "event_id": ack["event_id"]}, None, False
+        return post_event(self.url, payload, self.timeout, self._http)
 
     def _send_until_stopped(self):
         try:

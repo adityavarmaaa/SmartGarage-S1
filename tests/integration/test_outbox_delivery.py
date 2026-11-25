@@ -118,3 +118,27 @@ def test_operator_requeue_preserves_payload_and_event_id(tmp_path, capsys, monke
         assert db.execute("SELECT event_id, payload, attempts, failed_at, sent FROM outbox").fetchone() == (
             "queued", "encrypted-payload", 0, None, 0
         )
+
+
+def test_manual_sender_conflict_is_failure(tmp_path, capsys, monkeypatch):
+    from tools.send_report_to_s2 import main
+
+    monkeypatch.setenv("S2_API_KEY", "test-key")
+    report = tmp_path / "report.json"
+    report.write_text(json.dumps({"service2_events": [{"event_id": "event", "event_type": "ENTRY"}]}))
+
+    class Receiver(BaseHTTPRequestHandler):
+        def do_POST(self):
+            self.rfile.read(int(self.headers["Content-Length"]))
+            self.send_response(409)
+            self.end_headers()
+
+    with ThreadingHTTPServer(("127.0.0.1", 0), Receiver) as server:
+        thread = Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            assert main([str(report), "--send", "--url", f"http://127.0.0.1:{server.server_port}/events"]) == 1
+        finally:
+            server.shutdown()
+            thread.join()
+    assert "HTTP_409" in capsys.readouterr().out
