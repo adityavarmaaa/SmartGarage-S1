@@ -73,7 +73,11 @@ def main():
             wait_for(lambda: server.started)
             with httpx.Client(base_url=base, trust_env=False) as client:
                 assert client.get("/health/database").json()["database"] == "connected"
-                assert client.get("/openapi.json").is_success
+                schema = client.get("/openapi.json")
+                docs = client.get("/docs")
+                assert schema.is_success and schema.json().get("openapi")
+                assert docs.is_success and "SwaggerUIBundle" in docs.text
+                print("Parking & Bay Management health, OpenAPI and Swagger HTML passed.")
                 assert client.post("/internal/events/vehicle", json={}).status_code == 401
                 assert client.post("/internal/events/vehicle", json={}, headers={
                     "X-API-Key": os.environ["S2_API_KEY"]

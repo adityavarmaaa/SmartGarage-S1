@@ -53,8 +53,10 @@ def start_api(stack, module, health, env, directory):
                     response = client.get(url + health)
                     if (response.is_success
                             and (health != "/health/database" or response.json().get("database") == "connected")):
-                        client.get(url + "/openapi.json").raise_for_status()
-                        return url
+                        schema = client.get(url + "/openapi.json")
+                        docs = client.get(url + "/docs")
+                        if schema.is_success and schema.json().get("openapi") and docs.is_success and "SwaggerUIBundle" in docs.text:
+                            return url
                 except httpx.TransportError:
                     pass
             time.sleep(0.25)
@@ -214,7 +216,7 @@ def main():
     directory = args.output_root.resolve() / uuid4().hex
     directory.mkdir(mode=0o700, parents=True)
     print(f"Run directory: {directory}", flush=True)
-    summary = {"mode": args.mode, "publishing": full, "status": "failed"}
+    summary = {"mode": args.mode, "publishing": False, "status": "failed"}
     run_errors = (OSError, ValueError, KeyError, subprocess.CalledProcessError)
     try:
         if args.source:
@@ -224,8 +226,11 @@ def main():
         cfg = load_config(config_path)
         if "cameras" not in cfg:
             raise ValueError("The runner requires a cameras list to use the multicamera report and MP4 pipeline.")
+        cameras = camera_configs(cfg)
+        if full and any(camera["publisher"].get("enabled") is False for camera in cameras):
+            raise ValueError("Publishing is disabled in the configuration. Select preview or explicitly enable it.")
         expected_slots = set()
-        for camera in camera_configs(cfg):
+        for camera in cameras:
             if not (ROOT / str(camera["source"])).is_file():
                 raise ValueError("The recorded-video runner requires a local file for every camera.")
             geometry = Geometry.load(camera["geometry_file"])
@@ -294,6 +299,7 @@ def main():
                 command.append("--no-publisher")
             env["PYTHONPATH"] = os.pathsep.join(filter(None, (str(ROOT), env.get("PYTHONPATH"))))
             (directory / "data").mkdir()  # Isolate legacy local diagnostic files.
+            summary["publishing"] = full
             run_command(command, directory / "pipeline.log", env, cwd=directory)
             summary.update(check_output(directory, expected_slots, full))
             if full:
