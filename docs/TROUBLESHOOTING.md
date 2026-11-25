@@ -20,3 +20,7 @@
 Read the [developer guide](DEVELOPER_SETUP.md#automated-execution) first. A PostgreSQL connection error at the configured endpoint calls for checking the actual host, port and service. If the server rejected credentials or privileges, resolve that before rerunning migrations. Use database-free preview while the development server is being provisioned.
 
 Each run prints its output directory. Read `execution-summary.json`, then the stage-specific log named in the summary or the pipeline log. Full mode with zero matched lifecycle rows means the recording did not establish and close a verifiable session. A readable MP4 can still be available. Review `database-verification.json` and confirm the footage and calibration before trying again.
+
+For `OUTBOX_RETRY` or `OUTBOX_DEAD_LETTER`, use the event ID and sanitized reason to compare the recorded delivery against Parking Management. A 409 is a conflict and remains undelivered. Check whether a prerequisite parking event has arrived and inspect destination records before replaying a failed event. Preserve the encrypted queue and its keys. See [delivery integrity](DEVELOPER_SETUP.md#delivery-integrity-and-schema-upgrade).
+
+After reconciling the destination and correcting the problem, inspect a retained row with `python scripts/requeue_outbox.py /path/to/outbox.db --event-id EVENT_ID`. Add `--apply` to put that one failed row back in the retry schedule. The command neither sends immediately nor opens a new queue. Resume processing with the same queue and encryption keys.

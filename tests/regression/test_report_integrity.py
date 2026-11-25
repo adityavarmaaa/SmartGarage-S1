@@ -140,3 +140,28 @@ def test_one_identity_claiming_two_active_slots_is_reported_as_conflict():
     assert vehicles[0]["state"] == "IDENTITY_CONFLICT"
     assert vehicles[0]["slot_id"] is None
     assert len(vehicles[0]["slot_assignments"]) == 2
+
+
+def test_appearance_must_not_merge_conflicting_confirmed_plates():
+    observations = {
+        "A": [_obs("A", 1, "one", "shared", "TS07FN1199", "CONFIRMED")],
+        "B": [_obs("B", 1, "two", "shared", "TG11BB4023", "CONFIRMED")],
+        "C": [_obs("C", 1, "three", "shared")],
+    }
+    vehicles = build_vehicles(
+        {camera: _runtime(camera, items) for camera, items in observations.items()},
+        {camera: [] for camera in observations}, {"backend": "osnet"},
+    )
+    assert len(vehicles) == 3
+    assert {vehicle["cross_camera_identity"] for vehicle in vehicles} == {"ambiguous"}
+    assert all(not vehicle["identity_evidence"] for vehicle in vehicles)
+
+
+def test_report_preserves_relative_and_source_clock_fields_separately():
+    observation = _obs("A", 1, "one")
+    observation["first_seen_source_clock_seconds"] = 1_795_581_423.0
+    observation["last_seen_source_clock_seconds"] = 1_795_581_428.0
+    vehicle, = build_vehicles({"A": _runtime("A", [observation])}, {"A": []})
+    seen, = vehicle["camera_observations"]
+    assert seen["first_seen_video_seconds"] == 1.0
+    assert seen["first_seen_source_clock_seconds"] == 1_795_581_423.0

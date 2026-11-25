@@ -212,6 +212,8 @@ def build_vehicles(runtimes, slot_table, reid_info=None):
                 "local_track_id": track_id,
                 "first_seen_video_seconds": obs.get("first_seen_video_seconds"),
                 "last_seen_video_seconds": obs.get("last_seen_video_seconds"),
+                "first_seen_source_clock_seconds": obs.get("first_seen_source_clock_seconds"),
+                "last_seen_source_clock_seconds": obs.get("last_seen_source_clock_seconds"),
             }
             if observation not in v["camera_observations"]:
                 v["camera_observations"].append(observation)
@@ -255,10 +257,28 @@ def build_vehicles(runtimes, slot_table, reid_info=None):
             k = parent[k]
         return k
 
-    def union(a, b):
-        ra, rb = find(a), find(b)
-        if ra != rb:
-            parent[max(ra, rb)] = min(ra, rb)
+    members = {key: {key} for key in keys}
+    evidence = {key: set() for key in keys}
+    ambiguous = set()
+
+    def associate(group, reason):
+        roots = sorted({find(key) for key in group})
+        if len(roots) < 2:
+            return
+        candidates = set().union(*(members[root] for root in roots))
+        cameras = [local[key]["cameras"][0] for key in candidates]
+        plates = set().union(*(local[key]["_confirmed_plates"] for key in candidates))
+        # Evaluate the whole candidate group before merging. An intermediate
+        # match must never bridge conflicting plates or same-camera identities.
+        if len(cameras) != len(set(cameras)) or len(plates) > 1:
+            ambiguous.update(candidates)
+            return
+        canonical = roots[0]
+        for root in roots[1:]:
+            parent[root] = canonical
+            members[canonical].update(members[root])
+            evidence[canonical].update(evidence[root])
+        evidence[canonical].add(reason)
 
     plate_groups = {}
     gid_groups = {}
@@ -268,27 +288,14 @@ def build_vehicles(runtimes, slot_table, reid_info=None):
         for gid in v["_global_ids"]:
             gid_groups.setdefault(gid, []).append(key)
 
-    # A confirmed exact plate is the strongest available cross-camera key.
-    for plate, group in plate_groups.items():
-        if len(group) > 1:
-            cameras = [local[k]["cameras"][0] for k in group]
-            # If one camera has two distinct local vehicle objects claiming
-            # the same plate, treat it as a conflict rather than auto-merging.
-            if len(cameras) == len(set(cameras)) and len(set(cameras)) > 1:
-                for other in group[1:]:
-                    union(group[0], other)
+    # Confirmed plate evidence takes precedence over appearance.
+    for group in plate_groups.values():
+        associate(group, "confirmed_plate")
 
     backend = str((reid_info or {}).get("backend") or "").lower()
     if "osnet" in backend:
-        for _gid, group in gid_groups.items():
-            if len(group) < 2:
-                continue
-            # Never collapse two distinct local vehicles from the same camera
-            # under one GID without an independent confirmed-plate match.
-            cameras = [local[k]["cameras"][0] for k in group]
-            if len(cameras) == len(set(cameras)) and len(set(cameras)) > 1:
-                for other in group[1:]:
-                    union(group[0], other)
+        for group in gid_groups.values():
+            associate(group, "osnet_appearance")
 
     merged = {}
     for key, v in local.items():
@@ -337,6 +344,11 @@ def build_vehicles(runtimes, slot_table, reid_info=None):
         ]
         v["vehicle_uid"] = local_vehicle_uids[0][1] if len(local_vehicle_uids) == 1 else None
         local_keys = sorted(v.pop("_keys", []))
+        v["identity_evidence"] = sorted(evidence[find(local_keys[0])])
+        v["cross_camera_identity"] = (
+            "matched" if len(v["cameras"]) > 1 else
+            "ambiguous" if any(key in ambiguous for key in local_keys) else "unmatched"
+        )
         slot_map = v.pop("_slot_assignments")
         assignments = list(slot_map.values())
         v["slot_assignments"] = [
@@ -718,7 +730,7 @@ def build_final_report(runtimes, handoff, global_reid, reid_info, cfg,
         "logging": error_health,
     }
     report = {
-        "report_version": 2,
+        "report_version": 3,
         "generated_at": datetime.now(IST).isoformat(),
         "run_status": "COMPLETED",
         "processing_mode": "MULTI_CAMERA_SHARED_GPU_BATCHING",
@@ -753,6 +765,10 @@ def build_final_report(runtimes, handoff, global_reid, reid_info, cfg,
         "vehicles": vehicles,
         "service2_events": s2_events,
         "lifecycle_events": raw_events,
+        "generated_lifecycle_counts": {
+            kind: sum(event.get("event_type") == kind for event in raw_events)
+            for kind in ("ENTRY", "PARK_START", "PARK_END", "EXIT")
+        },
         "exit_vehicle_details": _build_exit_vehicle_details(raw_events, plate_evidence),
         "lifecycle_timeline": timeline,
         "plate_evidence": plate_evidence or [],

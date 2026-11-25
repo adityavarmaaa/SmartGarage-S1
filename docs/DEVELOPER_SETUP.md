@@ -131,3 +131,21 @@ Mapped EXIT now includes optional, timezone-aware `departure_at` from the origin
 ## Future commits
 
 Use descriptive `type(scope): subject` messages, such as `test(integration): verify PostgreSQL slot release`. Preserve existing history and review the exact diff before committing. Keep credentials, recordings, models, databases and generated reports out of new commits.
+
+### Delivery integrity and schema upgrade
+
+Run `python scripts/init_database.py` before starting the upgraded Parking Management service. Migration `002_delivery_integrity.sql` adds a nullable sender event ID, a unique index on populated sender IDs, and a unique index for active camera-slot sessions. Migration `001_baseline.sql` remains byte-identical. If historical data already violates the new active-slot constraint, migration stops and rolls back. Review the conflicting rows before proceeding.
+
+A sender ID and PostgreSQL event ID serve separate purposes. An exact replay of a known sender ID returns `duplicate` with the original stored ID. Reusing the sender ID for a conflicting event returns 409. Legacy requests without sender IDs retain semantic duplicate detection.
+
+The outbox accepts only an `accepted` or `duplicate` acknowledgement with a stored event ID and matching event type. It persists that receipt. HTTP 409 is a retryable conflict. Requests use bounded exponential backoff with up to eight failed attempts by default. Invalid 400/405/415/422 requests and unreadable encrypted rows go straight to retained dead-letter state. Failed rows keep their ciphertext, attempt count, reason and failure time. Reconcile the underlying error and destination records before recovery. Keep the SQLite artifact and encryption keys together.
+
+Full-mode output includes `outbox-verification.json` for queued, acknowledged, pending and permanently failed counts. `database-verification.json` reads back acknowledged event IDs, lifecycle sessions and slot state directly from PostgreSQL. Preview does not send events.
+
+Run the real HTTP/PostgreSQL controlled smoke test with:
+
+```bash
+python scripts/smoke_database.py
+```
+
+It checks authentication, persisted acknowledgements, duplicates, an out-of-order EXIT rollback, competing claims, duration and slot release using test data. It does not replace the real recorded-video acceptance run.

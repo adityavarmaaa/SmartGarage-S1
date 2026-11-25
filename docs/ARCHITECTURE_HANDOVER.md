@@ -29,3 +29,16 @@ The bridge owns track-to-vehicle evidence association and builds raw ENTRY, PARK
 The SQLite outbox is the durable sender queue. The mapper separately tracks camera/area lifecycle sessions and canonical park-start IDs. Queue acceptance and destination acknowledgement are distinct. The API starts one worker per process, exposes health and job state, and can stream video when the multicamera demo recorder is enabled. Runtime entry points are `main.py`, `run_local.py`, and `vehicle_intelligence.api:app`.
 
 See [API reference](API_SWAGGER.md) and the [lifecycle audit](../TEST_REPORTS/BROADER_EVENT_LIFECYCLE_AUDIT_REPORT.md).
+
+## Parking persistence relationships
+
+| Parent | Child or projection | Integrity |
+|---|---|---|
+| Parking area | Cameras, sessions, slot state and event history | Area keys reference configured parking areas. |
+| Camera | Parking slots | The slot key combines camera ID and slot ID. |
+| Camera-slot | Slot state, sessions and historical events | Composite foreign keys preserve the configured slot relationship. Slot state is separate from history. |
+| Vehicle | Slot state, sessions and events | Vehicle references are nullable when the available identity is a local UID. Plate evidence uses protected values. |
+| Sender event | Stored Parking Management event | A unique non-null sender ID guards retries. The acknowledgement returns the stored row ID. |
+| Camera-slot and vehicle UID | Active session | Partial unique indexes guard active camera-slot claims and active UID sessions in the configured scope. |
+
+Local track observations and report-level cross-camera associations are produced by Vehicle Intelligence. The current PostgreSQL contract contains the mapped ENTRY and EXIT history and its derived sessions. It has no separate durable graph for cross-camera identities or independent rows for all four source observations.
