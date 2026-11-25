@@ -24,7 +24,7 @@ def correlated():
                              "duration_seconds": 1}],
         "persisted_events": [
             {**identity, "slot_id": slot, "event_type": kind, "sender_event_id": event["event_id"],
-             "database_event_id": index, "event_time": event["event_time"]}
+             "database_event_id": index, "database_sender_event_id": event["event_id"], "event_time": event["event_time"]}
             for index, (kind, event) in enumerate(zip(("ENTRY", "EXIT"), events[1:3]), 1)
         ],
     }
@@ -41,7 +41,7 @@ def test_acceptance_correlates_real_observation_shape_to_stored_session(correlat
 
 
 @pytest.mark.parametrize("gap", ["missing_exit", "restored_entry", "inferred_departure", "different_identity",
-                                 "wrong_sender_id", "wrong_slot", "occupancy_mismatch", "exit_before_departure"])
+                                 "wrong_sender_id", "legacy_duplicate", "wrong_slot", "occupancy_mismatch", "exit_before_departure"])
 def test_missing_grounded_lifecycle_blocks_even_with_closed_database_session(correlated, gap):
     report, database = correlated
     events = report["lifecycle_events"]
@@ -55,6 +55,8 @@ def test_missing_grounded_lifecycle_blocks_even_with_closed_database_session(cor
         events[-1]["vehicle_uid"] = uuid4().hex
     elif gap == "wrong_sender_id":
         database["persisted_events"][1]["sender_event_id"] = uuid4().hex
+    elif gap == "legacy_duplicate":
+        database["persisted_events"][1]["database_sender_event_id"] = None
     elif gap == "wrong_slot":
         events[2]["parking"]["slot_id"] = uuid4().hex
     elif gap == "occupancy_mismatch":

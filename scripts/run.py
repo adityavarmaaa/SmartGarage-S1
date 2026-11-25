@@ -149,14 +149,15 @@ def verify_database(url, directory, endpoint, expected_slots, *, require_session
                                                event.get("captured_at") or event["timestamp"])
             if not uid or (camera, slot) not in expected_slots:
                 raise ValueError("Mapped event has no verifiable identity or configured slot.")
-            count = db.execute(
-                """SELECT count(*) FROM parking_events WHERE event_type=%s AND parking_area_id=%s
+            stored = db.execute(
+                """SELECT sender_event_id FROM parking_events WHERE event_type=%s AND parking_area_id=%s
                 AND camera_id=%s AND slot_id=%s AND vehicle_uid=%s AND captured_at=%s AND id=%s""",
                 (kind, area, camera, slot, uid, event_time, persisted_id),
-            ).fetchone()[0]
-            if count != 1:
-                raise ValueError(f"Expected exactly one persisted {kind} event for a mapped observation.")
+            ).fetchone()
+            if stored is None:
+                raise ValueError(f"No matching persisted {kind} event for an acknowledged observation.")
             persisted.append({"sender_event_id": event["event_id"], "database_event_id": persisted_id,
+                              "database_sender_event_id": stored[0],
                               "event_type": kind, "camera_id": camera, "parking_area_id": area,
                               "slot_id": slot, "vehicle_uid": uid, "event_time": event_time.isoformat()})
             key = (area, camera, slot, uid)

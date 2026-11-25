@@ -46,6 +46,7 @@ def verify_recording_lifecycle(report, database):
                    for event in database["persisted_events"]
                    if (event["parking_area_id"], event["camera_id"], event["vehicle_uid"]) == key
                    and event["slot_id"] == slot
+                   and event["sender_event_id"] == event["database_sender_event_id"]
                    and _timestamp(event["event_time"]) == (start if event["event_type"] == "ENTRY" else end)}
         observations_for_vehicle = sorted(observations.get(key, []),
                                           key=lambda item: (item[0], tuple(counts).index(item[2]), item[1]))
